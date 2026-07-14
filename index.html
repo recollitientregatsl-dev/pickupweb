@@ -4,27 +4,23 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pickup Point – Recollit i Entregat S.L.</title>
-  <meta name="description" content="Adreça de recepció de paquets a la Seu d'Urgell per a clients d'Andorra. Rep qualsevol enviament sense restriccions duaneres i recull-lo quan vulguis, amb locker 24/7." />
+  <meta name="description" content="Concentra tots els teus paquets en un sol punt i recull-los quan vulguis. Servei de recepció multimarca a Av. Valls d'Andorra 18." />
   <style>
     /* ─── Reset & variables ─── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --brand:    #2C9C8A;
-      --brand-dk: #1F7566;
-      --brand-green: #8BC34A;
-      --brand-blue:  #3E6FB0;
-      --brand-navy:  #2B3D8C;
-      --dark:     #121A2E;
-      --mid:      #223059;
-      --light:    #F3F7F6;
+      --brand:    #e8622a;
+      --brand-dk: #c44d18;
+      --dark:     #1a2332;
+      --mid:      #2d3f55;
+      --light:    #f5f7fa;
       --white:    #ffffff;
-      --text:     #2B3542;
-      --muted:    #66758A;
-      --border:   #DCE4E7;
+      --text:     #333d4b;
+      --muted:    #6b7a8d;
+      --border:   #dde2ea;
       --radius:   10px;
-      --shadow:   0 4px 24px rgba(15,25,40,.10);
+      --shadow:   0 4px 24px rgba(0,0,0,.10);
       --font:     'Segoe UI', system-ui, -apple-system, sans-serif;
-      --logo-gradient: linear-gradient(135deg, #92C83E 0%, #4FB88A 35%, #4AA6C4 65%, #2B3D8C 100%);
     }
     html { scroll-behavior: smooth; }
     body { font-family: var(--font); color: var(--text); background: var(--white); line-height: 1.6; }
@@ -57,17 +53,13 @@
     }
     .logo { display: flex; align-items: center; gap: 12px; }
     .logo-mark {
-      width: 40px; height: auto; flex-shrink: 0;
+      width: 44px; height: 44px; border-radius: 8px;
+      background: var(--brand); display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; font-weight: 900; color: #fff; letter-spacing: -1px;
     }
-    .logo-mark img { width: 100%; height: auto; display: block; }
     .logo-text { line-height: 1.2; }
     .logo-text strong { display: block; font-size: 1.05rem; }
     .logo-text span { font-size: .75rem; opacity: .7; }
-    .footer-brand {
-      display: flex; align-items: center; justify-content: center; gap: 10px;
-      margin-bottom: 14px;
-    }
-    .footer-brand img { height: 34px; width: auto; display: block; }
     nav { display: flex; align-items: center; gap: 24px; }
     nav a { font-size: .9rem; opacity: .85; transition: opacity .15s; }
     nav a:hover { opacity: 1; }
@@ -85,52 +77,27 @@
       color: #fff; padding: 90px 20px 80px; text-align: center; position: relative; overflow: hidden;
     }
     .hero::before {
-      content: ''; position: absolute; inset: 0; pointer-events: none;
+      content: ''; position: absolute; inset: 0;
       background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
     }
     .hero-badge {
-      display: inline-block; background: rgba(44,156,138,.15); border: 1px solid var(--brand);
+      display: inline-block; background: rgba(232,98,42,.2); border: 1px solid var(--brand);
       color: var(--brand); border-radius: 50px; padding: 6px 18px; font-size: .85rem;
       font-weight: 600; margin-bottom: 20px; letter-spacing: .5px;
     }
-    .hero h1 { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 900; line-height: 1.15; margin-bottom: 18px; }
+    .hero h1 { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 900; line-height: 1.15; margin-bottom: 22px; }
     .hero h1 em { color: var(--brand); font-style: normal; }
-    .hero-tagline { font-size: 1.25rem; font-weight: 700; color: #fff; max-width: 580px; margin: 0 auto 14px; }
     .hero p { font-size: 1.15rem; opacity: .85; max-width: 580px; margin: 0 auto 36px; }
     .hero-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
     .hero-stats {
-      display: flex; gap: 32px; justify-content: center; flex-wrap: wrap;
+      display: flex; gap: 40px; justify-content: center; flex-wrap: wrap;
       margin-top: 60px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,.1);
     }
     .stat strong { display: block; font-size: 2rem; font-weight: 900; color: var(--brand); }
     .stat span { font-size: .85rem; opacity: .7; }
 
-    /* ─── Confiança ─── */
-    .trust { background: var(--light); padding: 34px 0; }
-    .trust-inner {
-      display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
-    }
-    .trust-headline { font-size: 1.1rem; font-weight: 900; color: var(--brand-navy); margin-bottom: 4px; }
-    .trust-text { color: var(--dark); font-size: .98rem; max-width: 560px; }
-    .trust-text strong { color: var(--brand-navy); }
-    .trust-badges { display: flex; gap: 10px; flex-wrap: wrap; }
-    .trust-badge {
-      background: #fff; border: 1px solid var(--border); border-radius: 50px;
-      padding: 8px 16px; font-size: .82rem; font-weight: 700; color: var(--dark);
-      white-space: nowrap;
-    }
-
-    /* ─── Per què (band) ─── */
-    .why-band {
-      margin-top: 56px; background: var(--light); border-radius: var(--radius);
-      padding: 32px 36px;
-    }
-    .why-title { font-weight: 900; font-size: 1.15rem; color: var(--dark); margin-bottom: 16px; text-align: center; }
-    .why-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; max-width: 560px; margin: 0 auto; }
-    .why-list li { font-size: .98rem; color: var(--dark); }
-
     /* ─── Sections generic ─── */
-    section { padding: 80px 0; scroll-margin-top: 84px; }
+    section { padding: 80px 0; }
     .section-label {
       font-size: .8rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
       color: var(--brand); margin-bottom: 10px;
@@ -155,132 +122,6 @@
     .step h3 { font-size: 1.1rem; margin-bottom: 10px; color: var(--dark); }
     .step p { font-size: .9rem; color: var(--muted); }
 
-    /* ─── Preus ─── */
-    .pricing { background: #fff; }
-    .price-table {
-      border: 1.5px solid var(--border); border-radius: var(--radius); overflow: hidden;
-      box-shadow: var(--shadow);
-    }
-    .price-table-head {
-      display: grid; grid-template-columns: 2fr 1fr 1.3fr;
-      background: var(--dark); color: #fff;
-    }
-    .price-table-head > div {
-      padding: 16px 20px; font-weight: 700; font-size: .85rem; letter-spacing: .3px;
-    }
-    .price-table-head > div span { display: block; font-weight: 400; opacity: .65; font-size: .75rem; margin-top: 2px; }
-    .price-row {
-      display: grid; grid-template-columns: 2fr 1fr 1.3fr; align-items: center;
-      border-top: 1px solid var(--border);
-    }
-    .price-row:nth-child(even) { background: var(--light); }
-    .price-row-type { display: flex; align-items: center; gap: 14px; padding: 18px 20px; }
-    .price-icon { font-size: 1.6rem; flex-shrink: 0; }
-    .price-row-type strong { display: block; font-size: .95rem; color: var(--dark); }
-    .price-row-type span { display: block; font-size: .78rem; color: var(--muted); margin-top: 2px; }
-    .price-row-base {
-      padding: 18px 20px; font-size: 1.3rem; font-weight: 900; color: var(--brand);
-    }
-    .price-row-base span { display: block; font-size: .72rem; font-weight: 400; color: var(--muted); margin-top: 2px; }
-    .price-row-extra { padding: 18px 20px; font-size: 1.05rem; font-weight: 800; color: var(--brand-navy); }
-    .price-row-extra span { display: block; font-size: .74rem; font-weight: 400; color: var(--muted); margin-top: 2px; }
-    .express-banner {
-      margin-top: 24px; border-radius: var(--radius); padding: 20px 26px;
-      background: linear-gradient(90deg, rgba(44,156,138,.08), rgba(43,61,140,.06));
-      border: 1.5px dashed var(--brand);
-      display: flex; align-items: center;
-    }
-    .express-banner-left { display: flex; align-items: center; gap: 18px; }
-    .express-icon { font-size: 1.8rem; }
-    .express-banner strong { display: block; font-size: 1.02rem; color: var(--dark); margin-bottom: 4px; }
-    .express-price { color: var(--brand); font-weight: 900; }
-    .express-banner span#expDesc { font-size: .88rem; color: var(--muted); }
-    .price-note { margin-top: 20px; font-size: .8rem; color: var(--muted); }
-
-    /* ─── Locker ─── */
-    .locker { background: var(--light); }
-    .locker-grid {
-      display: grid; grid-template-columns: .8fr 1.2fr; gap: 50px; align-items: center; margin-bottom: 56px;
-    }
-    .locker-visual {
-      background: var(--logo-gradient); border-radius: 20px; aspect-ratio: 1/1;
-      display: flex; align-items: center; justify-content: center; position: relative;
-      box-shadow: var(--shadow); max-width: 320px;
-    }
-    .locker-icon-big { font-size: 5rem; filter: drop-shadow(0 6px 14px rgba(0,0,0,.25)); }
-    .locker-badge {
-      position: absolute; top: 16px; right: 16px; background: #fff; color: var(--brand-navy);
-      font-size: .72rem; font-weight: 800; letter-spacing: .5px; text-transform: uppercase;
-      padding: 6px 14px; border-radius: 50px; box-shadow: 0 2px 10px rgba(0,0,0,.15);
-    }
-    .locker-desc { color: var(--muted); margin-bottom: 0; max-width: 480px; }
-    .locker-minicards {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
-      margin: 36px 0 28px;
-    }
-    .locker-minicard {
-      background: #fff; border-radius: var(--radius); box-shadow: var(--shadow);
-      padding: 20px 14px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px;
-    }
-    .lmc-icon { font-size: 1.6rem; margin-bottom: 4px; }
-    .locker-minicard strong { font-size: 1.1rem; color: var(--dark); font-weight: 900; }
-    .locker-minicard span { font-size: .8rem; color: var(--muted); }
-    .billing-restriction {
-      text-align: center; font-size: .85rem; color: var(--muted); font-style: italic;
-      margin-bottom: 20px;
-    }
-    .billing-compare {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
-    }
-    .billing-card {
-      background: #fff; border-radius: var(--radius); padding: 28px 26px; box-shadow: var(--shadow);
-      border-top: 4px solid var(--border); display: flex; flex-direction: column;
-    }
-    .billing-bank { border-top-color: var(--brand-green); }
-    .billing-cash { border-top-color: var(--brand-blue); }
-    .billing-tag { font-weight: 800; color: var(--dark); font-size: .95rem; margin-bottom: 2px; }
-    .billing-sub { display: block; font-size: .78rem; color: var(--muted); margin-bottom: 18px; }
-    .billing-amount { margin-bottom: 10px; }
-    .billing-amount strong { font-size: 1.3rem; font-weight: 900; display: block; }
-    .billing-amount-good strong { color: var(--brand-green); }
-    .billing-amount-neutral strong { color: var(--brand-blue); }
-    .billing-note { font-size: .85rem; color: var(--muted); margin-bottom: 18px; flex: 1; }
-    .billing-btn { align-self: flex-start; padding: 10px 22px; font-size: .88rem; }
-
-    /* ─── Consulta enviaments ─── */
-    .tracking { background: #fff; }
-    .tracking-form {
-      display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap;
-      background: var(--light); border: 1.5px solid var(--border); border-radius: var(--radius);
-      padding: 24px; margin-bottom: 8px;
-    }
-    .tracking-form .field { flex: 1; min-width: 180px; }
-    .tracking-form label { display: block; font-size: .82rem; font-weight: 700; color: var(--dark); margin-bottom: 6px; }
-    .tracking-form input {
-      width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 8px;
-      font-size: .95rem; font-family: var(--font);
-    }
-    .tracking-form input:focus { outline: none; border-color: var(--brand); }
-    .tracking-form .btn { white-space: nowrap; }
-    .trk-hint { font-size: .8rem; color: var(--muted); margin: 10px 0 0; }
-    .tracking-results { margin-top: 20px; }
-    .trk-card {
-      display: flex; justify-content: space-between; align-items: center; gap: 16px;
-      background: #fff; border: 1.5px solid var(--border); border-radius: var(--radius);
-      padding: 18px 22px; margin-bottom: 12px; flex-wrap: wrap;
-    }
-    .trk-card-main strong { display: block; color: var(--dark); font-size: .98rem; margin-bottom: 4px; }
-    .trk-card-main span { display: block; font-size: .82rem; color: var(--muted); }
-    .trk-card-main span.trk-meta { font-size: .76rem; opacity: .8; margin-top: 2px; }
-    .trk-summary { font-size: 1.05rem; font-weight: 800; color: var(--dark); margin-bottom: 14px; }
-    .trk-status {
-      font-size: .78rem; font-weight: 800; padding: 6px 14px; border-radius: 50px;
-      background: rgba(44,156,138,.12); color: var(--brand-dk); white-space: nowrap;
-    }
-    .trk-empty, .trk-error { color: var(--muted); font-size: .92rem; padding: 16px 0; }
-    .trk-error { color: #b3261e; }
-    .trk-loading { color: var(--muted); font-size: .92rem; padding: 16px 0; }
-
     /* ─── Avantatges ─── */
     .features { background: #fff; }
     .features-grid {
@@ -290,7 +131,7 @@
       border: 1.5px solid var(--border); border-radius: var(--radius); padding: 28px 24px;
       transition: border-color .2s, box-shadow .2s;
     }
-    .feature:hover { border-color: var(--brand); box-shadow: 0 4px 20px rgba(44,156,138,.12); }
+    .feature:hover { border-color: var(--brand); box-shadow: 0 4px 20px rgba(232,98,42,.1); }
     .feature-icon { font-size: 2rem; margin-bottom: 14px; }
     .feature h3 { font-size: 1.05rem; margin-bottom: 8px; color: var(--dark); }
     .feature p { font-size: .9rem; color: var(--muted); }
@@ -298,11 +139,7 @@
     /* ─── Operadors ─── */
     .operators { background: var(--dark); color: #fff; text-align: center; padding: 60px 0; }
     .operators .section-title { color: #fff; }
-    .operators .section-sub { color: rgba(255,255,255,.6); margin: 0 auto 20px; }
-    .ops-brands {
-      font-size: .95rem; color: rgba(255,255,255,.85); font-weight: 600;
-      margin: 0 auto 36px; max-width: 640px;
-    }
+    .operators .section-sub { color: rgba(255,255,255,.6); margin: 0 auto 40px; }
     .ops-grid {
       display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; align-items: center;
     }
@@ -311,8 +148,6 @@
       border-radius: 8px; padding: 10px 20px; font-weight: 700; font-size: .9rem;
       letter-spacing: .5px;
     }
-    .ops-note { margin-top: 28px; font-size: .85rem; color: rgba(255,255,255,.55); }
-    .ops-closing { margin-top: 10px; font-size: 1rem; font-weight: 700; color: var(--brand); }
 
     /* ─── FAQ ─── */
     .faq { background: var(--light); }
@@ -378,7 +213,7 @@
     }
     .field input:focus, .field select:focus, .field textarea:focus {
       outline: none; border-color: var(--brand); background: #fff;
-      box-shadow: 0 0 0 3px rgba(44,156,138,.15);
+      box-shadow: 0 0 0 3px rgba(232,98,42,.12);
     }
     .field textarea { resize: vertical; min-height: 80px; }
     .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -446,17 +281,6 @@
       nav .nav-links { display: none; }
       .hero-stats { gap: 24px; }
       .step-ind-label { display: none; }
-      .price-table-head { display: none; }
-      .price-row { grid-template-columns: 1fr; text-align: left; }
-      .price-row-base, .price-row-extra { padding-top: 0; }
-      .price-row-base::before { content: attr(data-label); }
-      .express-banner-left { flex-direction: column; align-items: flex-start; gap: 10px; }
-      .locker-grid { grid-template-columns: 1fr; }
-      .locker-visual { margin: 0 auto; }
-      .billing-compare { grid-template-columns: 1fr; }
-      .trust-inner { flex-direction: column; text-align: center; }
-      .trust-badges { justify-content: center; }
-      .locker-minicards { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
@@ -466,7 +290,7 @@
 <header>
   <div class="inner">
     <div class="logo">
-      <div class="logo-mark"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALAAAADgCAYAAACjOeypAABNbklEQVR42u19eZxcVZX/99z7Xi29JQGCwiCO6KCmdQQJEpJAd2RUxpFxrdLRcYkLuIzi+hsF4dWDIOOMjuI64IKAoFPPFRVF1HRLSFgSFiENIuICLpNAkl5qe+/ec35/vKqkk67qPV1V0JfP/YR0Vadevft9537P9ywXWByLY3EsjsXRnEGz/T3PAyEX/yUHCBFk8XYujpYeIp7yNvY5jV73NvY5nnhq8U4tjpYangd1IDCv2bb6yMu3nvyMy7ee/IxrfnXSE8a/ls9ntMisrfviWBzzRyHy+YzOZgMLAFfeufYkTfJay7JOWP4WoG4RgAh7SOFBEP3cilyz/vjNdwKAJ57yyefF27w4mgLgGngvvXHN0R09+DgBr0mmNaIKw0QC5pj2Kk1wXIKbVCgVrCWSr43+Vc5554u27Bj/ACyOxbFgAK4B70tbTupPdzjfSKb1E8eGjYDEkpASgIji3xeBEEQEYAI5XUsdlEv828KYyZ61+ubbF0G8OA7WqOtwZaqAu/y2VWvSne51RPTEseHIEIEI5ICgauAFACIQiBQROSBgdNhEWtNTOzv1T792y4m92Wxg58W5E5DnQYl4Kp/PaE88tci1Fy3wBIcNAJ5++knLTUrf4TjqiHLJWqVIz0yxEJPudJxy0d43NuqeuLN/sJibpdzmCVQvMpSl+lZcBJQb6NO5/kG7KOc9vsYESay3N0PZbGC/+hL1Hz1d7hFjw1GkFLkzfjKInNJYZHoOST5DEP37vxHO65WMBqZPJURAQZBRMXAD5CWjw9sfPioUOVQJnISjC47QDqJNO4FB4x/gdC6Ox5kFrqkGV926+uni4h5h1LboWW3TIhDHJWEjI0apY9/y3E07RUDTsZKeQPkEBoArb1/zHKVkPTNeyCzHkKIkEYGtCBH2aAd3ieA7XImueeNJtz3qCZQPCBat8eOMAw8MKAAwWv4l3ek4LMKYfbQORCATsaS7naWOsWcAQG6gb0oqks9ntE/gL21edciVt6+5TGnZmuxwztaueiYRJYUBtiIAiBQtc1zdn+pwPuOkE3desXX122rAX+THjzMKkesftD4ACK2zRjAX8I4DsQAQITwfwFd7+w+XyS2vp7Lk26/dsqbXSdO3Ux3q6WO7jURRZEhIASDQ3l1BrBGUrGEIxHXVUZ1LnMuu2Hby6gcHEm/LDQxyVadetMSPeQBXt/Y4VBwdZUxs4Oa68iJQxggJ0bEAkEHQMLDheVA++XzltlVP0w5u0A4dMbrLRKTgVtWPOlQbAEiDAGOEx4aN7Tkk8aa/5TC93sdrenszGhLwIp14jANYqiatN1lxCyBnvlabQBAWANIzjv9S9SMx/gECPFz+poEUPxoGyaQ6ojhqDM3MgVQA1PCuKFxySOLVX73l5HuyJwUbLrnu9OSujaWWcOz6a2yt5jTvPFwymRWSy/nI5RaTombvxEmMtUvuPz3ZMzLyayehnmxCZjTQiqdvgsGJtFJhme9Zv3LzsxvyXsnoLAX28ttWn9uzzN0wuiuMMAv1o/qZQhqsNHFUNL1vPvmW37TLgoiAAmTU8oEdtLP/cNmOQBYd0mmqEDUgf3XryXcnU7o3LDOD5gZggdh0p6PLBXPD+pVbXjheXRi/aESQq3+1dllYsb9xE2pZFAqND5bMHAjCiZRWUcVuBWgzBI4c8LkL6i0TLDMiIpQEUiTQsJDsViSPWMYu1+UdxcjuOmvltmIjx3b78h2E/n724S8Cup4Tl8/HVhBb6W6dUCukYhmguUbQRGuCZdoW7519ChjcD0ixMjFoTGRf0tnjHloYiSzR3D6XiFRYYkmk9cpEUq1sGYtRfSSZAWEBMxBVGNaoYhLOrq9tW/0nAh6EyL0CdY92ZSip9/wu+6wgjH9zcO+OhQDIZh7f/H4/AG9fvqOa2yDXQvCaqmWcI3xJlcsMrej7Nc534FtqygQzXoh5TI4nBYrKlsOKbbmMOMJemY+ISClFHcpBh3bUUdqhk4gAawWVojUlu/T3V96x+g6IbBKFG49+TuLudRSYvc7vxj4H/YPsN3GHaQ0KUdVNr7zrBR1RNHZvIqGPikKW2fJgkZg+FMfs5rc8b/PaXA7k+3VucpV/X7715NuSab2yXLQ8VwvcbkMkfnAFIgSI1J5BIu24Cm6CQIpQGrMQyH2K6AZi+v6u7q5NZx/7kwpQDbkHcST18XLf1AFwljwy6g3H3VAA1EcTaUUisFKVDGY0BUKahFngavp3Ikhvb4YaPEYSLyJ1igD0OIw/VPm+IpAGyKF4ahFIFDIXRo0tjESGWeC46hmpTv1ulcTPlhZG7r7yjtUXf/2uU5/tEzibDSwopoOPPwADyFLA+XxGv+XEm64c2R1+s/sQ1xVGNFNrAsB0LXWdUsFseOPKmzYt5ijMaZdURDGwASAqMxdGIhOWmLVWf5fqdD5s2dx+5R1rfnDFr1a/GAJks4EVAcljvMSr3peTTCZgT6CcYnJ9YTj6cc+hrisiXAXmlN4/EdB9iOuOPBpd+rZVN5+Xz2d0NtM4gFEL+RJhjIggJIse9uSQVqimtUZhDGa2cBIp9RJX6x9dceeam6684+SXEUGIfH4sl3ipBtuZ5ABZv26wHErlpaMj5rOJtFbaVcQS420ibSAwQ5IdjtIuRSO7ww+/9Xmb3+6Jp7LZyT3lWn6EAPdoh4Qwf161iLBATCtNFrECsRLnmrAI5vLEKsSBJymMGVsuGnZdtdpNOt+94q41P//K1jVrs9nAEkEei7TCmYSTSaxCbIsAvOdLt635jtK43HHVk42RifKagN2UpsjIgJTx3reu2nJXrPn6NYxPx7Jcz4L1PB/qBwBhSLJDKzepVKsITSKAVBErVmAtwCxgK2CIBSBVhULFAsW0LSfFNAMoFQ0DQLrLeT5Bnn/FnWsv3TOC87KnBjvzktFZPHakt+ncHNoonl5Hvrn0ttXXdnU5ZxRGja3drHFLY7qWuM7I7uidZ520+YuX3H96suYdT2NRiQhyyc3P6+lS+tduQj3BRDJr9aNmeZNprcIS3wSSzQC5cdXTgt9gEYAEcABKgNABQTdBlpCiJcJyGAjLSKnuZEpBOwQRwEQMEwqY2QIQCFT1saYZ3AMLkOpa4lClzH/gyLzvTStv/i5QzTvx2192c6ZzHwYAzuczehh/SjBXzalMXClmAESdnnhq18DAtB02Ikg1lDzylVtXfTzV6XxqdHdkiKBkFk+kCEQ5JMZIyWXzmtevuvXhVl2AT25elT6iS3qKZRwZFuRJlvAMInk2QL0A/i6Zdrq0SzARIywzRMRUwaymYZK1ABgbjoybUE920+53vnr7ms/+4YHdH/SzQ+FjwbF2pvvGbDawl966WrgRHxCAq5bPJ5+9jX0zsp5ZCjiTz+hjTtzxud/eFr6qc4m7prjHRFCYUT5E9dpMZ4/rDj8afvhNq259+JL7T0/u+lNrJPP09h8uCIDtmUB8An9g9c0lACUA/wfgDgDX1t571V19RxWL5nhS0qdAfSAc19ntOiYSVIoWgtjCNqIZsg/JThQKR6FB11L33U/5u0OO/9xNJ/9rdk3wB29jn+OvGzSPeQAvBD1ckQlkHcF+bfOqV1cK5pfpHueY4oiJQHCmwwWrCgh3H5pwRx6JLnvbSVs+U7XslVZdgJo6kINHvRiiWhJPlgL7+ucMPgzgYQA/AIAr7j71meWC/ScWeZV26aRk2tHlgoWxbGkSINeUCwFhdE9kOrqctV2kNn1x86pXvmP14K3tDOIZAZjHqQ6TPvGzHD6BPfHUm8j/0xe3nHSaEAVdh7grC8MGzGyqyZiq6uARJM7SiuU9QSKptZNQamR3+Km3nrTl/Z54KovWbqyyL2zuT7h9ngfVm8vQ9oEd5K8bNG989i/vBXAvgE9cfteaVaUirwfh1V1L3CWlgoUxbBVNUXxL5IyNGptM66M6OvTPL7vl5FededLg9Rs39jnr2hDEM3aSporA2TmD2GcRT73j5Ft+//uHyn2lgv04KSp0LU04ybSjtaMoTrQnQBFpV6l0t6M7ehLaCu4rjZpXvXXllvd7nqfaPWvL98FZCmzNOnqCuDedgNY/56ab3/zcTWdpxt+Xi3wxEe3qWpLQ8RMNjp/v+lMppStltizUlUzr73/hlpNfsm7doJms791jAsCyVwZqPOfHKvnseVD+P28rrj9u04cj5ucUx8z5UWQ3s8guAEwEsIixVh6qlOy1Ydm+4Q+79fFvfd7mb2fyGe37/mMuS8snsL9u0IAgnngqLxn9xpU3/XH98ZvOCa0cXyqaL2iXbLLDUVbETraORKSjiNkaJNIp/e0vblnzAr8NQezM1vo2ep3n0fpAQHlkVJaC3wK4EMCFV9/Xd1gY4rBy0SQTSo26Ov1/ce5GPB4vIetaz7laT4yzVg7+EcC7vrxt9dcjwX93LXFXjQ0bgcRZeQ0shTIRsyaVSKXVty8dXNV/Vt/g7Zl8Rgdtcg9bigPXcTwki8B6HhT6+1TcuGTwEQCP7O8IeSrAEGURcKPmJ4/VEXPoQVMD8ltPGNzibew75ShrPTehPiosiKJJuDGRikK2yZTu1t36e5duPeWks1YGf6lXePAYUCH28agGxRyYawVSQ2vsD7JfsziI6+ewt45ssQNmDcj5fEZn+gNLhPO+dNvqLeTqryU7nOXlgmnYXYmIdKVsTUe386RSwX4zL5nnxwsaUKvTsBmhzTLAMsXkg79QPoF98tn3wYtFkPuPat4DvI19zttO3HxdaaS81oR2KN3taBYxjZxvEDmFUWM6e9xTd9788MVZCmwemZbPZJu5EzfFXGwG3BJDag7Zu0+97f5iodAfVuwt6W7XmQLEemw0NKlO90Nf2LzqH7IU2FZPAJp3GW1xtJCjty6mFGefeufOwrBzerlkb0t1OQ6z2LqKEkBsoJhFyHUu/fKm1d3bMyuklVMxZ0YhZGoKsZix3nqUIpPP6PetG9zDZfuSsGh/k0hrzbbarQP7VdFAiFSlbG26Wx9TUvB88jkIWpdKzLsFXqQQrTeCbGDzktHvXLNlRxjyP1sre5ykAnMs3dejEsURw05Kv+dzt6zpzWYDbtXDe2bIgVXD6I6AwIu99FrXElNgvY19znvWbLmvEvKblKMVNFhAUmctyTDETWqXmS4GIEPBELU9gHk6KsQih2hpTnzppSe4Z6/a/P3iaPTpdJerLQvXj6iSLo4adlPqjE9vWbM2qFKR9gYwYo7LU8zF0brjzDO3mXw+o5cc6X5kbMTcl0hpzZAGlefCylEA8FEAWJFZIW0P4Kk04EUD3Nqjppuvf8pgmcDvFIprmOobI3JKBcPKVS/8r5tOPtEnn1vNCs97LsTiaA9loponvfGTN63OdyxJZItxOy89cU2FUynHMZH8G4A3ZgAEB/HaMpmMXrFixV6+ncvlLE3S5XeGMhqBp5pYPGm2LZSJAICAxKrzyiVThiLFAplghYV0sWAFhJd/fNPqI7PZam7KQdgcPM9TQRBY3/dNbRKRZDKNrf6MLXDti1EjirGIjfYAcDaOsmWzwf3/edPaqzuXuG8pjkam1jxlH6xAlsV09LjdZthkAXwa/X0K/uB8LjUBEN/3xf/Yx07SpPtNFB3iKP3rKCpf5/v+Xz3PU74/MedlZtlo4/gu1QP3AuRCzHZ4nqeAxe1h/NiOIeVt9Iijmy4pjUXrmZXGvl7n+wEsqgBs8VrPk8/85f6zyPP65yVv+Mgjj6Rly5bxLbfcklqy7LBLHaVf5zgOEq4LAaC02uldsOGD/vkfvbIeiGecTtnIAss4haIVfZfqF1/cIOqPuy++beU30ktSryuPRQZCB+JCl00kqpOe2/OWJx3jH/3wA/N9AbkLLrqiq6vzlSMjIzaKor2cV2u9PJ1KXXHBBR/bdf755/wwn8/rbDZrZwVgy/t48MTGlvFrrdbItPbUet6Glcl08s1RWOmRxQy28SunSEiiTWNPlUMKMBXW9ZrKiABuQunS7r6rchd2PQCIAmhOq00CiteCuh2tXzo6OjrBkbTWGqWUFvB/vfvdl9yQyWTCebHAk/HjFgOveJ53tHLoF4lkoltrNT9tfx4r8I1PcYIppRD+dhmosctPFREk0nqVk1arar83p8+umkEWQblUEqqfdO9EUQQQPeOQIwpPJqL7x1OJGQO4ltCDRhy4hRant7eXALBS7vHJZLJ7bHS0Ur1J81F/+tizxAkoQHSj/rYEILKwoSEmkJ2/h0iIiBKTWmsiaKWSc3LirKjqrEchKKYXLWtpRIjIgYhWWiOZTLqLoJ04KgULttK4gZVAuwml3ZRy529tgHK5NNXyiYqisbkBeNxEAyeuhc0aARDturAmerBYLH2GlJAwPe75cNUCCrRV8tTfnqsTcqg1IgdaYhHhRFqrcHfypujhJwdCRpM4s17yffdfliqlcgCsiOxflyYSptLpRLlUvtFY84cDlYgZO3HciEJIlV5wSy+UaMeBiaI/5s4/95JFeztxnHvz89a6nclXVAqRpQM1YRGRTge2FBU2vPmyeb1/3oUXJXu6uj5SLBbBzAwREUCl0ulEFEWjBPUe3/f5wKDGDC1wTBPqUgiJVQjT6lJr3MbH9TzPqT7pi9IaAPzt7x38/m9NWBz8pSSdV3BFT2QRAlVhgo30yg9/52WHJu96zvCRR/6F/vznI+a0ix155JF01llnneNf+LFd2tEfdLV+AikFawyMNTdVosr7LvS8u6rW185JhbDSthRiPJeQnO+bRtGdx+PI5DMS+L798KZTby2XLQSiZUI4A8RWQA4dIofsOtr3/Ts88ZQ/D1XhVRrzCc/zvppIp0+IQruUGA+ef/6Ht41TlOYWibOybzakEIu+fVuOfCZgAlAZC3+tU8ndjkPLrBE5sGGgQGwq7ehiQZ4O4A4MDMzLLkZEUg1S7AJww370YhJDM2MAmwYUAhKrFAZ6EQ1tOKjaKvFTdPOuDw72PwBXnWiNFcKBjhyEiUBMT5/va8hms1ZEKAgCtX37dgLAvu/zZLvkjFUI1cACQwAj2BuJG1jERPvRCGRUgMAalt84Wp3IYCbZ36mJ5VKABccA+w6pnL8HiWak0c8IwIYnB7CVRY+onceKgfikVgv8hilOC5gYbRMyRmAIRwPA9lxzqzRmrkJUZz2l24JgFnHQ9kOA3xsr9ZO2hMhYwDKeMI6bEppUzzCzkqIqTYiqf9ab0aIJbtsxVD3H2gIPRwawAlWTTcdNioyAQUsfesENnTXEt4UFjlgB1S9CdZw4I7RIIdqZQlSLNiPgEa4wBDTxeDIBxAIi0pOK3E4AowI0raHCjCywQWPLu3cu4qB9R86PqaBxRiIrFSZCfCLjOAm16gtZoZSN3G4AyOW8pqX3zVBGI5AQTAMLTEyw/PgteqhT9cHtFCjxcxD4QMRqzFFcEVBSJprXOIOXSJcliilEDoDfBgA21RP76iYrSaxQPF4tcCaT0dUwJx8I6naL9onVZUs2VFQ/7wUCUS6RIaQAoJlde2Yso01mgSGE6HEYiauGQe0FF1zQS07iH9mYoxXRX0Xs9eeff/62dvs+9Ii15gkINRQsWEgOjMZBNCkyVjc9JXWGMppqCGCpAvix4MRlMhmdyWQQAMhM8d6f/exnioii3AUbfOU4H0kkEq64CRABURRtuODCiz5vTXg2APi+3xZdaCuppUx41EqD3VZqX8Eh3VYAjo/71SDiukn7cbGD0+74pSAIbBDE7Tum0cTD5i7Y8KHu7u7zx8bGpFQqmnFLrrq7u/9tdHQk8s776PszmYwOgnY4w+MhWO5EYwDHvpBtAb44I7QpaCg41R6GBzJ7gOCinfvz1BK7Pe/CtYlU8q2RibqoWsvRGO5CBPqnYrFY3Xz25dCKiIyNjVoi/d4LLrjgS+eff/697cCJS6nDSKOstMRBq4nBjJjpG6W4rQBMygWRAyLUtcCKXCjdniTC8zxFRHzhhRc+WaB+kkgmOqdbAFqpVMB1MvmJiEQg6XSSiiX+B8SnbLZ8DnK6e1QVy67DDIitv9kyAzYypq0AHNMHp3ZOZl0Kods0G61aAApW6th0Mt1ZGBstxQdpNy452luKAyQwuaYuBBzaLveiWOhyrQoTLLWTp+ostQWU61aA5natnBGAdZVCqAZfS8FBuxb7ZrNZBkBFrW+VUumu7u6e5xhjpm2BrbVCDd4sALHIgy1/E3JxTkNJSh3EKqGI6p2+GivDRsRaVW4vCkHu5BZYOVCqbXU0AUAf//CHhz3P648qlReHxnYgFpLqAlOJkAWgQB91E4knmSg8sLeY0VrrSrm0J6Hpx0DcbdH3/Za8AR48+PAhjttlDafIVveOA++SAkQkAqMAAH7Obw8AAzWVoUE+Jdxx9K4fwGBbgtj3/T0ArpnuL/kXXfQ7An6cSCSdSqUiRMQiolzXdRzHQbFk333++efuzGQymoha9gkf6o0DEjaiHuU6miOOvXU5YDshggiXOUmFquWWtojEKThQ5EAR1z2nU5GGav/+eSIilMvlpkvmlXfuuTd43oWnJ5KJ/3Qc53jtONrG/s29xVLhfP/8879VryCxdQcdptwE2EQTaRFBlFZkLY+kHwmL7eXEwanORs2lnKoVbu9Rdcym7WHH4DzvZwBWXnzxxceXy+HfJB33/+64/dY7giAI2yWcvGN5nNCuVOJI7biwJFJHRINSDoTsnhte/6Mi3gA082yfmVlgVVMh6ltgovZ14uYyav0KgiCwH/nIR7YB2Bs+Hpcj0T4PsDhHk3KhMPGIQ4GI0gkwRTtBEHieQhMfzpnt9+SASE8yHSj1+MxGq0bYyPM8lc/ndbUBB7VH5C0eh1cT2pVyjiFxYl3/gKmREKVdEPTDAJDJNff4rRk7cbGM1oADP0YoxFz4czXfoT0fwkxQtaT6aWAFUN1Oq1DKAcj+HgB2VOvo2oRCOLFKRA04MDloxSbozEz7EffF/sD1lo9AkNOve12PgT5GjIKCVnV7qIoDRfybVrjsGaGNoEFwQFDV/584dStaYA2jlFIiYggQCC02rzjQEUVcVREh+VStE8thlBC5FK/3uElacwho6AfG04724MCYmgOjhThwJpNhESFYe3O5VP5td3dPWitNoFjjrYWPFwcwMBBjQUE91+lMEUHZCesLLcpxSSKMskr8NqYdeW4bAKu9FrjedEFwqjy4Rbzpah6D7/uPsA3XGmPePlYae1HuvHM/D4DGn7WwOAbiNdaJNfsirvtPkBblJqGU8+ANL/zizupNbp++EPs/jY3ygVuLA1dBTL7v/xXApcB+STiLo3qbBtcNGm+j59xSfnSthABIqzops6zdpJJQ7gSRZPIZHWSbq7LMnELAach/CRqqxTiwiFAmk1EHgjqfzy/y4Br/lZj/3mJ2PVsnEk+VEKLgqolWWEORBqy+GQB2LF/RdAo2cwusql+mbj6wA2jVUuCt9dq66KKLlociT0oqNXbOOefcn81m7WJ71f34LytJvtjtSKtopGiqUan97ydBmyKLItoCAP394GZnu8yCA082nZaxwDXwnnPOOUdc9LH/uJyh79VQ26zQ3Rs+9vHbz/c3ZOLjt7zH/eGHg/05CxEiqFeKAUCOiuXScROanWSKYOnBvx72jCEA8Kn5mvfMLDAcqDbgwFVQyoYNG44Q0gPJVOrYYqkEEYGIJFxXH9/V2ZHPXXjRv+XOO/fzl156qfvnP/95wbjc0FAvZTJxO9GmKzX5jA6I+J9+5p2o3dRxtmRFkTNhEQXCTjJFNpSN21aeFWUkrwNq/vXPIp2yNqnB680H8NDQEBER+xdc9MnOrvSxY2NjleoxTgRAwjBkay1ppT7teRf/+KyzzlrwZPMgQGuMTAZAIMrK25yuNEWmVJc+gISEiRTUDwFgR257S0iQM4zEqcYqBFUtsGouhailLW7YsOEIK/KyUqnE48Bb9eFIW2vFcRxHafOD3IUX/RYCBwe7K0B1w00knLBcDr99Qe68q5upiHiep3xk+OWDG45gK1lbskJw6jm3rB2tbcHsiCK1EQAGc76F32YAxl6eW98CExzoJlvgoaE4uUTEeYrWSFtr6p4pSURkjBHXdVdo7axYyGpqIkJHp/PyCy+8+E9ENHDg+b8Ldq96ewlEzDdseE9iSVdPOFI0pLRT58FjtyOtwrHSD3/ygnNHWoU+zADAOQD+Xikl5rpTceB+NKNh1ooVcYGhSFgQdqYCkhhjImPMQlpAEpGoq6u7s0KVvwcwUG2nv8BerqcCZPifN338SGXoHaYYCUHXlRaFoDgEtKgrYv7TOg7oDJ04tXfWt8Cq6RUZ1WwwWrJkyX27h0d/l0gknhyGIR94Dq+IsOM4ynXdxILiBoBWKlEqFh7miK6t3sgFl/L6BqAG15FRP/v4BndJ55JwpGBJOfrAnUgA66YSyhTDO91dt98EEQpaqCzqIDhxTZfRaqfdVLwLNuQSicQVxhgWEVPjmyIinZ2dbrFQvDMy9pO1Hy4AdRARIa21KYMHP+Z/9C+Io4QLCuBMPq+DdVnzsp9+ss9JJd4UjYVWkaPrrqkwtJskVvK5IBvYvo05Z7CFejjOEMBqEgohLSOj7Q1SnP/RKz3/wqMSicQFrptwmC2I4gzBSrlyiyLOeOed91DTnrRmOHAitAI5+dfr/6uzlHAvI+UQiRBRHS9AwE4yqaLRyh87ouibENAgWqu6ZIZFne7eoEX9jllOyxR11oIUvnfex7wNG65jRtZa8wzt6N0A/eKhPzyYv+yyyyLP85ze3l5ZaB6ay+VsM9SHPuS0T755xc8/9/lkV+exlZGCJYq578QVZXHSHcqWx/7r6y/6UKFvo+cMrvNN2wKYFI2zwKhjgVXTZbS6IP7oR+8EcGcDC2iadG0L/plnbr3UvYzOil758y++L7mk843hWNEo5TgNyDo7qZSKRsq/0R2Vr3iep/x1OQu0Vk+LOXDguu4JWi0bbVy4WA0NDUkmk8H27dvJ9337eMpIO3Prpe5lK8+KMr/4n1frdOq/TSG0JEqjYechEe0mFYf234PVHyhl8nndoBSnjQBMqsohVUML3IpFnVUniQEgCAI8zgb1bdyoL1u5Lsr+4suv1OnE19kwC5Mi5dRvhcVsEz1dOhwe+2Hw/DO/m8nnddCiudMzlNH0OA5cB8AtaIEfz8OTOFHJp3Umu/Fr63XS/bIYS2IESmlq4FiKTqTIls0euIl3QYSCXK5ld6oZqxD7ZiMKsZhm2wqjb+NGx6d1BgBec9M1G5yEe64pVUQYIO00LGslBeum005599i7gtPe+MdMPq2DFu5rMTMVgtQUTtyiBW72yOTzOshkeJDIZAavfIrjpL7gdiRPD8cKVmQcbagn+Qqi1JJut7xn9AvBaW+8pm+j5wTrsi19bs8snLjJLLBaBHATgbsis138ao7Ca2/61pkgfMxJJg4NR4sGUI6iRifCEkTYpHq63cpIYeNf+YizM/m8DvozLac6zBMHbuDEtUAo+fE0RIT6Bwb04Lp1tuZkve6m755GSjydSp1iSmVEhYpVpOuuc9zoNwZvsqvbiUrhPeWymxl8wToLzyNksy2v0szQAtPkKoRSezlwP9qwuWo7OGaepwb6+9XhO3dKtVWrAYB/3fL9F4jgvUqrFyutEY2WLABVC1LUX01AhE2is9sxYeUBO1J58fdO/5dH42LN9ujnNgsnbjJHbZEDHyx6sGP5chrs77c+Edea6b1m0/eOdKBfCo03KK1XKcdBOFYQJsuTAXc/ztvT7ZpSZUiK5sX/e/q/PNTKktncnbgqfaAGIFXVc4wWx/xaXH8coF5/4w1Hiw77AZxBhNOcjvQyjgxMqSQ2NExKa2CKzkMiAoJNLe1xo7HijcKVV11z2qt2tBt4Z26BlQKoOhtoMK1Uldz2g+IgzGs3X79Ga7wYVk6BRMe7HZ1dAGBKZUQjRRs3TXcUpqNhilhSWrtdnU40Wvqa+vX/veOK9evL7QjeWThxalILTIs68LwB1zvfU0O9vZQ4svsLyXTqTNIabAxspQIzVrJVJ0yRcvR0spDidFGxia4ux0amGI4V/9/X1/zj5+tZ+ceuBZ5URgMWZbR54rws2ieyr7/ppx/oOOyQM4uPPFrVYokgUGiQPTYJfOEkkuSkU05UKt0YhaX3XLP2JXfWNGOfqG17Y6iZWgYiqjtR/XMRvnO3vwGBz9x6qUtCb49Gy5agiaAdgtJEmsbvhFNOUULKZQC/iwrl9/3+R4PPv2btS+7s2+g5QTZr0eYJTbMMJVOD53/RAs95iABEUrI39JDSh7G1mqBkNudQiADkKCFHlyWMzrti9fOvBgBPNjrIDfBjQeac95q4RQDP08K4SWUN076TaWeOYIqr7ZSE3EE6ceX62za9mZk/5tOpPweAjIgOWvjYr/mnEPtx4EZz0YmbjxGpniIRVQhaMBPKMGFWe3hYVo6ber7jJH/2llu35N80MPB3AZH1RBRE2rZP8gwbm9QSeupTCCJqnf7WAsoHGbV9+Q7qH/fjAQDoH2SfWvTAbSLJ5PP668cdV3jTlk0DyZ4l2dKuXRUBudUz1ml251oJomLZCkDJ7u6MKPWi9TfffI5PFCsRIqodnbk5pFO2JgcWAQXIqCwFNou4d63f6H1BRmWzrXeK0IpMRiBCzi23fDgcK67uOOSwo6JiAWwsOD6T2Up8XnVVlZgmqAmaIAhHx6zSTk+yu+tzb7n11lNHhofP9ImGH/OBjNjuVo1AC3JgEU8R+QwE9pLrnpY89IgnroSS40wkT4EgBZI9Sqn7tcO3Em25Dwis50HlchBqoYNffCKGCH151arfvfbnP1+rSH2URU4VwZFOItmlUymHiMCRgQ0rsMZwfLwt1NRCEIEIWixLZWTMJnt6sj1KP339jTe+4vJTTnmw3XjxHHRgmjulnseRl4wm8u1/Xf/3nU98Ytc7SegtpPD0REojma5ersSeebko0VV3rdkkTJ95w/Gbvuf7gCdQLUUriMTzPOWfdtofALytb+NG5+/S6Sdy2TzJVEafSVodp0gdL6DeRGf3Mu04ylQqMOWyEMCxNSGaDMcAnMrwaJTo6nqOhRp4/cCWF11FdG87WeIZZ6PtP+u9vvAg9jb2OVkKzFe2nLQ21elcmkzrFZUSI6ywRKG1cgA3JiI3lVTriLDuqjvWfLu4p/z2s2jbI60G4lpB6lAuRwGRGQQeRjy31N7z9jvvPNxae0IYRi8C5HQn3fF0nUjoqFCAMBuIaFBjIBPBDQtFk+joeFKqi366/sYb+y4/5ZQH24UTT8sbqH2Zt91674+Tnd2nh4VRe2DCiAAm1bPEqQzv/sBlJ634b2/jRsdft+6gZ/Pn8xmdzQb2K7esenm6w/kGCMlKyRoCNY55x5FVBoDupa4uF+xQGFZOf/Pztj7UcpZ43Fp5nkdDvb20Y/ly6gfg9/fvF4jI3HNPYllZ1gj49RB5ldvZ1R2OjUIs2wZlNONviEl0djpRpbJdU7TmiB/8YLT2ED3GnLjWscCeQGUpsJdvXbPKTdD/GiOuMWxVvf62EwSTeEFHd0dR5xJ3hbWJH+Tv6Vu7e9tY5dKt0H8e7ZqUE/f2Hy4IgO2ZQHJYEA693ymgg/uAR9kAasfyAQqe9awQwEYAG996850XhsXSu4jct7vdqc5wdNQKRBGpej14QKScsFA0qSVLeyt79nzN9/2XZ/KiH1MVGdPjwAujA4uAcjngyjtf0GlN4SpS5JoKWyLSM0KSIndsOIp6Dkk8Z3Q4+vhZK7e9a8ZbffVh6h/oUzt3Hi7ZbMBYoH6ttTNAqjeFMkGgkMngy0S/A/DBM7f+6su2El6c7Ol5WVgoQCwzKaXqXR0p7VRGRkxq2SEve/Pmbe/+6mr6bKvzYWe29ndqPtJ/UC88N9CnfX/QXP7PhXd1LXWfNro7NDS15a1/3YqcseGIIXLW5dtW/1lAwyKslEzMExASS6IqpHlYrHpEufTn0d36z/9Gg2M+Bnm8U5lFwAt6rC2RBFUw1yo3Llv59/cBePmZW7e/QzmJT8FB0lYqMYjrWWJAR8WidZLp/1h/669+dPmJz/5dK/PhWSx4C6gQAvIxaC//XV/K7ozeUYpTYtUckELCsb7U0eVsoL27Tb2PrqkZCtYIwoo1nT38f5dvW32v0riRjLr+DSs33ZKlWF+ucfRmOIDwffZE1BBAlxF98W2bbx9Sqa5vOamOw0y5VAXxRHXCRgapniUddnjPJ0H08qF8vmXzA9TM305TzIP/XfNBRoEg8mh0YjKl/jYqswigpCqTzWrGtASFkciMTTKrr9vCqLGVEjNAjtL0N8m0/odk2vHFkZu/duea2668Y+2Zl2/sS2Wzgc3nMxqzC5/Ni6YcENkzt251v7T6uYPRSPGFEDzqJFMKAiZM/E+R1uHomE10dL/szFt+fWqQzdqYD7c7gMfzh+bhF9uX7yAAYMGJTlJBSFiq1nHuk5ypZq05hhAUCyQKRYoFY8dGIhOFIlrTSrdDXaoOsVu/tG3NGdlsYKsPStNyDi5buTI6c+tW96v9x90RlYqvIHJC5SREhKRuTosQSDtgjnIAsCIDeQxYYEzDAi/cYKInCwhNniREJFBaoBwhonKJeWTYWBD1plL62i9tW/vpXA5EVK1GazaI1zznl6ZYfH+is0sTEdfN8VZKR8UiO+mOdW+/+f5VPhFnWvB0UzUz6CrQFP8tpIwmVlI8F9pwsGbciFaXS5aLBWM7e5yzjzpjzXcuue70ZC4HajKIjbdxo/PlNc/6fGV45PpkV4+GwNYzRgRiN5kGk7zzMcKBW2sIyR5BnC3bilOIlID08KNRlO5xX5o8bOQbfg4SBBmF5oFY0N/PgJBWibOjSliBdgggmQBigY4KRQjhpW+/6YHDg2zWSoulXrY1gC2r+60AVuLGtfMyRdiK2OnM+L0QlimArOAO7wqjzqWJl39u88kXZbOBzQeZpt17n4j7Ng7o/3neMb+2lcrXkl09SkATrTApYmttqntZj2g+I5YvB3QbA5jQEhy4v59j/VY2FceMEZBmIbBgDpNgGeKkHJXsdPVUM9HhaiflKOUoYgFbhp3s3xcid2Q4Moku9yOf23bKqbFj17xzmvv7+xkiBOX+dzRWDBUpTSCZQAqJABYRoleMv/dtrAM3f/gUJ7m883n+rz+9Zc2WdKeztlw0TFM19JjkuRSGOAlFpZK9nYAdLKQI9U8uIkUkghQgSwE6KpHSh2hHoTQanzdHCiRS58wJK6RBMKH9nJdfsTKX8w0kbk/WDCvsiSj/pKfe/7ZbHrg+1d1zRmVs1NCBmBCoqFwmglqz/pf3L/eJdkKEWqUYdGYAns4lL9Dz2dtbPZETuJgJ1/FcQrcsrBOKooj/EqVGT/3Qcb8qTPdXP7G17zCu8AlUMet1Ur2arcBELKTqZYCRLhWN6ehxn22fdMjrPpDF5V5/n+NjsDktTAcGFEREbX3wSgBnEGjiGe5EJNZYt6trCVPhZADX9g0M6FY5asuZGX5jwic15f8AbMdq7MKMWoAge3Lw4/+8ac3/dh+SeHVhdxSCMKODC0UgRGQTSe2GJfu+Dx33q4J3z4rE0FCvzUymRW8PxPfBH1w5+AiA6wFc/4ktq69Rjr4Kruo2oQipiZxKQFSuiDDjQ5duPeHrZ54waPy92coLbIWr2WypO373s9LY6KPaTRzKUSQHpl8KkSjHhVKqD8C1/Widxo0zs8DM+7SiBmgALxxF2r49EE88lbzlx2eODqtjUz3u8cU9UQQip44tqXO5wqTAnUsT7sij4Sc+snbz/+Ylo7MUhMDQdE5UJREgCDJq9zEPqrNWbr724sGTX+52Jn4impVlqDq1PrpUspzscJ45XEqfRoSfVD9z4RNmqvV3lxz/lD1n3vrgL91Ux8srZsQeSCMIIDEGEFm1F/jt6MSxBYQnn1jAr+b7YOSAs1fdOkLWnF4s2JtSyxIuE8iIGMNgIxAjQHWKYYgRsUbEUEIrp8N1RndHH//I2k0fyuczOkvBTJ5AIYJks4E9a+W2yLtnReIjfVt+US7xxU6now0Lj/vsvdMCzIokAr0BQFPPHl6xfDkBIFL0s31tcyfIacpWQkDwzHfdMnQoqieOtqeMNpmCzwvP6+OqBagPrdmy40+P/vm0sVH+D6tUye1OOJTUyhKREZKISYwQsVak0q52uhKOEfpNYSzKfGT1jR/2xFNzTYP0e4ciTzyV7E795+iweRiuo40QGyGMnxErXSwxRRYv/PCNa5dVQ83NAUSsKoiAbg6LY1LXESYiNpE4ieSyCOljASAbBKr9AMxVDjzJZOYmgBjseVCfffEDlY+uGviICe1xpYK5uBLxXZFFiRURXEUWQMjySLnMN5SK9sw/FeS556/Z9K1MPqN98ueew0sQDAyoDx13QyGy6jKVUohkohW2AJVDZt3hHOpCrQViGtIURaf6nYtO8tds+K/KTZAIJgQ1hJR1Uh0gRSvGWe5248AyDQ7cJGnNB9d6QWRPDe4HcA6Ac/79xjVH6yj5RBGTTCSdYRLnYX/1T3fVfm/e0x37+xkYJMP4xsio/ShEudVe/gc6vWyVokjMaQB+UEtQagYPrp5YWnj71j/cpxPJIzgKGfXySeMDlVdUv2j7OXEi2Gtp6yls+/98oAmLAclWS+XR36f8dYPm46fc9EcAfxz/Nk+gMNCn/P5BO9/Ok08+i4CIBh/4wEDfVrdDr45K1kIOBARRORQKrVodO0aDTXOMqtE1Q4IhpfU6AU0guCRCYi1I8HcAMLQzaD8dmJnBjQBcBTdz8x1U3wfDH2QA5Hmgod4MAcCKzArJwRciMMZVT8w/IPo0MGhCpp8rrVZXLAtNPElbmYrACp7x9ptecPj/0A07YuA3I22xv+qky32oMmKZqNiQNREEeDIgFGRbo3fEDAMZso9G1DXBsqAqxHSu2Pch4938hShRHNp5uABARWiTVAShQNVR9QghRCedbpQqTwewIxtkFLDwctrQzhivrOS3NgwhzIrogIojEeLIQASHv+7m33RfvQojrRCRUzPF75QyWtu2Sp6/kc/EUlxZaPtYgYuGlAotSciE/aaQta5GGc4KANjRJB5cS1Ynww9HpaKQkMIBeaoEgI0BmA/tEvcQAPByaLojNzPP13JD9QFNVCFabdRowFNOO+UvIavfG61REUiFCQfOUBRCK89o5vXmqrbW0WonWzsG0hBmEYmjrvEEibGitOMi5MMBYKg3aDqAZ6hCoLEKUaMQLTY8T9RA/4Dqr7qVe//s7z+orfWr0px91U+e/xtWakXIVibSYCE2gkjUUwHg8Cr1WHjfNx56WbQ72qH3kKJuayA0MVjByklo40TL4y+ZaTcVQhqqEBBA7MKGkicHkOgggxikPvZ2Iz/wz0xedJAFxwnd8zdqdKAi9BtLGhGzHPgRIkQ2AizjSQAQNKtTZpXHfvbYYytv++UDjxL0k8BSp7WaiNIazHQoAOwYGGgvC1zL3m4IYBbYJjtxnucpP5eTWofFN1x3/1M10Qks9hix0RJFqiBa/0EbvuOrZ6y4p+ZNH6zeByVDDzoWiBgTASGAigBmtfwl176k44f//MNis9IrPU+U7xMzy664eU98rtGEZWZArF1e0y4G2wnAEN6XoV0XwNxUJy6Tz2s/m7Xwfay/7t5XgdQ7xNrVOpVOuTpVPX4ivs7QFvhNP7zvdiH5SrFw91d9ojC2xvMjD9XoQCjOwxwpGGgirqNEGECYlhZIlgEoIteczLShHAg+AMFuiKqmHsoEJ75KIQ8ZL7+1jxPHmDKUXEPwQBPAG2Sz9o3fveNv3/Sje3+s3VSglPN8tjYVjo3Y0p49pjK8x5T27DGV0WErxiqlnZWJVOcXuzqfs/l13779xCBLtm/jxnlJ8l+RWRF79jrxF5gkNNJKqRQOmKSQgnbSnWlOLQUAD15TgFCjAyKyW0QgdrwDN27GdVdLW8XHmaGMJlPOZlDgGnhfm992Atz0TdpNn14ZHbFhYczGlWvQgDgCcQBxhKGFRcJSgct7dhtS+gQ32Tn4L9+842WD69aZ+Wji4efiPxNO8lHiRKh1mhSlRFEK+02kxHE7QQnnkNizH2oqryTGHgj2BqwmKE3WAoJuYJ9+3DYAZlt9MieZC41gzxMVZLP2td/61TFuMn0dQR1ZHt5jYpBCC8dtT/a7znhBCAwFwAkLo5Yjk06k08Frv3XXqUGW7Jx7IOT8anAgNaIoNap1GhopaNp/KpVix+2AMsllzQRCjQww8ygE8TpOKOxjEstgy93xu4P2ssB7v9ikKZXNURyIzde1kzg8KhTiuq5pNnGQuOJScxRaQBwNujqTv+eQYPt2mY/Te9xo6ZiiVEHrNEglJ1hgTUnRTgcc3dkTqxcrqJkQFstjcdVNvR03TieAUDqmSZn2ssAi1UCGnYQDL6AMkcmL9n3ihNz1xmTn0pPLIyMGgCPTSPucMAU6KpaM29F9VEIq58D3ORPMoe1AVUn4yYs/W1GUGFVOOgbtgTyYUtA6BaVTPc0EwkDVaxFIUSw3Tp21DGbuiHeZXJtZYDsFCKwspAGmIAPu27jREWPfb8plgYiaFXhrD5+IDkdHRCy9NZO/fXmQJTsnK1xNUleUGtEqDaVSoiiJiTMF0qmuVnCKhLkY81yhek0uquBOxzw/114WuC4vmjB5gaxvXoFIjnio+wTluL1RqQgI1JyaQwiIw4jddOcS18rpANCXm30jDw8eAQBRakzpFIiSDWYKxImmAvjwnf0xGEWVuUHKANuYA4tIMjYhzS+tn1kkbpyMNrHpAfa1qFkI2adaEUAka3QiBVsJrZDMhwQmEBKO5FQAV81JWw16CQA0JYtapWAhdc9b0ZSEUjbdChaY2IYxSDFBjo6r0hlgccdlojVFt56dCjEph6wl8ywYaas+VHJs1SpgLvRhHA0ijiKC8NNi12b2nWh2LN8eUwiVLCqVgqbGFMJRqWRLUAgjFWGGWK7b6qhqpJwzt21z9nn2bWKBYWtfBPVTB1gAu7AyhDB69l7XvPyDtQcVVYs4d0eFKFHSKglbaz92oBWhJEAm0VzoBtUl1JWaQajb+8MyhNmtjB6qAUT1yqVaF8AyCYXAARRiYMGcjkrD/IxZArhqbeat84ymREXFNKGeWhFbYRi3FSwwi1RiDlyPQgAc0wunuLPQEm3JpncRVSMk48h9IwAvdD6wWPmjCGQeuwIJhCAsfwKAod7eOdsXokQ5dtZMo9dBKmwJQAibSKwCLNPE5CMhKIZYdjuK3EYA3nv9Mn0LfLC95t7Ya2bwbRxFxNaqfY055mqCAbG8dbyzOLvRD8AHIREpSkBRWHe/VUhAU9IBgMP7e5tCKmtBCTEUMcUymkwsjANbBkQcXpLSbQdgMMdaL0vdU3jFMuwCBTKCTPyomEK4iczYI8pxDmVjZLJjVadJknRUKFiI+hEA9A/081xTBjVco1SyMYApAaJQj6OiCz+qu6xiY9jU6uFkf4Yrex05NyoPt4QFnnE22tR66kLpPSSZvOjvv2/dHmFc6SQ6SFjsXHRgtsxuspNsGN4QvGPVUC1Hdu7XmrBELupPB0QuFBKtgAeQuCFstbRc6qQNxBzYTTgpBwC8XI7aBsA8nWjWQvrNGTBEyDWl/6yMjTyilKOZLc9OQmNRpMRUyszQ5wLA0ND81HwpOFYhAYLbeJLT5C05VwWwhMxiUC9lQGIfR6w4JoqSbWeBxU4DwAvpxBFJJgjUN9/7D/9no+gspV2CKBFmnil4xYpxU92OqZTP++67V9+eyeR1EMzPEatELityMdkkcluiVZNxbAUs0fgmNvtmLZTMOipzar5kxoWzwMIQnnwutApRO4Tve+/r/044suf9TiKtAaXYWlsF5+TXa9mKQBKdS93KyK4vfPe9/R/r8zY6QZCZty+iVAJELuIj5urNmE40c9TyGtzIVIQRNSheIGEGQRFqOnmujSww7L7E5oZRmibUxMX5u6K/+6HTPhUWRl4P0LCb7NJirUzFe91kh1bkSHlk93nfeV/fuzxP1KDfb+e3yLMG0sREDgyXCC4UuS3R7XE4ikIRiWqtwupEKgWkABUn9AwFQftw4L3plPW34YWnEBNAnNff+8C6r0eF0ZW2XPqWUg7iioy61ywCZU2lfD2bytrvfaBvQ9Vpk/kCb39NhSBtCQ4aTnJA0M2lENVPDwsjobCUwNUOUwcaKYkBrIztaEsVYsp0yiYWdQbZrM14+cQPzjn9gUq56AuD6uZIWBYiTWLsrj/eN3TGdz+w7ua+jRudquIw754oKUeoIX2IQQzETlzzksRjBJ+065ZImItxMIfr5HuLEBSYVScA7Ni+vI0scDWheXInrsl19UOwnucpBSxhnvxa2bIcc8wxHZ4navCgts1PVK2tnmQ6zXbiBIgbhhNLEYJGif8iDEBsT9tZYLYypRLRAs0p4fs+Q8hO2ZBbBBUqsO8TH9yEFIVJLTA5UKSazoE9Lz63jlkKEAIspEHeNESoJQA8w2w0VDPO6oWSqz9vld5oESBUvaaJZD6muVaAPQuxOWuzz9Ie+KKAoIEWkNFqeR/CMrq3zwfVlaMgtjVK62fc2KRxLoQsaC7EtC7XNuoiNE5NWQh2qZQQaVC9c7cg8cmIoBYIzWaqy8zD1SYmDbrzCER4WdsBWNhOUpER/9y2iAWOADg8OYBloXKXWdu4Y79C/VIWBYKOheAmFkru2B43NyGm3ZgkshqX1ktLAHiGoeSpVYiWscCRmV4h50EdsZBG5NjY+tabunomsXZi/Da/UFLEPtrQibNCbC3AcigAHD60s6nXO/NDXpjjWccCg3nBKzKm8DqrnJzqX6sszLUqTRFIVZv7qbosWYSSANAK8WRr5VG2XPfeiaDWnedQAMjnM0xtU5FhGx81G2/L3DoW2CBuJDUZhVgoDszKkqBqcQ8EhBCEQEQtU+mLCI+Ka8EWdODlxD2NLZh5meeJorijZ9MKO2eY0M5TOkatcMhLbRWEaQoAH+xrGKguOhsITcrYCCqx31+bAIjDe3dWs4B5BxsDYaY6uxcxDGBxyAP4cReAkb1tP1udA4vFNHqjtQx+p7xWMYJHFoJTKl2ROCxI9Z1jgQDJTP6exN59uhmjmkxPVh4xYQVgqHraORsLsbx0zOlc0l5O3DTSKblFOLDB1A7nwaYQA/vkvFCM3RfJHD9ZEL/GieXLlzc1q33Fiu1xmVYCj7KJygDFSeD7FywQWwsilTRSPhxo7mEvM2zuxy2V0D4lB57yWNyDe72H91fr9qIwtBE32AWYrLEQwynqiJPEm3UXfT9WQNIlZxeY9kCoUeTVKp0AWzkCaO5hLzNMp8TkZTmtRCFgJr1WqR0j9ejB35KVlZJEBmwsHWiBYRkSWYjltLGFVFVKaxIg4o8N/P4CW94RJ+2ITEzoYYEoEPPRQHMTemaRTtlaCe2TcmCe+noXglSySMlGBmwFbHj/aQUcv5aqjOlqimKuWXdNMpm8Bkgg+Aug4rTT+kk9IKGntBkH5tYqKZqS8UxZSrQwF8K6yJEBDFNMHcZbYSGOLEiUcgQ9zcUvsGPF8mo+BP8eQiAWqbN7kRgDthwfD9bEYMbMD/uuqQ31pCnbOkfNRgCcSSQ/oMH3mE+nqJrba8vlEkhXS9QPDA4IRIQdrVRkw6VA86scYmNFv92r7dOEYAaxMYDgGEAoCKhpVmsWJUWTW+FWyYWAiZofSq7mNUSRKXFkQmEBGytsLMbPaoI9iO0hwFybqcyPdkIwD3BkwAKa2EeZyUYR2MrRL3zf9cuqTyG1BYAna3LNLK3DICJMp6H1wfXqa3kNKRSYpSQWkIgh5oAZsYgVmIo5vNm3rR85jgGsHojKRQGLrlOdTGwiIVLLoMxTmimlzfiwb96bD3FgknO1MyW30HH1LdKEZc/vzZhEXBQrsFZkgiNnGGwE4FiWaubw/VjFi5D4o1j7KKDr1hWyFdY6CbH2WbHdHlAtD2C2dqIQX51ck4Wi/Xaipqpoja612v+2mk55EGNxVe54wp9/UGbDo2DEQQtTzwpbSGT/pvn3jgQi9LOPv2AYTA8oaDCDJ0Rc4+PLIIIT20aFwHRUiBaKJU+jmfVBF0IgQr7vsxh+VJggUV0LTDaMYI0cFW/js22qLRRz0bnx0dqxCsL2biINslynOhnEUQgwnwgAcSuCNqAQU0e3WsSHm5aMdvDVn0wQxHVmkX2kkQVma8lWQsDy33iytx/btECYyed1n7fRiYFLEmezkQBCfd5Gp3re3awAzYyt3KD7PZiVDSsQ5mc9/6z839Qsd0vLaGwFStdfeEGL6cARILoRSKsyGgsOdjZPLUrFhv8iRsC2XutzIcMVsDVHDn31xkMB7JwqwyuTyesgn+HaoebwgdMvuS6Z6OxJLNNRdMV6Kg/6MOOBHmSn1yqrH9WOnNbcZsoFERFdJ8BNDGvdREeHNWNrAAR9uQE9CJiWBbBMkkdbAzC3Uk0cTwHgBcz6Eit/qEXi6hFPmEiUdpZIRR0NYKeXA/kN0iL2gpGAV3/h5lOY+GUgOlFYjkYkqUKYiDKX3vwQMd0OwQ/y73zeT2uNX4JsdsreF3FzF6CQlvs6CvYh5bhHs4kYdMCOLRDE/vxLAOTTu36l+/o2xoUoAwPo789x9d+SlgAwLANKAFO/wXUss7WKBTaAVtUdQU0EsNgF3S3Y2D/YSgSObIMOxmTJTTi2UngmgG1Vr57rWt5s1r7iM79coxz3Qia1TifSEGvAYiASt0gm6KNUwj2ZTfSuV33hltvE/vKCIHvqD+PThUBTdB+STCavg09lS+veGmxW5B5tOWQ6AMAiok2lDGE6vc/bmPqJv64MAKg2VB4c9GNO3ec5g4O5eW7XNSsAC0Rx/egMap0LW0RGM4BQ7awHrmOB1YIUde5NEg/Ng0ZKEGOV1O0ODsAFbGhOAPD1eg5aJh+oIJu1L/vEwLmKnAsJDpnimJhSyQqquK0efyUCoTg+qtxk+kTS6R+8/FO/vOS7udz7PQ/wczJp9UctpAwrPxWW1wgL1TFaZE3Ejptazg/t/GD/m791L0GeIhAm5fxFsb3P/PawuwcH1xnAx3x2/JwlhWhcVl9rBmdbraxe6vlD8a7GLFAH2e0IMtUul6T+YErlMaV0l7Cd0EleBGTKFYiV2KvP9Vv442lDDN6XXvzzTybSS95fKexhkTITkSbE51XIeDVi3N/DqMAASap76dkv7eh7Qu7/rXvtUBCoAMKNrOIgBuJHX1duiEpSJKIOYa5HzJWplERr90LSDvYe8yACyxbqmEfuXXdM8A1lil8Irso+Ot8gntby1TqVn/RPX/2x46RPN1HREpE+ABLGdTudMBz90JM7ez41OtrldHePmSbgVgOwD40NryKd2CSxVjaxLkY5xGx2aC1P23ztW0fjRT949Wie56k7kqfcpZ3ks0xUYarDa0hpYmtHbaSP7RzaufPBZbvVMbuXMVZAB342fMmGG96Z6lr6+bAwHMUVf4pmQi8FCFNdyxKlkUc+/sPzXvThqcBUW/dTX/+NHzuJjheZqMAEpRsoVAwSgdQuSIiItNIJKCcJayp/FBN9cPCq1wTzCeIZVyVPaoFjJ69QvbhmcQkLACv/6cvDDjdy1GoqRBXuB1tKy+e1n83al/g/vUdr/SwxluMepfsbExG2iXRnt/DoqiDIfg+A3Vb9TmdceP1TAP2JyuiIFWud2ILP+Ba75eFdRjupf3/xhT+/NjjvtM2TgWlgIKcAMLFcCcbpsUMsjSVZ2d82igisrbAJy6x14mjlpPKnvu7qjwZXZy+aLxBPE8C5/bz6Bo1NiKMIYJx64osue1BZ0qwWPqqhGEqIjIT8PMRVyfUs8ILJaPtLaXYLG34NR1xfIhPAViJwKO9+8bk/KbNlpR0HJMaYirzTTTrpqFKwRESzdOxJRCihkkAlvBDAaStWNO6GGTtePiXIXFsqjz2stXsU2zpqxBRLAkDZKGSYiN1k94a1r/n6aPDN7GfmA8Qz04GZobi+EwdAm7AEpd3XEKnXwJF6ncAWAMExEhQAa0KgbrBGquVRjJkGI2flyFXzZU1kb4IdE7asGygROowK0I77fFL6+Xvb/ZGGYotwbESIlJa52QUdjo4KKd3/j//+o2f7Pt3d+DAbkr4+z7nh628orHn1VZ8nx72YucKEWZ1npgCmsDxqlXL+e+1rr74puCa7ba4H6cyMQhgBiBs096spbWHLuHHUEJ3VYNUC1fAFQZYBYEmyePfwaOpBnUg+1UYTZam9t9lUJlxZ3PMJSuaDmYlYN93pRNHoPwK4u5FkN94Kl7n4RZTkA0o7hwmb2dbRE7OFdpMaUfgJAOv8OWbvz2OH9r0N81SrzGanU46/dX2e5wR+NhTD1xE7kMgyR4y607ASY/ebbFg1fP8spg0NbMTHV9nuJM5njgBIglPHgHQ3GxMn8czyMHVi6KhcZJDbvzpzxcnwfY7LmA6iBfbHuUdCjU/qbJ8h1dC94OBWdY6nEdUTOA2ujkrFd7Nl1axbKASSyEBM3KS6HzkeHK/Z7efI9SvAZ2LOaCeVjKJRQzS3TpoiwgqusmH5VQC27NixnQ4qgDNDQxQAYBarWGJligRtPRSDmWVsTPEMFMW50AjreZ7y/Zfeuu6twS1OIv08E1UsEXQTHl8wMTi0U+7Ag4NVPdhgFVMEYaG5RobjkqQIEDwv/gwcXA68Y8eKWqHfb8BEIswQ0u2KXRFhjSSJjR7+1a8+WAQ+SAvxRA4N9RJALPyt/xJW35LIsjQFwAImhkQSxtfVsAaPgHiLf6g09jdsDWCF5iHnjNgaCMvfnHDmpe62y86KMMt2WtMCcO0J0SJfNWHpPQTlMGxEII12MsQUo1cIrMhxrcX/1DztwcGDn0UVBFkLz1N9eOV3f/HbawaSqWX9YXlPhL2Ng2nyjX+eGpAJRJhYJIp+HxuoRjV4sQL5EB5KiF2alNrRRfOw5gyGWEmWfh0lEecOzmoXnKYT5zPgqW03v/tuNpV3QhRppF0SRxHaaIqjFCW1o7rcsDz8lTtve/dXAE8NDvoLF3Txc+L7JMoiExaHr1eUdhWlNImjSHTDKRbEka3mE895EocRsZFfAMDhhzcqi48BdfOK91dEuAxGtf/dHGe1AY4wl5djZ3kuFG6Gv+UpwOe/P+ETaxXSb2eYv4dUrXiTqlKn/01JAAGR/gOEv37X7WdfPe77L/A+si9sfUr26ley4DVi7TP3yWrj7yVVbSaeREp1xOHD2VtiAVgpTczRX13VcexgkB2bNIzueQq+zye+8LLrHZ1+oYlKE9IIZkHhrHZT2prywG03nLmuhquDrwNXLfGvtn1wE4BN7e3FCTXPE40rJgCSG/Ov+zaAb09lNFa99IrXupS8OooKJj5PQ2ZlrwTMTqLDYRN+evD72bGYPlFD+tQ3ADUIsDBvhlIvFBGZ6+MuECHRYJbNANDXBzVbR24WERWfkcnouWh3zR2e2ts+qblbggBxfu/k9zI2Gjd//43XhMWR6zWlHY5MxGavZjz1rL7PRsYoSTqV4vDdnNj1WXhT06fB/hhYAvpOFBY5brnKmMsEQ5mwKJqdfExheme9FoTF0QbPnKfg5+TEvq89gZJyk1LuMdaUIhBcQmP3Z/zPGWK0SjoQ3s1kTrnt+jO3x7Le1Ft3JpPRQRDY557yhWsdt/MMExUNKcxKCxaGcdwOx5qxH2775bvOqP3bs1ZDF9HRBsP3GV6Obhtc/9eoUnyRrZTvU0i7HDLb0FqOrNgDI20RgyMrNrTWhtZqSTkcmr9ElfKLb7v+zO2ZTF5PB7wAEKxYIQCIlP5/NiqXCUqJFZ5xJM4KE5SyplwiQx8EQNV/e9ZDL6KjTcbgoGQyef3z69Y/2rP85G9qcp9Ioo5TSCixTGwti2UWK1xrRAIhpSihSLRiG/4wLA1n7tz83ntmnAVW/eyfXffGnU848oUPaZ1+hbARYWYSKKllWTaYFFezWwKRUgkltrJ+2+Z3bcxk8nroC/82p9yZRQrRlnQitpzHrfp8H4C3k+A0kFquyBmnWliwmBEFNWhFLr3r1nf9aDwdmM1H14B/3Emfe4fSzucJRNaGBnE5k5qojohInDonWicdgbC15XfcdcvZl81XPvAigNtVQfFyVAPyCSd84rCQ9QqCejKUdJKosgB/dCl577ZtZ/1ln+qSo9nKVQeC+PgTP3calP60Uu6zRCyYI0icnyp7hUtSSikXRBpio19ZhO+969azN85nRcYigNt41NSLScHgeSoz1EvzWYdWA+CTn+ylli4/7A0A/hWQ5xI5naoqEbNYiJgxgG4nwlVju/mqBx44u9KUmrjF0foWOZMJ1PisrsMP75UgyPBBkwszGY1xVOTZz7vkKGXV04TNEwCAlNrBGr+5+9azH65HfxbH4miFQX19njN5LzapvufgGMtFC7w45su7VJlML9V2gXgH2C5z5dyLY3EsjsWxOFp1/H/XLwLrbiAmkwAAAABJRU5ErkJggg==" alt="Recollit i Entregat"></div>
+      <div class="logo-mark">PP</div>
       <div class="logo-text">
         <strong>Pickup Point</strong>
         <span>by Recollit i Entregat S.L.</span>
@@ -474,19 +298,11 @@
     </div>
     <nav>
       <div class="nav-links" style="display:flex;gap:24px;">
-        <a href="#com-funciona" data-ca="Com funciona" data-es="Cómo funciona" data-en="How it works" data-fr="Comment ça marche" data-ru="Как это работает">Com funciona</a>
-        <a href="#preus" data-ca="Preus" data-es="Precios" data-en="Prices" data-fr="Tarifs" data-ru="Цены">Preus</a>
-        <a href="#locker" data-ca="Locker" data-es="Locker" data-en="Locker" data-fr="Casier" data-ru="Locker">Locker</a>
-        <a href="#consulta" data-ca="Consulta enviaments" data-es="Consultar envíos" data-en="Track shipment" data-fr="Suivre un envoi" data-ru="Отследить посылку">Consulta enviaments</a>
-        <a href="#preguntes" data-ca="Preguntes freqüents" data-es="FAQ" data-en="FAQ" data-fr="FAQ" data-ru="Частые вопросы">Preguntes freqüents</a>
+        <a href="#com-funciona" data-ca="Com funciona" data-es="Cómo funciona">Com funciona</a>
+        <a href="#avantatges" data-ca="Avantatges" data-es="Ventajas">Avantatges</a>
+        <a href="#preguntes" data-ca="Preguntes freqüents" data-es="FAQ">Preguntes freqüents</a>
       </div>
-      <select class="lang-btn" onchange="setLang(this.value)" id="langBtn">
-        <option value="ca">CA</option>
-        <option value="es">ES</option>
-        <option value="en">EN</option>
-        <option value="fr">FR</option>
-        <option value="ru">RU</option>
-      </select>
+      <button class="lang-btn" onclick="toggleLang()" id="langBtn">ES</button>
       <a href="#registra-t" class="btn btn-primary nav-cta" id="navCta">Registra't gratis</a>
     </nav>
   </div>
@@ -495,36 +311,17 @@
 <!-- ════ HERO ════ -->
 <section class="hero" id="top">
   <div class="container">
-    <div class="hero-badge" id="heroBadge">✦ Adreça a Espanya · Recepció multimarca</div>
-    <h1 id="heroTitle">La teva adreça a Espanya,<br>a només <em>10 minuts</em> d'Andorra</h1>
-    <p class="hero-tagline" id="heroTagline">Compra on vulguis. Rep aquí. Recull quan et vagi bé.</p>
-    <p id="heroDesc">Moltes botigues no envien a Andorra o cobren molt més per fer-ho. Amb Pickup Point disposes d'una adreça a la Seu d'Urgell on rebre tots els teus paquets, amb notificació per correu i accés al locker 24/7.</p>
+    <div class="hero-badge" id="heroBadge">✦ Servei multimarca · Recepció d'enviaments</div>
+    <h1 id="heroTitle">Rep els teus paquets<br>sense estar <em>a casa</em></h1>
+    <p id="heroDesc">Concentra tots els teus enviaments en un sol punt i recull-los quan et vagi bé. Gestionem paquets de qualsevol transportista, sense restriccions.</p>
     <div class="hero-actions">
       <a href="#registra-t" class="btn btn-primary" id="heroCta1">Registra't ara — és gratis</a>
-      <a href="#preus" class="btn btn-outline" id="heroCta2">Veure preus</a>
+      <a href="#com-funciona" class="btn btn-outline" id="heroCta2">Com funciona</a>
     </div>
     <div class="hero-stats">
-      <div class="stat"><strong>0€</strong><span id="stat1">Registre gratuït</span></div>
-      <div class="stat"><strong>24/7</strong><span id="stat2">Accés al locker</span></div>
-      <div class="stat"><strong>14 dies</strong><span id="stat3">Custòdia inclosa</span></div>
-      <div class="stat"><strong>+40</strong><span id="stat4">transportistes: rep qualsevol enviament</span></div>
-    </div>
-  </div>
-</section>
-
-<!-- ════ CONFIANÇA ════ -->
-<section class="trust">
-  <div class="container">
-    <div class="trust-inner">
-      <div>
-        <p class="trust-headline" id="trustHeadline">Més de 40 anys gestionant enviaments</p>
-        <p class="trust-text" id="trustText">Som l'empresa responsable de l'<strong>agència oficial de GLS a la Seu d'Urgell</strong>. Cada dia gestionem centenars d'enviaments, perquè rebis els teus paquets amb total confiança.</p>
-      </div>
-      <div class="trust-badges">
-        <span class="trust-badge" id="trustB1">🚚 Agència oficial GLS</span>
-        <span class="trust-badge" id="trustB2">📅 Més de 40 anys</span>
-        <span class="trust-badge" id="trustB3">👥 Equip professional</span>
-      </div>
+      <div class="stat"><strong>+20</strong><span id="stat1">operadors de transport</span></div>
+      <div class="stat"><strong>0€</strong><span id="stat2">cost de registre</span></div>
+      <div class="stat"><strong>7 dies</strong><span id="stat3">de custòdia inclosa</span></div>
     </div>
   </div>
 </section>
@@ -534,153 +331,29 @@
   <div class="container">
     <p class="section-label" id="howLabel">El procés</p>
     <h2 class="section-title" id="howTitle">Com funciona el servei?</h2>
-    <p class="section-sub" id="howSub">Registrar-te només et portarà dos minuts. Després, només hauràs de comprar com sempre. Nosaltres ens encarreguem de la resta.</p>
+    <p class="section-sub" id="howSub">En tres passos senzills tens el control total dels teus enviaments.</p>
     <div class="steps">
       <div class="step">
         <div class="step-num">1</div>
-        <h3 id="s1h">Registra't gratuïtament</h3>
-        <p id="s1p">Només necessitem les teves dades. En menys de 2 minuts rebràs per correu electrònic la teva nova adreça de recepció.</p>
+        <h3 id="s1h">Registra't</h3>
+        <p id="s1p">Omple el formulari en menys de 2 minuts i rep la confirmació per e-mail amb les teves dades de lliurament.</p>
       </div>
       <div class="step">
         <div class="step-num">2</div>
-        <h3 id="s2h">Compra on vulguis</h3>
-        <p id="s2p">Quan facis una compra online, utilitza la teva nova adreça Pickup Point. Acceptem enviaments de GLS, Correos, DHL, SEUR, FedEx, Amazon, MRW, NACEX i qualsevol altre transportista.</p>
+        <h3 id="s2h">Fes les teves compres</h3>
+        <p id="s2p">Utilitza la nostra adreça com a punt d'entrega en les teves compres online. Tots els transportistes funcionen aquí.</p>
       </div>
       <div class="step">
         <div class="step-num">3</div>
-        <h3 id="s3h">T'avisem quan arribi</h3>
-        <p id="s3p">Tan bon punt rebem el teu paquet t'enviarem un correu electrònic. Podràs passar a recollir-lo quan et vagi millor o utilitzar el nostre locker 24/7 si el tens habilitat.</p>
+        <h3 id="s3h">Recull quan vulguis</h3>
+        <p id="s3p">T'avisarem quan arribi el paquet. Pots recollir-lo en l'horari que et vagi millor, sense pressa.</p>
       </div>
       <div class="step">
         <div class="step-num">4</div>
-        <h3 id="s4h">Sense presses</h3>
-        <p id="s4p">Disposem de:<br>• 14 dies gratuïts per a paquets<br>• 7 dies gratuïts per a palets<br>Necessites més temps? També és possible.</p>
+        <h3 id="s4h">Custodia segura</h3>
+        <p id="s4p">Els teus paquets queden sota la nostra custodia durant 7 dies. Seguretat total per als teus enviaments.</p>
       </div>
     </div>
-    <div class="why-band" id="whyBand">
-      <p class="why-title" id="whyTitle">Per què cada vegada més andorrans ens utilitzen?</p>
-      <ul class="why-list">
-        <li id="why1">✅ Compra a botigues que no envien a Andorra.</li>
-        <li id="why2">✅ Aprofita les promocions amb enviament gratuït dins d'Espanya.</li>
-        <li id="why3">✅ Rep tots els transportistes en una única adreça.</li>
-        <li id="why4">✅ Locker disponible les 24 hores.</li>
-        <li id="why5">✅ Sense quotes mensuals.</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<!-- ════ PREUS ════ -->
-<section class="pricing" id="preus">
-  <div class="container">
-    <p class="section-label" id="priceLabel">Tarifes clares</p>
-    <h2 class="section-title" id="priceTitle">Quant costa el servei?</h2>
-    <p class="section-sub" id="priceSub">Sense quotes ni permanències. Pagues només pels enviaments que reps.</p>
-
-    <div class="price-table">
-      <div class="price-table-head">
-        <div id="ptH1">Tipus d'enviament</div>
-        <div id="ptH2">Preu base<span>(14 dies naturals)</span></div>
-        <div id="ptH3">Dia addicional<span>a partir del dia indicat</span></div>
-      </div>
-      <div class="price-row">
-        <div class="price-row-type"><span class="price-icon">📦</span><div><strong id="pr1t">Fins a 15 kg i 200 cm</strong><span id="pr1s">sumant els tres costats</span></div></div>
-        <div class="price-row-base">3,50€<span id="pr1iva">(2,89€ + 21% IVA)</span></div>
-        <div class="price-row-extra">+0,50€<span id="pr1e">cada dia addicional (a partir del dia 15)</span></div>
-      </div>
-      <div class="price-row">
-        <div class="price-row-type"><span class="price-icon">📦</span><div><strong id="pr2t">De 15 a 40 kg o més de 200 cm</strong><span id="pr2s">&nbsp;</span></div></div>
-        <div class="price-row-base">7,50€<span id="pr2iva">(6,20€ + 21% IVA)</span></div>
-        <div class="price-row-extra">+3,00€<span id="pr2e">cada dia addicional (a partir del dia 15)</span></div>
-      </div>
-      <div class="price-row">
-        <div class="price-row-type"><span class="price-icon">🪵</span><div><strong id="pr3t">Enviaments paletitzats</strong><span id="pr3s">&nbsp;</span></div></div>
-        <div class="price-row-base">25,00€<span id="pr3iva">(20,66€ + 21% IVA)</span></div>
-        <div class="price-row-extra">+3,00€<span id="pr3e">cada dia addicional (a partir del dia 8)</span></div>
-      </div>
-    </div>
-
-    <div class="express-banner">
-      <div class="express-banner-left">
-        <span class="express-icon">⏱️</span>
-        <div>
-          <strong id="expTitle">Pickup Express <span class="express-price">+2,50€</span></strong>
-          <span id="expDesc">Prioritzem la tramitació del teu enviament perquè el puguis recollir el mateix dia que arriba.</span>
-        </div>
-      </div>
-    </div>
-
-    <p class="price-note" id="priceNote">Els preus inclouen la recepció, custòdia durant el període indicat i l'entrega al locker o al taulell. IVA aplicable segons normativa vigent.</p>
-  </div>
-</section>
-
-<!-- ════ LOCKER ════ -->
-<section class="locker" id="locker">
-  <div class="container">
-    <div class="locker-grid">
-      <div class="locker-visual">
-        <div class="locker-badge" id="lockerBadge">Novetat</div>
-        <div class="locker-icon-big">🔐</div>
-      </div>
-      <div class="locker-content">
-        <p class="section-label" id="lockerLabel">Nou servei</p>
-        <h2 class="section-title" id="lockerTitle">Recull els teus paquets quan vulguis</h2>
-        <p class="locker-desc" id="lockerDesc">Sense presses. Sense cues. Sense dependre dels horaris. El nostre locker et permet recollir els teus enviaments sempre que et vagi bé.</p>
-      </div>
-    </div>
-
-    <div class="locker-minicards">
-      <div class="locker-minicard"><span class="lmc-icon">🕒</span><strong id="lmc1t">24/7</strong><span id="lmc1s">Sempre disponible</span></div>
-      <div class="locker-minicard"><span class="lmc-icon">⚡</span><strong id="lmc2t">1 minut</strong><span id="lmc2s">Recollida molt ràpida</span></div>
-      <div class="locker-minicard"><span class="lmc-icon">🔒</span><strong id="lmc3t">100% segur</strong><span id="lmc3s">Accés personalitzat</span></div>
-      <div class="locker-minicard"><span class="lmc-icon">📧</span><strong id="lmc4t">Avís per correu</strong><span id="lmc4s">Quan el paquet arriba</span></div>
-    </div>
-
-    <p class="billing-restriction" id="billingRestriction">Només disponible per a clients registrats amb facturació mensual.</p>
-
-    <div class="billing-compare">
-      <div class="billing-card billing-bank">
-        <p class="billing-tag" id="billTag1">Pagament per domiciliació</p>
-        <span class="billing-sub" id="billSub1">transferència / domiciliació bancària</span>
-        <div class="billing-amount billing-amount-good">
-          <strong id="billLbl1">Estalvia 0,50€ en cada enviament</strong>
-        </div>
-        <p class="billing-note" id="billNote1">Els clients amb pagament domiciliat gaudeixen d'un descompte automàtic de 0,50€ per paquet i accés complet al locker.</p>
-        <a href="#registra-t" class="btn btn-primary billing-btn" id="billBtn1">Activar domiciliació</a>
-      </div>
-      <div class="billing-card billing-cash">
-        <p class="billing-tag" id="billTag2">Pagament en efectiu</p>
-        <span class="billing-sub" id="billSub2">cash, sense dades bancàries</span>
-        <div class="billing-amount billing-amount-neutral">
-          <strong id="billLbl2">Paga només pels enviaments que utilitzes</strong>
-        </div>
-        <p class="billing-note" id="billNote2">Sense domiciliació bancària. Accés al locker també inclòs. Només no s'aplica el descompte de 0,50€.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ════ CONSULTA ENVIAMENTS ════ -->
-<section class="tracking" id="consulta">
-  <div class="container">
-    <p class="section-label" id="trkLabel">Per a clients registrats</p>
-    <h2 class="section-title" id="trkTitle">Consulta els teus enviaments</h2>
-    <p class="section-sub" id="trkSub">Introdueix el teu telèfon i cognom per veure els enviaments que tenim pendents al teu nom.</p>
-
-    <div class="tracking-form">
-      <div class="field">
-        <label for="trkTel" id="trkTelLbl">Telèfon</label>
-        <input type="tel" id="trkTel" placeholder="376 600 000">
-      </div>
-      <div class="field">
-        <label for="trkCognom" id="trkCognomLbl">Cognom</label>
-        <input type="text" id="trkCognom" placeholder="Garcia">
-      </div>
-      <button class="btn btn-primary" id="trkBtn" onclick="consultarEnviaments()">Consultar</button>
-    </div>
-    <p class="trk-hint" id="trkHint">Si ets de fora d'Espanya, escriu el teu telèfon amb el prefix internacional del teu país però sense el 0 inicial (per exemple, Andorra: 376 600 000 · França: 33 6 12 34 56 78).</p>
-
-    <div id="trkResults" class="tracking-results"></div>
   </div>
 </section>
 
@@ -688,53 +361,38 @@
 <section class="features" id="avantatges">
   <div class="container">
     <p class="section-label" id="ftLabel">Per què Pickup Point?</p>
-    <h2 class="section-title" id="ftTitle">Tot el que necessites per comprar sense fronteres</h2>
-    <p class="section-sub" id="ftSub">Una única adreça per rebre qualsevol enviament, amb la tranquil·litat de saber que sempre estarà controlat.</p>
+    <h2 class="section-title" id="ftTitle">Tot el que necessites</h2>
+    <p class="section-sub" id="ftSub">Un servei pensat per a persones que valoren el seu temps i la comoditat.</p>
     <div class="features-grid">
       <div class="feature">
         <div class="feature-icon">📦</div>
-        <h3 id="f1h">Rep qualsevol enviament</h3>
-        <p id="f1p">Treballem amb GLS, Correos, DHL, SEUR, FedEx, MRW, NACEX, Amazon, InPost i qualsevol altre transportista.</p>
+        <h3 id="f1h">Multimarca i multitransportista</h3>
+        <p id="f1p">Acceptem paquets de GLS, SEUR, MRW, Correos, DHL, Amazon, Inpost i molts més. Sense exclusivitats.</p>
       </div>
       <div class="feature">
         <div class="feature-icon">🔔</div>
-        <h3 id="f2h">Sempre sabràs quan arriba</h3>
-        <p id="f2p">Cada tarda t'enviem un correu amb tots els paquets rebuts. Necessites més rapidesa? Amb Pickup Express t'avisem tan bon punt arriba.</p>
+        <h3 id="f2h">Notificació immediata</h3>
+        <p id="f2p">T'informem en el moment que arriba el teu paquet. Pots recollir-lo quan tu triïs, dins l'horari comercial.</p>
       </div>
       <div class="feature">
         <div class="feature-icon">🔒</div>
-        <h3 id="f3h">Nosaltres signem per tu</h3>
-        <p id="f3p">No cal que estiguis pendent del repartidor. Acceptem l'enviament en nom teu i el custodiem fins que el recullis.</p>
+        <h3 id="f3h">Recepció autoritzada</h3>
+        <p id="f3p">Signem per tu en la teva absència. La teva autorització queda registrada i tot queda documentat.</p>
       </div>
       <div class="feature">
         <div class="feature-icon">🕐</div>
-        <h3 id="f4h">Recull quan et vagi bé</h3>
-        <p id="f4p">Durant l'horari comercial t'atendrem personalment. Fora d'horari podràs utilitzar el locker automàtic.</p>
+        <h3 id="f4h">Horari flexible</h3>
+        <p id="f4p">Ens adaptem a la teva rutina. Consulta l'horari d'atenció per planificar la teva recollida.</p>
       </div>
       <div class="feature">
         <div class="feature-icon">💶</div>
-        <h3 id="f5h">Només pagues quan reps un paquet</h3>
-        <p id="f5p">Registrar-te és gratuït. Sense permanències. Sense quotes mensuals. Només pagues pels enviaments que realment utilitzes.</p>
+        <h3 id="f5h">Sense cost de registre</h3>
+        <p id="f5p">El registre és totalment gratuït. Tarifa plana per custòdia ampliada. Sense sorpreses.</p>
       </div>
       <div class="feature">
         <div class="feature-icon">📍</div>
-        <h3 id="f6h">Sempre la mateixa adreça</h3>
-        <p id="f6p">Av. Valls d'Andorra 18, a només 10 minuts d'Andorra. Fàcil aparcament i accés ràpid des de la frontera.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">🛡️</div>
-        <h3 id="f7h">Els teus paquets estan protegits</h3>
-        <p id="f7p">Cada enviament queda registrat. Custòdia segura fins al moment de la recollida.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">🚗</div>
-        <h3 id="f8h">Sense buscar lloc</h3>
-        <p id="f8p">Para davant de la porta i recull en un minut.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">📱</div>
-        <h3 id="f9h">No necessites instal·lar res</h3>
-        <p id="f9p">Només rebràs un correu quan el paquet estigui disponible.</p>
+        <h3 id="f6h">Punt fix i conegut</h3>
+        <p id="f6p">Sempre la mateixa adreça: Av. Valls d'Andorra 18. Fàcil d'accedir i amb aparcament proper.</p>
       </div>
     </div>
   </div>
@@ -743,9 +401,8 @@
 <!-- ════ OPERADORS ════ -->
 <section class="operators">
   <div class="container">
-    <h2 class="section-title" id="opsTitle">Rep paquets de qualsevol transportista ⭐</h2>
-    <p class="section-sub" id="opsSub">No importa on compris. Si t'ho poden enviar a Espanya, nosaltres ho rebem per tu.</p>
-    <p class="ops-brands" id="opsBrands">Amazon · AliExpress · Zara · PCComponentes · Decathlon · MediaMarkt · El Corte Inglés · Ikea · Temu</p>
+    <h2 class="section-title" id="opsTitle">Transportistes compatibles</h2>
+    <p class="section-sub" id="opsSub">Acceptem paquets de tots els operadors principals i molts més.</p>
     <div class="ops-grid">
       <span class="op-badge">GLS</span>
       <span class="op-badge">SEUR</span>
@@ -760,8 +417,6 @@
       <span class="op-badge">Correos Express</span>
       <span class="op-badge">+ molts més</span>
     </div>
-    <p class="ops-note" id="opsNote">No trobes el teu transportista? No passa res. També acceptem molts altres operadors.</p>
-    <p class="ops-closing" id="opsClosing">I si una botiga no envia directament a Andorra, nosaltres som la teva adreça a Espanya.</p>
   </div>
 </section>
 
@@ -773,15 +428,15 @@
     <div class="faq-list">
       <div class="faq-item">
         <button class="faq-q" id="fq1">Quina adreça he de posar a les meves compres?</button>
-        <div class="faq-a"><p id="fa1">Has de posar la nostra adreça amb les teves dades: <strong>Av. Valls d'Andorra 18, 25700 La Seu d'Urgell</strong>, indicant el teu nom i els dos cognoms. Si el transportista ho demana, indica també el teu telèfon i email de contacte.</p></div>
+        <div class="faq-a"><p id="fa1">Un cop registrat, et facilitarem la informació exacta d'adreça i les instruccions per a cada transportista. En general: <strong>Av. Valls d'Andorra 18, [a/c de: el teu nom]</strong>.</p></div>
       </div>
       <div class="faq-item">
         <button class="faq-q" id="fq2">Té algun cost el servei?</button>
-        <div class="faq-a"><p id="fa2">El registre és gratuït. Cada enviament rebut té un preu segons pes i mida (des de 3,50€), amb la custòdia inclosa. Consulta la taula de <a href="#preus">preus</a> per a tots els detalls.</p></div>
+        <div class="faq-a"><p id="fa2">El registre i la recepció bàsica són gratuïts. Existeix una tarifa per custòdia ampliada (més de 7 dies) o per a volums alts. Consulta'ns sense compromís.</p></div>
       </div>
       <div class="faq-item">
         <button class="faq-q" id="fq3">Quant de temps guardareu el meu paquet?</button>
-        <div class="faq-a"><p id="fa3">La custòdia inclosa és de 14 dies naturals per a paquets (7 dies per a palets). Passat aquest període s'aplica un cost addicional per dia, indicat a la taula de preus.</p></div>
+        <div class="faq-a"><p id="fa3">Custodia inclosa de 7 dies naturals des de la recepció. Passats aquests dies, podem aplicar un cost de custòdia addicional o procedir a la devolució.</p></div>
       </div>
       <div class="faq-item">
         <button class="faq-q" id="fq4">Podeu rebre paquets amb reemborsament (contrarembolso)?</button>
@@ -790,14 +445,6 @@
       <div class="faq-item">
         <button class="faq-q" id="fq5">Podeu rebre paquets d'empresa o és només per a particulars?</button>
         <div class="faq-a"><p id="fa5">El servei és per a tothom: particulars i empreses. En el formulari pots indicar si actues com a empresa i el teu NIF.</p></div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q" id="fq6">Per què molts e-commerce no envien a Andorra?</button>
-        <div class="faq-a"><p id="fa6">Andorra no forma part de la Unió Duanera Europea, i moltes botigues online no gestionen els tràmits duaners o directament exclouen Andorra dels seus enviaments. Rebent el paquet a la nostra adreça a la Seu d'Urgell (Espanya) evites aquesta restricció.</p></div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q" id="fq7">Com funciona el pagament i el descompte per domiciliació?</button>
-        <div class="faq-a"><p id="fa7">Pots facturar per transferència/domiciliació bancària (−0,50€ de descompte per enviament) o en efectiu sense donar dades bancàries (sense descompte). En tots dos casos tens accés complet al locker 24/7.</p></div>
       </div>
     </div>
   </div>
@@ -808,7 +455,7 @@
   <div class="container">
     <p class="section-label" style="color:rgba(255,255,255,.5);letter-spacing:2px;" id="regLabel">Registre gratuït</p>
     <h2 class="section-title" id="regTitle">Comença ara</h2>
-    <p class="section-sub" id="regSub">Omple el formulari en menys de 2 minuts. El registre és immediat, sense esperes.</p>
+    <p class="section-sub" id="regSub">Omple el formulari i en 24h tindràs la confirmació per e-mail amb les teves dades de lliurament.</p>
 
     <div class="form-card">
       <!-- Step indicator -->
@@ -949,7 +596,7 @@
       <div class="form-success" id="formSuccess">
         <div class="success-icon">✅</div>
         <h3 id="succH">Registre completat!</h3>
-        <p id="succP">Hem rebut les teves dades correctament. Ja pots utilitzar la nostra adreça: Av. Valls d'Andorra 18, 25700 La Seu d'Urgell, amb el teu nom i cognoms — per a les teves properes compres online. Rebràs també un email de confirmació amb aquesta informació.</p>
+        <p id="succP">Hem rebut les teves dades. En 24 hores laborables rebràs un correu de confirmació amb la teva adreça de lliurament personalitzada.</p>
         <br>
         <p style="color:var(--brand);font-weight:600;" id="succSub">Gràcies per confiar en Pickup Point!</p>
       </div>
@@ -970,9 +617,6 @@
 <!-- ════ FOOTER ════ -->
 <footer>
   <div class="container">
-    <div class="footer-brand">
-      <img src="data:image/png;base64,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" alt="Recollit i Entregat">
-    </div>
     <p>© <span id="yr"></span> Recollit i Entregat S.L. · Pickup Point · Av. Valls d'Andorra 18
     &nbsp;|&nbsp; <a href="#" id="privLink">Política de privacitat</a>
     &nbsp;|&nbsp; <a href="#" id="cookieLink">Cookies</a></p>
@@ -988,7 +632,7 @@
    2. Copia la URL que Google et dóna
    3. Enganxa-la aquí:
    ───────────────────────────────────────────────── */
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzVAecW5h4Rw435qDBGQ-HLbchZUJs0ppfUmfaq_nrzNUWEFmV8tHJILRmw2t4uRjEp/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/ENGANXA_AQUI_LA_TEVA_URL/exec';
 
 /* ─── Anys footer ─── */
 document.getElementById('yr').textContent = new Date().getFullYear();
@@ -1020,8 +664,11 @@ function showStep(n) {
     else ind.querySelector('.step-ind-dot').textContent = i;
   }
   currentStep = n;
-  // Scroll to form on mobile
-  document.getElementById('registra-t').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // Scroll to form card, accounting for sticky header
+  const card = document.querySelector('.form-card');
+  const headerH = document.querySelector('header').offsetHeight;
+  const cardTop = card.getBoundingClientRect().top + window.scrollY - headerH - 16;
+  window.scrollTo({ top: cardTop, behavior: 'smooth' });
 }
 
 function validateStep(n) {
@@ -1065,53 +712,6 @@ function nextStep(n) {
 }
 function prevStep(n) { if (n > 1) showStep(n - 1); }
 
-async function consultarEnviaments() {
-  const tel = document.getElementById('trkTel').value.trim();
-  const cognom = document.getElementById('trkCognom').value.trim();
-  const results = document.getElementById('trkResults');
-  const t = translations[lang];
-
-  if (tel.length < 6 || cognom.length < 2) {
-    results.innerHTML = `<p class="trk-error">${t.trkErrInput}</p>`;
-    return;
-  }
-
-  results.innerHTML = `<p class="trk-loading">${t.trkLoading}</p>`;
-
-  try {
-    const url = SCRIPT_URL + '?action=consulta&telefon=' + encodeURIComponent(tel) + '&cognom=' + encodeURIComponent(cognom);
-    const res = await fetch(url);
-    const data = await res.json();
-
-    if (data.status !== 'ok') {
-      results.innerHTML = `<p class="trk-error">${t.trkErrGeneric}</p>`;
-      return;
-    }
-
-    if (!data.enviaments || data.enviaments.length === 0) {
-      results.innerHTML = `<p class="trk-empty">${t.trkEmpty}</p>`;
-      return;
-    }
-
-    const count = data.enviaments.length;
-    const summary = count === 1 ? t.trkSummary1 : t.trkSummaryN.replace('{n}', count);
-
-    results.innerHTML = `<p class="trk-summary">📦 ${summary}</p>` + data.enviaments.map(env => `
-      <div class="trk-card">
-        <div class="trk-card-main">
-          <strong>${env.descripcio || (t.trkAlbara + ' ' + env.albara)}</strong>
-          <span>${t.trkDataRegistre}: ${env.data || '—'}</span>
-          <span class="trk-meta">${t.trkAlbara}: ${env.albara || '—'} · ${t.trkBultos}: ${env.bultos || '—'} · ${t.trkPes}: ${env.pes || '—'} kg${env.reemborsament ? ' · ' + t.trkReemborsament + ': ' + env.reemborsament + '€' : ''}</span>
-        </div>
-        <div class="trk-status">${env.estat}</div>
-      </div>
-    `).join('');
-
-  } catch (err) {
-    results.innerHTML = `<p class="trk-error">${t.trkErrGeneric}</p>`;
-  }
-}
-
 async function submitForm() {
   if (!validateStep(4)) return;
   const btn = document.getElementById('submitBtn');
@@ -1140,7 +740,7 @@ async function submitForm() {
     const res = await fetch(SCRIPT_URL, {
       method: 'POST',
       mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
     });
     // no-cors always returns opaque — assume success
@@ -1162,71 +762,33 @@ function showSuccess() {
 /* ─── Bilingual ─── */
 const translations = {
   ca: {
-    heroBadge: '✦ Adreça a Espanya · Recepció multimarca',
-    heroTitle: 'La teva adreça a Espanya,<br>a només <em>10 minuts</em> d\'Andorra',
-    heroTagline: 'Compra on vulguis. Rep aquí. Recull quan et vagi bé.',
-    heroDesc: 'Moltes botigues no envien a Andorra o cobren molt més per fer-ho. Amb Pickup Point disposes d\'una adreça a la Seu d\'Urgell on rebre tots els teus paquets, amb notificació per correu i accés al locker 24/7.',
+    heroBadge: '✦ Servei multimarca · Recepció d\'enviaments',
+    heroTitle: 'Rep els teus paquets<br>sense estar <em>a casa</em>',
+    heroDesc: 'Concentra tots els teus enviaments en un sol punt i recull-los quan et vagi bé. Gestionem paquets de qualsevol transportista, sense restriccions.',
     heroCta1: 'Registra\'t ara — és gratis',
-    heroCta2: 'Veure preus',
-    stat1: 'Registre gratuït', stat2: 'Accés al locker', stat3: 'Custòdia inclosa', stat4: 'transportistes: rep qualsevol enviament',
-    trustHeadline: 'Més de 40 anys gestionant enviaments',
-    trustText:'Som l\'empresa responsable de l\'<strong>agència oficial de GLS a la Seu d\'Urgell</strong>. Cada dia gestionem centenars d\'enviaments, perquè rebis els teus paquets amb total confiança.',
-    trustB1:'🚚 Agència oficial GLS', trustB2:'📅 Més de 40 anys', trustB3:'👥 Equip professional',
+    heroCta2: 'Com funciona',
+    stat1: 'operadors de transport', stat2: 'cost de registre', stat3: 'de custòdia inclosa',
     howLabel: 'El procés', howTitle: 'Com funciona el servei?',
-    howSub: 'Registrar-te només et portarà dos minuts. Després, només hauràs de comprar com sempre. Nosaltres ens encarreguem de la resta.',
-    s1h:'Registra\'t gratuïtament', s1p:'Només necessitem les teves dades. En menys de 2 minuts rebràs per correu electrònic la teva nova adreça de recepció.',
-    s2h:'Compra on vulguis', s2p:'Quan facis una compra online, utilitza la teva nova adreça Pickup Point. Acceptem enviaments de GLS, Correos, DHL, SEUR, FedEx, Amazon, MRW, NACEX i qualsevol altre transportista.',
-    s3h:'T\'avisem quan arribi', s3p:'Tan bon punt rebem el teu paquet t\'enviarem un correu electrònic. Podràs passar a recollir-lo quan et vagi millor o utilitzar el nostre locker 24/7 si el tens habilitat.',
-    s4h:'Sense presses', s4p:'Disposem de:<br>• 14 dies gratuïts per a paquets<br>• 7 dies gratuïts per a palets<br>Necessites més temps? També és possible.',
-    whyTitle:'Per què cada vegada més andorrans ens utilitzen?',
-    why1:'✅ Compra a botigues que no envien a Andorra.', why2:'✅ Aprofita les promocions amb enviament gratuït dins d\'Espanya.',
-    why3:'✅ Rep tots els transportistes en una única adreça.', why4:'✅ Locker disponible les 24 hores.', why5:'✅ Sense quotes mensuals.',
-    ftLabel:'Per què Pickup Point?', ftTitle:'Tot el que necessites per comprar sense fronteres', ftSub:'Una única adreça per rebre qualsevol enviament, amb la tranquil·litat de saber que sempre estarà controlat.',
-    f1h:'Rep qualsevol enviament', f1p:'Treballem amb GLS, Correos, DHL, SEUR, FedEx, MRW, NACEX, Amazon, InPost i qualsevol altre transportista.',
-    f2h:'Sempre sabràs quan arriba', f2p:'Cada tarda t\'enviem un correu amb tots els paquets rebuts. Necessites més rapidesa? Amb Pickup Express t\'avisem tan bon punt arriba.',
-    f3h:'Nosaltres signem per tu', f3p:'No cal que estiguis pendent del repartidor. Acceptem l\'enviament en nom teu i el custodiem fins que el recullis.',
-    f4h:'Recull quan et vagi bé', f4p:'Durant l\'horari comercial t\'atendrem personalment. Fora d\'horari podràs utilitzar el locker automàtic.',
-    f5h:'Només pagues quan reps un paquet', f5p:'Registrar-te és gratuït. Sense permanències. Sense quotes mensuals. Només pagues pels enviaments que realment utilitzes.',
-    f6h:'Sempre la mateixa adreça', f6p:'Av. Valls d\'Andorra 18, a només 10 minuts d\'Andorra. Fàcil aparcament i accés ràpid des de la frontera.',
-    f7h:'Els teus paquets estan protegits', f7p:'Cada enviament queda registrat. Custòdia segura fins al moment de la recollida.',
-    f8h:'Sense buscar lloc', f8p:'Para davant de la porta i recull en un minut.',
-    f9h:'No necessites instal·lar res', f9p:'Només rebràs un correu quan el paquet estigui disponible.',
-    priceLabel:'Tarifes clares', priceTitle:'Quant costa el servei?', priceSub:'Sense quotes ni permanències. Pagues només pels enviaments que reps.',
-    ptH1:'Tipus d\'enviament', ptH2:'Preu base<span>(14 dies naturals)</span>', ptH3:'Dia addicional<span>a partir del dia indicat</span>',
-    pr1t:'Fins a 15 kg i 200 cm', pr1s:'sumant els tres costats', pr1iva:'(2,89€ + 21% IVA)', pr1e:'cada dia addicional (a partir del dia 15)',
-    pr2t:'De 15 a 40 kg o més de 200 cm', pr2iva:'(6,20€ + 21% IVA)', pr2e:'cada dia addicional (a partir del dia 15)',
-    pr3t:'Enviaments paletitzats', pr3iva:'(20,66€ + 21% IVA)', pr3e:'cada dia addicional (a partir del dia 8)',
-    expTitle:'Pickup Express <span class="express-price">+2,50€</span>', expDesc:'Prioritzem la tramitació del teu enviament perquè el puguis recollir el mateix dia que arriba.',
-    priceNote:'Els preus inclouen la recepció, custòdia durant el període indicat i l\'entrega al locker o al taulell. IVA aplicable segons normativa vigent.',
-    lockerBadge:'Novetat', lockerLabel:'Nou servei', lockerTitle:'Recull els teus paquets quan vulguis',
-    lockerDesc:'Sense presses. Sense cues. Sense dependre dels horaris. El nostre locker et permet recollir els teus enviaments sempre que et vagi bé.',
-    lmc1t:'24/7', lmc1s:'Sempre disponible', lmc2t:'1 minut', lmc2s:'Recollida molt ràpida',
-    lmc3t:'100% segur', lmc3s:'Accés personalitzat', lmc4t:'Avís per correu', lmc4s:'Quan el paquet arriba',
-    billingRestriction:'Només disponible per a clients registrats amb facturació mensual.',
-    billTag1:'Pagament per domiciliació', billSub1:'transferència / domiciliació bancària', billLbl1:'Estalvia 0,50€ en cada enviament',
-    billNote1:'Els clients amb pagament domiciliat gaudeixen d\'un descompte automàtic de 0,50€ per paquet i accés complet al locker.', billBtn1:'Activar domiciliació',
-    billTag2:'Pagament en efectiu', billSub2:'cash, sense dades bancàries', billLbl2:'Paga només pels enviaments que utilitzes',
-    billNote2:'Sense domiciliació bancària. Accés al locker també inclòs. Només no s\'aplica el descompte de 0,50€.',
-    trkLabel:'Per a clients registrats', trkTitle:'Consulta els teus enviaments', trkSub:'Introdueix el teu telèfon i cognom per veure els enviaments que tenim pendents al teu nom.',
-    trkTelLbl:'Telèfon', trkCognomLbl:'Cognom', trkBtn:'Consultar',
-    trkLoading:'Cercant...', trkErrInput:'Introdueix un telèfon i un cognom vàlids.', trkErrGeneric:'No s\'ha pogut fer la consulta. Torna-ho a provar més tard.',
-    trkEmpty:'No hem trobat cap enviament pendent amb aquestes dades.',
-    trkAlbara:'Albarà', trkBultos:'Bultos', trkPes:'Pes', trkReemborsament:'Reemborsament',
-    trkDataRegistre:'Data de registre', trkSummary1:'Tens 1 enviament pendent', trkSummaryN:'Tens {n} enviaments pendents',
-    trkHint:'Si ets de fora d\'Espanya, escriu el teu telèfon amb el prefix internacional del teu país però sense el 0 inicial (per exemple, Andorra: 376 600 000 · França: 33 6 12 34 56 78).',
-    opsTitle:'Rep paquets de qualsevol transportista ⭐', opsSub:'No importa on compris. Si t\'ho poden enviar a Espanya, nosaltres ho rebem per tu.',
-    opsBrands:'Amazon · AliExpress · Zara · PCComponentes · Decathlon · MediaMarkt · El Corte Inglés · Ikea · Temu',
-    opsNote:'No trobes el teu transportista? No passa res. També acceptem molts altres operadors.',
-    opsClosing:'I si una botiga no envia directament a Andorra, nosaltres som la teva adreça a Espanya.',
+    howSub: 'En tres passos senzills tens el control total dels teus enviaments.',
+    s1h:'Registra\'t', s1p:'Omple el formulari en menys de 2 minuts i rep la confirmació per e-mail amb les teves dades de lliurament.',
+    s2h:'Fes les teves compres', s2p:'Utilitza la nostra adreça com a punt d\'entrega en les teves compres online. Tots els transportistes funcionen aquí.',
+    s3h:'Recull quan vulguis', s3p:'T\'avisarem quan arribi el paquet. Pots recollir-lo en l\'horari que et vagi millor, sense pressa.',
+    s4h:'Custodia segura', s4p:'Els teus paquets queden sota la nostra custodia durant 7 dies. Seguretat total per als teus enviaments.',
+    ftLabel:'Per què Pickup Point?', ftTitle:'Tot el que necessites', ftSub:'Un servei pensat per a persones que valoren el seu temps i la comoditat.',
+    f1h:'Multimarca i multitransportista', f1p:'Acceptem paquets de GLS, SEUR, MRW, Correos, DHL, Amazon, Inpost i molts més. Sense exclusivitats.',
+    f2h:'Notificació immediata', f2p:'T\'informem en el moment que arriba el teu paquet. Pots recollir-lo quan tu triïs, dins l\'horari comercial.',
+    f3h:'Recepció autoritzada', f3p:'Signem per tu en la teva absència. La teva autorització queda registrada i tot queda documentat.',
+    f4h:'Horari flexible', f4p:'Ens adaptem a la teva rutina. Consulta l\'horari d\'atenció per planificar la teva recollida.',
+    f5h:'Sense cost de registre', f5p:'El registre és totalment gratuït. Tarifa plana per custòdia ampliada. Sense sorpreses.',
+    f6h:'Punt fix i conegut', f6p:'Sempre la mateixa adreça: Av. Valls d\'Andorra 18. Fàcil d\'accedir i amb aparcament proper.',
+    opsTitle:'Transportistes compatibles', opsSub:'Acceptem paquets de tots els operadors principals i molts més.',
     faqLabel:'Dubtes habituals', faqTitle:'Preguntes freqüents',
-    fq1:'Quina adreça he de posar a les meves compres?', fa1:'Has de posar la nostra adreça amb les teves dades: <strong>Av. Valls d\'Andorra 18, 25700 La Seu d\'Urgell</strong>, indicant el teu nom i els dos cognoms. Si el transportista ho demana, indica també el teu telèfon i email de contacte.',
-    fq2:'Té algun cost el servei?', fa2:'El registre és gratuït. Cada enviament rebut té un preu segons pes i mida (des de 3,50€), amb la custòdia inclosa. Consulta la taula de <a href="#preus">preus</a> per a tots els detalls.',
-    fq3:'Quant de temps guardareu el meu paquet?', fa3:'La custòdia inclosa és de 14 dies naturals per a paquets (7 dies per a palets). Passat aquest període s\'aplica un cost addicional per dia, indicat a la taula de preus.',
+    fq1:'Quina adreça he de posar a les meves compres?', fa1:'Un cop registrat, et facilitarem la informació exacta d\'adreça i les instruccions per a cada transportista. En general: <strong>Av. Valls d\'Andorra 18, [a/c de: el teu nom]</strong>.',
+    fq2:'Té algun cost el servei?', fa2:'El registre i la recepció bàsica són gratuïts. Existeix una tarifa per custòdia ampliada (més de 7 dies) o per a volums alts. Consulta\'ns sense compromís.',
+    fq3:'Quant de temps guardareu el meu paquet?', fa3:'Custodia inclosa de 7 dies naturals des de la recepció. Passats aquests dies, podem aplicar un cost de custòdia addicional o procedir a la devolució.',
     fq4:'Podeu rebre paquets amb reemborsament?', fa4:'Per a paquets amb reemborsament cal coordinació prèvia. Contacta\'ns abans de fer la compra per confirmar la disponibilitat d\'aquest servei.',
     fq5:'Podeu rebre paquets d\'empresa?', fa5:'El servei és per a tothom: particulars i empreses. En el formulari pots indicar si actues com a empresa i el teu NIF.',
-    fq6:'Per què molts e-commerce no envien a Andorra?', fa6:'Andorra no forma part de la Unió Duanera Europea, i moltes botigues online no gestionen els tràmits duaners o directament exclouen Andorra dels seus enviaments. Rebent el paquet a la nostra adreça a la Seu d\'Urgell (Espanya) evites aquesta restricció.',
-    fq7:'Com funciona el pagament i el descompte per domiciliació?', fa7:'Pots facturar per transferència/domiciliació bancària (−0,50€ de descompte per enviament) o en efectiu sense donar dades bancàries (sense descompte). En tots dos casos tens accés complet al locker 24/7.',
-    regLabel:'Registre gratuït', regTitle:'Comença ara', regSub:'Omple el formulari en menys de 2 minuts. El registre és immediat, sense esperes.',
+    regLabel:'Registre gratuït', regTitle:'Comença ara', regSub:'Omple el formulari i en 24h tindràs la confirmació per e-mail amb les teves dades de lliurament.',
     indl1:'Email', indl2:'Dades', indl3:'Adreça', indl4:'Autorització',
     st1h:'Comencem!', st1d:'Podràs concentrar tots els teus enviaments en un sol punt i recollir-los quan et vagi bé.',
     st2h:'Dades personals', st2d:'Necessitem les teves dades per identificar els teus paquets correctament.',
@@ -1235,78 +797,40 @@ const translations = {
     authLbl:'<strong>Autorització de recepció</strong> — Autoritzo a Recollit i Entregat S.L. a rebre, signar i custodiar paquets en el meu nom a l\'adreça Av. Valls d\'Andorra 18. <span class="req">*</span>',
     rgpdLbl:'Accepto la <a href="#" onclick="return false;">política de privacitat</a> i el tractament de les meves dades personals conforme al RGPD per a la gestió del servei. <span class="req">*</span>',
     comLbl:'Accepto rebre comunicacions sobre el servei i novetats (opcional).',
-    succH:'Registre completat!', succP:'Hem rebut les teves dades correctament. Ja pots utilitzar la nostra adreça: Av. Valls d\'Andorra 18, 25700 La Seu d\'Urgell, amb el teu nom i cognoms — per a les teves properes compres online. Rebràs també un email de confirmació amb aquesta informació.',
+    succH:'Registre completat!', succP:'Hem rebut les teves dades. En 24 hores laborables rebràs un correu de confirmació amb la teva adreça de lliurament personalitzada.',
     succSub:'Gràcies per confiar en Pickup Point!',
     navCta:'Registra\'t gratis',
     ci1:'Av. Valls d\'Andorra 18', ci4:'Consulta el nostre horari',
     privLink:'Política de privacitat', cookieLink:'Cookies',
   },
   es: {
-    heroBadge: '✦ Dirección en España · Recepción multimarca',
-    heroTitle: 'Tu dirección en España,<br>a solo <em>10 minutos</em> de Andorra',
-    heroTagline: 'Compra donde quieras. Recibe aquí. Recoge cuando quieras.',
-    heroDesc: 'Muchas tiendas no envían a Andorra o cobran mucho más por hacerlo. Con Pickup Point dispones de una dirección en la Seu d\'Urgell donde recibir todos tus paquetes, con notificación por correo y acceso al locker 24/7.',
-    heroCta1: 'Regístrate ahora — es gratis',
-    heroCta2: 'Ver precios',
-    stat1: 'Registro gratuito', stat2: 'Acceso al locker', stat3: 'Custodia incluida', stat4: 'transportistas: recibe cualquier envío',
-    trustHeadline: 'Más de 40 años gestionando envíos',
-    trustText:'Somos la empresa responsable de la <strong>agencia oficial de GLS en la Seu d\'Urgell</strong>. Cada día gestionamos cientos de envíos, para que recibas tus paquetes con total confianza.',
-    trustB1:'🚚 Agencia oficial GLS', trustB2:'📅 Más de 40 años', trustB3:'👥 Equipo profesional',
+    heroBadge: '✦ Servicio multimarca · Recepción de envíos',
+    heroTitle: 'Recibe tus paquetes<br>sin estar <em>en casa</em>',
+    heroDesc: 'Concentra todos tus envíos en un solo punto y recógelos cuando quieras. Gestionamos paquetes de cualquier transportista, sin restricciones.',
+    heroCta1: 'Regístrate — es gratis',
+    heroCta2: 'Cómo funciona',
+    stat1: 'operadores de transporte', stat2: 'coste de registro', stat3: 'de custodia incluida',
     howLabel: 'El proceso', howTitle: '¿Cómo funciona el servicio?',
-    howSub: 'Registrarte solo te llevará dos minutos. Después, solo tendrás que comprar como siempre. Nosotros nos encargamos del resto.',
-    s1h:'Regístrate gratuitamente', s1p:'Solo necesitamos tus datos. En menos de 2 minutos recibirás por correo electrónico tu nueva dirección de recepción.',
-    s2h:'Compra donde quieras', s2p:'Cuando hagas una compra online, usa tu nueva dirección Pickup Point. Aceptamos envíos de GLS, Correos, DHL, SEUR, FedEx, Amazon, MRW, NACEX y cualquier otro transportista.',
-    s3h:'Te avisamos cuando llega', s3p:'En cuanto recibamos tu paquete te enviaremos un correo electrónico. Podrás pasar a recogerlo cuando mejor te venga o usar nuestro locker 24/7 si lo tienes habilitado.',
-    s4h:'Sin prisas', s4p:'Disponemos de:<br>• 14 días gratuitos para paquetes<br>• 7 días gratuitos para palets<br>¿Necesitas más tiempo? También es posible.',
-    whyTitle:'¿Por qué cada vez más andorranos nos utilizan?',
-    why1:'✅ Compra en tiendas que no envían a Andorra.', why2:'✅ Aprovecha las promociones con envío gratuito dentro de España.',
-    why3:'✅ Recibe todos los transportistas en una única dirección.', why4:'✅ Locker disponible las 24 horas.', why5:'✅ Sin cuotas mensuales.',
-    ftLabel:'¿Por qué Pickup Point?', ftTitle:'Todo lo que necesitas para comprar sin fronteras', ftSub:'Una única dirección para recibir cualquier envío, con la tranquilidad de saber que siempre estará controlado.',
-    f1h:'Recibe cualquier envío', f1p:'Trabajamos con GLS, Correos, DHL, SEUR, FedEx, MRW, NACEX, Amazon, InPost y cualquier otro transportista.',
-    f2h:'Siempre sabrás cuándo llega', f2p:'Cada tarde te enviamos un correo con todos los paquetes recibidos. ¿Necesitas más rapidez? Con Pickup Express te avisamos en cuanto llega.',
-    f3h:'Nosotros firmamos por ti', f3p:'No hace falta que estés pendiente del repartidor. Aceptamos el envío en tu nombre y lo custodiamos hasta que lo recojas.',
-    f4h:'Recoge cuando mejor te venga', f4p:'Durante el horario comercial te atenderemos personalmente. Fuera de horario podrás usar el locker automático.',
-    f5h:'Solo pagas cuando recibes un paquete', f5p:'Registrarte es gratis. Sin permanencias. Sin cuotas mensuales. Solo pagas por los envíos que realmente utilizas.',
-    f6h:'Siempre la misma dirección', f6p:'Av. Valls d\'Andorra 18, a solo 10 minutos de Andorra. Fácil aparcamiento y acceso rápido desde la frontera.',
-    f7h:'Tus paquetes están protegidos', f7p:'Cada envío queda registrado. Custodia segura hasta el momento de la recogida.',
-    f8h:'Sin buscar sitio', f8p:'Aparca delante de la puerta y recoge en un minuto.',
-    f9h:'No necesitas instalar nada', f9p:'Solo recibirás un correo cuando el paquete esté disponible.',
-    priceLabel:'Tarifas claras', priceTitle:'¿Cuánto cuesta el servicio?', priceSub:'Sin cuotas ni permanencias. Pagas solo por los envíos que recibes.',
-    ptH1:'Tipo de envío', ptH2:'Precio base<span>(14 días naturales)</span>', ptH3:'Día adicional<span>a partir del día indicado</span>',
-    pr1t:'Hasta 15 kg y 200 cm', pr1s:'sumando los tres lados', pr1iva:'(2,89€ + 21% IVA)', pr1e:'cada día adicional (a partir del día 15)',
-    pr2t:'De 15 a 40 kg o más de 200 cm', pr2iva:'(6,20€ + 21% IVA)', pr2e:'cada día adicional (a partir del día 15)',
-    pr3t:'Envíos paletizados', pr3iva:'(20,66€ + 21% IVA)', pr3e:'cada día adicional (a partir del día 8)',
-    expTitle:'Pickup Express <span class="express-price">+2,50€</span>', expDesc:'Priorizamos la tramitación de tu envío para que puedas recogerlo el mismo día que llega.',
-    priceNote:'Los precios incluyen la recepción, custodia durante el período indicado y la entrega en el locker o en el mostrador. IVA aplicable según normativa vigente.',
-    lockerBadge:'Novedad', lockerLabel:'Nuevo servicio', lockerTitle:'Recoge tus paquetes cuando quieras',
-    lockerDesc:'Sin prisas. Sin colas. Sin depender de horarios. Nuestro locker te permite recoger tus envíos siempre que te venga bien.',
-    lmc1t:'24/7', lmc1s:'Siempre disponible', lmc2t:'1 minuto', lmc2s:'Recogida muy rápida',
-    lmc3t:'100% seguro', lmc3s:'Acceso personalizado', lmc4t:'Aviso por correo', lmc4s:'Cuando el paquete llega',
-    billingRestriction:'Solo disponible para clientes registrados con facturación mensual.',
-    billTag1:'Pago por domiciliación', billSub1:'transferencia / domiciliación bancaria', billLbl1:'Ahorra 0,50€ en cada envío',
-    billNote1:'Los clientes con pago domiciliado disfrutan de un descuento automático de 0,50€ por paquete y acceso completo al locker.', billBtn1:'Activar domiciliación',
-    billTag2:'Pago en efectivo', billSub2:'cash, sin datos bancarios', billLbl2:'Paga solo por los envíos que utilizas',
-    billNote2:'Sin domiciliación bancaria. Acceso al locker también incluido. Solo no se aplica el descuento de 0,50€.',
-    trkLabel:'Para clientes registrados', trkTitle:'Consulta tus envíos', trkSub:'Introduce tu teléfono y apellido para ver los envíos que tenemos pendientes a tu nombre.',
-    trkTelLbl:'Teléfono', trkCognomLbl:'Apellido', trkBtn:'Consultar',
-    trkLoading:'Buscando...', trkErrInput:'Introduce un teléfono y un apellido válidos.', trkErrGeneric:'No se ha podido realizar la consulta. Inténtalo más tarde.',
-    trkEmpty:'No hemos encontrado ningún envío pendiente con estos datos.',
-    trkAlbara:'Albarán', trkBultos:'Bultos', trkPes:'Peso', trkReemborsament:'Reembolso',
-    trkDataRegistre:'Fecha de registro', trkSummary1:'Tienes 1 envío pendiente', trkSummaryN:'Tienes {n} envíos pendientes',
-    trkHint:'Si eres de fuera de España, escribe tu teléfono con el prefijo internacional de tu país pero sin el 0 inicial (por ejemplo, Andorra: 376 600 000 · Francia: 33 6 12 34 56 78).',
-    opsTitle:'Recibe paquetes de cualquier transportista ⭐', opsSub:'No importa dónde compres. Si te lo pueden enviar a España, nosotros lo recibimos por ti.',
-    opsBrands:'Amazon · AliExpress · Zara · PCComponentes · Decathlon · MediaMarkt · El Corte Inglés · Ikea · Temu',
-    opsNote:'¿No encuentras tu transportista? No pasa nada. También aceptamos muchos otros operadores.',
-    opsClosing:'Y si una tienda no envía directamente a Andorra, nosotros somos tu dirección en España.',
+    howSub: 'En tres sencillos pasos tienes el control total de tus envíos.',
+    s1h:'Regístrate', s1p:'Rellena el formulario en menos de 2 minutos y recibe la confirmación por e-mail con tus datos de entrega.',
+    s2h:'Haz tus compras', s2p:'Usa nuestra dirección como punto de entrega en tus compras online. Todos los transportistas funcionan aquí.',
+    s3h:'Recoge cuando quieras', s3p:'Te avisaremos cuando llegue el paquete. Puedes recogerlo en el horario que mejor te venga, sin prisas.',
+    s4h:'Custodia segura', s4p:'Tus paquetes quedan bajo nuestra custodia durante 7 días. Seguridad total para tus envíos.',
+    ftLabel:'¿Por qué Pickup Point?', ftTitle:'Todo lo que necesitas', ftSub:'Un servicio pensado para personas que valoran su tiempo y la comodidad.',
+    f1h:'Multimarca y multitransportista', f1p:'Aceptamos paquetes de GLS, SEUR, MRW, Correos, DHL, Amazon, Inpost y muchos más. Sin exclusividades.',
+    f2h:'Notificación inmediata', f2p:'Te informamos en el momento en que llega tu paquete. Puedes recogerlo cuando decidas, dentro del horario comercial.',
+    f3h:'Recepción autorizada', f3p:'Firmamos por ti en tu ausencia. Tu autorización queda registrada y todo queda documentado.',
+    f4h:'Horario flexible', f4p:'Nos adaptamos a tu rutina. Consulta el horario de atención para planificar tu recogida.',
+    f5h:'Sin coste de registro', f5p:'El registro es totalmente gratuito. Tarifa plana por custodia ampliada. Sin sorpresas.',
+    f6h:'Punto fijo y conocido', f6p:'Siempre la misma dirección: Av. Valls d\'Andorra 18. Fácil de acceder y con aparcamiento cercano.',
+    opsTitle:'Transportistas compatibles', opsSub:'Aceptamos paquetes de todos los operadores principales y muchos más.',
     faqLabel:'Dudas habituales', faqTitle:'Preguntas frecuentes',
-    fq1:'¿Qué dirección debo poner en mis compras?', fa1:'Debes poner nuestra dirección con tus datos: <strong>Av. Valls d\'Andorra 18, 25700 La Seu d\'Urgell</strong>, indicando tu nombre y los dos apellidos. Si el transportista lo pide, indica también tu teléfono y email de contacto.',
-    fq2:'¿Tiene algún coste el servicio?', fa2:'El registro es gratuito. Cada envío recibido tiene un precio según peso y tamaño (desde 3,50€), con la custodia incluida. Consulta la tabla de <a href="#preus">precios</a> para todos los detalles.',
-    fq3:'¿Cuánto tiempo guardaréis mi paquete?', fa3:'La custodia incluida es de 14 días naturales para paquetes (7 días para palets). Pasado este período se aplica un coste adicional por día, indicado en la tabla de precios.',
+    fq1:'¿Qué dirección debo poner en mis compras?', fa1:'Una vez registrado, te facilitaremos la información exacta de dirección e instrucciones para cada transportista. En general: <strong>Av. Valls d\'Andorra 18, [a/c de: tu nombre]</strong>.',
+    fq2:'¿Tiene algún coste el servicio?', fa2:'El registro y la recepción básica son gratuitos. Existe una tarifa por custodia ampliada (más de 7 días) o para volúmenes altos. Consúltanos sin compromiso.',
+    fq3:'¿Cuánto tiempo guardaréis mi paquete?', fa3:'Custodia incluida de 7 días naturales desde la recepción. Pasados estos días, podemos aplicar un coste de custodia adicional o proceder a la devolución.',
     fq4:'¿Podéis recibir paquetes con reembolso?', fa4:'Para paquetes con reembolso es necesaria coordinación previa. Contáctanos antes de hacer la compra para confirmar la disponibilidad de este servicio.',
     fq5:'¿Podéis recibir paquetes de empresa?', fa5:'El servicio es para todos: particulares y empresas. En el formulario puedes indicar si actúas como empresa y tu NIF.',
-    fq6:'¿Por qué muchos e-commerce no envían a Andorra?', fa6:'Andorra no forma parte de la Unión Aduanera Europea, y muchas tiendas online no gestionan los trámites aduaneros o directamente excluyen Andorra de sus envíos. Recibiendo el paquete en nuestra dirección en la Seu d\'Urgell (España) evitas esta restricción.',
-    fq7:'¿Cómo funciona el pago y el descuento por domiciliación?', fa7:'Puedes facturar por transferencia/domiciliación bancaria (−0,50€ de descuento por envío) o en efectivo sin dar datos bancarios (sin descuento). En ambos casos tienes acceso completo al locker 24/7.',
-    regLabel:'Registro gratuito', regTitle:'Empieza ahora', regSub:'Rellena el formulario en menos de 2 minutos. El registro es inmediato, sin esperas.',
+    regLabel:'Registro gratuito', regTitle:'Empieza ahora', regSub:'Rellena el formulario y en 24h tendrás la confirmación por e-mail con tus datos de entrega.',
     indl1:'Email', indl2:'Datos', indl3:'Dirección', indl4:'Autorización',
     st1h:'¡Empezamos!', st1d:'Podrás concentrar todos tus envíos en un solo punto y recogerlos cuando quieras.',
     st2h:'Datos personales', st2d:'Necesitamos tus datos para identificar tus paquetes correctamente.',
@@ -1315,501 +839,18 @@ const translations = {
     authLbl:'<strong>Autorización de recepción</strong> — Autorizo a Recollit i Entregat S.L. a recibir, firmar y custodiar paquetes en mi nombre en la dirección Av. Valls d\'Andorra 18. <span class="req">*</span>',
     rgpdLbl:'Acepto la <a href="#" onclick="return false;">política de privacidad</a> y el tratamiento de mis datos personales conforme al RGPD para la gestión del servicio. <span class="req">*</span>',
     comLbl:'Acepto recibir comunicaciones sobre el servicio y novedades (opcional).',
-    succH:'¡Registro completado!', succP:'Hemos recibido tus datos correctamente. Ya puedes utilizar nuestra dirección: Av. Valls d\'Andorra 18, 25700 La Seu d\'Urgell, con tu nombre y apellidos — para tus próximas compras online. Recibirás también un email de confirmación con esta información.',
+    succH:'¡Registro completado!', succP:'Hemos recibido tus datos. En 24 horas laborables recibirás un correo de confirmación con tu dirección de entrega personalizada.',
     succSub:'¡Gracias por confiar en Pickup Point!',
     navCta:'Regístrate gratis',
     ci1:'Av. Valls d\'Andorra 18', ci4:'Consulta nuestro horario',
     privLink:'Política de privacidad', cookieLink:'Cookies',
-  },
-  en: {
-  heroBadge:'✦ Address in Spain · Multi-carrier reception',
-  heroTitle:'Your address in Spain,<br>just <em>10 minutes</em> from Andorra',
-  heroTagline:'Shop anywhere. Receive here. Pick up whenever you like.',
-  heroDesc:'Many shops don\'t ship to Andorra, or charge a lot more to do so. With Pickup Point you get an address in La Seu d\'Urgell to receive all your packages, with an email notification and 24/7 locker access.',
-  heroCta1:'Sign up now — it\'s free',
-  heroCta2:'See prices',
-  stat1:'Free registration',
-  stat2:'Locker access',
-  stat3:'Storage included',
-  stat4:'carriers: receive any shipment',
-  trustHeadline:'Over 40 years managing shipments',
-  trustText:'We\'re the company behind the <strong>official GLS agency in La Seu d\'Urgell</strong>. Every day we handle hundreds of shipments, so you can receive your packages with total confidence.',
-  trustB1:'🚚 Official GLS agency',
-  trustB2:'📅 Over 40 years',
-  trustB3:'👥 Professional team',
-  howLabel:'The process',
-  howTitle:'How does the service work?',
-  howSub:'Signing up only takes two minutes. After that, just shop as usual — we take care of the rest.',
-  s1h:'Sign up for free',
-  s1p:'We only need your details. In under 2 minutes you\'ll get your new reception address by e-mail.',
-  s2h:'Shop anywhere',
-  s2p:'When you make an online purchase, use your new Pickup Point address. We accept shipments from GLS, Correos, DHL, SEUR, FedEx, Amazon, MRW, NACEX and any other carrier.',
-  s3h:'We\'ll let you know when it arrives',
-  s3p:'As soon as we receive your package we\'ll send you an e-mail. You can come pick it up whenever suits you, or use our 24/7 locker if you have it enabled.',
-  s4h:'No rush',
-  s4p:'We offer:<br>• 14 free days for parcels<br>• 7 free days for pallets<br>Need more time? That\'s possible too.',
-  whyTitle:'Why more and more Andorrans use us',
-  why1:'✅ Shop at stores that don\'t ship to Andorra.',
-  why2:'✅ Take advantage of free-shipping promotions within Spain.',
-  why3:'✅ Receive every carrier at a single address.',
-  why4:'✅ Locker available around the clock.',
-  why5:'✅ No monthly fees.',
-  ftLabel:'Why Pickup Point?',
-  ftTitle:'Everything you need to shop without borders',
-  ftSub:'A single address to receive any shipment, with the peace of mind of knowing it will always be looked after.',
-  f1h:'Receive any shipment',
-  f1p:'We work with GLS, Correos, DHL, SEUR, FedEx, MRW, NACEX, Amazon, InPost and any other carrier.',
-  f2h:'You\'ll always know when it arrives',
-  f2p:'Every afternoon we send you an e-mail with all the packages received. Need it faster? With Pickup Express we notify you as soon as it arrives.',
-  f3h:'We sign for you',
-  f3p:'No need to wait around for the courier. We accept the shipment on your behalf and look after it until you pick it up.',
-  f4h:'Pick up whenever suits you',
-  f4p:'During opening hours we\'ll assist you in person. Outside those hours you can use the automatic locker.',
-  f5h:'You only pay when you receive a package',
-  f5p:'Signing up is free. No commitments. No monthly fees. You only pay for the shipments you actually use.',
-  f6h:'Always the same address',
-  f6p:'Av. Valls d\'Andorra 18, just 10 minutes from Andorra. Easy parking and quick access from the border.',
-  f7h:'Your packages are protected',
-  f7p:'Every shipment is logged. Secure storage until the moment you collect it.',
-  f8h:'No hunting for parking',
-  f8p:'Pull up right outside and pick up in a minute.',
-  f9h:'No app needed',
-  f9p:'You\'ll just get an e-mail when your package is ready.',
-  priceLabel:'Clear rates',
-  priceTitle:'How much does the service cost?',
-  priceSub:'No subscriptions, no commitments. You only pay for the shipments you receive.',
-  ptH1:'Shipment type',
-  ptH2:'Base price<span>(14 calendar days)</span>',
-  ptH3:'Extra day<span>from the day indicated</span>',
-  pr1t:'Up to 15 kg and 200 cm',
-  pr1s:'adding the three sides',
-  pr1iva:'(€2.89 + 21% VAT)',
-  pr1e:'each extra day (from day 15)',
-  pr2t:'From 15 to 40 kg or over 200 cm',
-  pr2iva:'(€6.20 + 21% VAT)',
-  pr2e:'each extra day (from day 15)',
-  pr3t:'Palletised shipments',
-  pr3iva:'(€20.66 + 21% VAT)',
-  pr3e:'each extra day (from day 8)',
-  expTitle:'Pickup Express <span class="express-price">+€2.50</span>',
-  expDesc:'We prioritise the processing of your shipment so you can pick it up the same day it arrives.',
-  priceNote:'Prices include reception, storage for the indicated period and delivery at the locker or the counter. VAT applies as per current regulations.',
-  lockerBadge:'New',
-  lockerLabel:'New service',
-  lockerTitle:'Pick up your packages whenever you like',
-  lockerDesc:'No rush. No queues. No depending on opening hours. Our locker lets you pick up your shipments whenever suits you.',
-  lmc1t:'24/7',
-  lmc1s:'Always available',
-  lmc2t:'1 minute',
-  lmc2s:'Very quick pickup',
-  lmc3t:'100% secure',
-  lmc3s:'Personalised access',
-  lmc4t:'E-mail alert',
-  lmc4s:'When your package arrives',
-  billingRestriction:'Only available for registered clients with monthly billing.',
-  billTag1:'Direct-debit payment',
-  billSub1:'bank transfer / direct debit',
-  billLbl1:'Save €0.50 on every shipment',
-  billNote1:'Clients paying by direct debit get an automatic €0.50 discount per package and full locker access.',
-  billBtn1:'Activate direct debit',
-  billTag2:'Cash payment',
-  billSub2:'cash, no bank details',
-  billLbl2:'Only pay for the shipments you use',
-  billNote2:'No bank details needed. Locker access included too. Only the €0.50 discount doesn\'t apply.',
-  trkLabel:'For registered clients',
-  trkTitle:'Track your shipments',
-  trkSub:'Enter your phone number and surname to see the shipments we currently have waiting for you.',
-  trkTelLbl:'Phone',
-  trkCognomLbl:'Surname',
-  trkBtn:'Check',
-  trkLoading:'Searching...',
-  trkErrInput:'Please enter a valid phone number and surname.',
-  trkErrGeneric:'The lookup could not be completed. Please try again later.',
-  trkEmpty:'We couldn\'t find any pending shipment with these details.',
-  trkAlbara:'Delivery note',
-  trkBultos:'Packages',
-  trkPes:'Weight',
-  trkReemborsament:'Cash on delivery',
-  trkDataRegistre:'Registered on',
-  trkSummary1:'You have 1 pending shipment',
-  trkSummaryN:'You have {n} pending shipments',
-  trkHint:'If you\'re outside Spain, enter your phone with your country\'s international code but without the leading 0 (e.g. Andorra: 376 600 000 · France: 33 6 12 34 56 78).',
-  opsTitle:'Receive packages from any carrier ⭐',
-  opsSub:'It doesn\'t matter where you shop. If it can be shipped to Spain, we\'ll receive it for you.',
-  opsBrands:'Amazon · AliExpress · Zara · PCComponentes · Decathlon · MediaMarkt · El Corte Inglés · Ikea · Temu',
-  opsNote:'Can\'t find your carrier? No problem. We also accept many other operators.',
-  opsClosing:'And if a shop doesn\'t ship directly to Andorra, we\'re your address in Spain.',
-  faqLabel:'Common questions',
-  faqTitle:'Frequently asked questions',
-  fq1:'What address should I use for my purchases?',
-  fa1:'Use our address with your own details: <strong>Av. Valls d\'Andorra 18, 25700 La Seu d\'Urgell</strong>, including your first name and both surnames. If the carrier asks for it, also include your phone number and contact e-mail.',
-  fq2:'Does the service cost anything?',
-  fa2:'Registration is free. Each shipment received has a price based on weight and size (from €3.50), with storage included. Check the <a href="#preus">pricing</a> table for full details.',
-  fq3:'How long will you keep my package?',
-  fa3:'Included storage is 14 calendar days for parcels (7 days for pallets). After that period, an extra daily cost applies, as shown in the pricing table.',
-  fq4:'Can you receive cash-on-delivery packages?',
-  fa4:'Cash-on-delivery packages require prior coordination. Contact us before purchasing to confirm availability of this service.',
-  fq5:'Can you receive business packages?',
-  fa5:'The service is for everyone: individuals and businesses. In the form you can indicate if you\'re acting as a business and your tax ID.',
-  fq6:'Why don\'t many online shops ship to Andorra?',
-  fa6:'Andorra isn\'t part of the European Customs Union, and many online shops don\'t handle customs procedures or simply exclude Andorra from their shipping. Receiving your package at our address in La Seu d\'Urgell (Spain) avoids this restriction.',
-  fq7:'How does payment and the direct-debit discount work?',
-  fa7:'You can pay by bank transfer/direct debit (−€0.50 discount per shipment) or in cash without giving bank details (no discount). Either way you get full 24/7 locker access.',
-  regLabel:'Free registration',
-  regTitle:'Get started',
-  regSub:'Fill in the form in under 2 minutes. Registration is instant, no waiting.',
-  indl1:'Email',
-  indl2:'Details',
-  indl3:'Address',
-  indl4:'Authorisation',
-  st1h:'Let\'s start!',
-  st1d:'You\'ll be able to bring all your shipments together in one place and pick them up whenever suits you.',
-  st2h:'Personal details',
-  st2d:'We need your details to correctly identify your packages.',
-  st3h:'Your address',
-  st3d:'Your contact address for notifications and billing where applicable.',
-  st4h:'Authorisations',
-  st4d:'To operate the service we need your authorisation.',
-  authLbl:'<strong>Reception authorisation</strong> — I authorise Recollit i Entregat S.L. to receive, sign for and store packages on my behalf at Av. Valls d\'Andorra 18. <span class="req">*</span>',
-  rgpdLbl:'I accept the <a href="#" onclick="return false;">privacy policy</a> and the processing of my personal data under GDPR for the management of the service. <span class="req">*</span>',
-  comLbl:'I agree to receive communications about the service and updates (optional).',
-  succH:'Registration complete!',
-  succP:'We\'ve received your details correctly. You can now use our address: Av. Valls d\'Andorra 18, 25700 La Seu d\'Urgell, with your first name and surname — for your upcoming online purchases. You\'ll also receive a confirmation e-mail with this information.',
-  succSub:'Thanks for trusting Pickup Point!',
-  navCta:'Sign up free',
-  ci1:'Av. Valls d\'Andorra 18',
-  ci4:'Check our opening hours',
-  privLink:'Privacy policy',
-  cookieLink:'Cookies',
-  },
-  fr: {
-  heroBadge:'✦ Adresse en Espagne · Réception multi-transporteurs',
-  heroTitle:'Votre adresse en Espagne,<br>à seulement <em>10 minutes</em> d\'Andorre',
-  heroTagline:'Achetez où vous voulez. Recevez ici. Récupérez quand vous voulez.',
-  heroDesc:'De nombreuses boutiques ne livrent pas en Andorre, ou facturent bien plus cher pour le faire. Avec Pickup Point, vous disposez d\'une adresse à la Seu d\'Urgell pour recevoir tous vos colis, avec notification par e-mail et accès au casier 24h/24 et 7j/7.',
-  heroCta1:'Inscrivez-vous maintenant — c\'est gratuit',
-  heroCta2:'Voir les tarifs',
-  stat1:'Inscription gratuite',
-  stat2:'Accès au casier',
-  stat3:'Garde incluse',
-  stat4:'transporteurs : recevez n\'importe quel envoi',
-  trustHeadline:'Plus de 40 ans dans la gestion d\'envois',
-  trustText:'Nous sommes l\'entreprise responsable de l\'<strong>agence officielle GLS à la Seu d\'Urgell</strong>. Chaque jour, nous gérons des centaines d\'envois, pour que vous receviez vos colis en toute confiance.',
-  trustB1:'🚚 Agence officielle GLS',
-  trustB2:'📅 Plus de 40 ans',
-  trustB3:'👥 Équipe professionnelle',
-  howLabel:'Le processus',
-  howTitle:'Comment fonctionne le service ?',
-  howSub:'L\'inscription ne vous prendra que deux minutes. Ensuite, il vous suffira d\'acheter comme d\'habitude. Nous nous occupons du reste.',
-  s1h:'Inscrivez-vous gratuitement',
-  s1p:'Nous avons seulement besoin de vos informations. En moins de 2 minutes, vous recevrez par e-mail votre nouvelle adresse de réception.',
-  s2h:'Achetez où vous voulez',
-  s2p:'Lorsque vous faites un achat en ligne, utilisez votre nouvelle adresse Pickup Point. Nous acceptons les envois de GLS, Correos, DHL, SEUR, FedEx, Amazon, MRW, NACEX et de tout autre transporteur.',
-  s3h:'Nous vous préviendrons à l\'arrivée',
-  s3p:'Dès que nous recevons votre colis, nous vous envoyons un e-mail. Vous pourrez venir le récupérer quand cela vous arrange, ou utiliser notre casier 24/7 si vous l\'avez activé.',
-  s4h:'Sans précipitation',
-  s4p:'Nous proposons :<br>• 14 jours gratuits pour les colis<br>• 7 jours gratuits pour les palettes<br>Besoin de plus de temps ? C\'est possible aussi.',
-  whyTitle:'Pourquoi de plus en plus d\'Andorrans nous font confiance',
-  why1:'✅ Achetez dans des boutiques qui ne livrent pas en Andorre.',
-  why2:'✅ Profitez des promotions avec livraison gratuite en Espagne.',
-  why3:'✅ Recevez tous les transporteurs à une seule adresse.',
-  why4:'✅ Casier disponible 24h/24.',
-  why5:'✅ Sans frais mensuels.',
-  ftLabel:'Pourquoi Pickup Point ?',
-  ftTitle:'Tout ce dont vous avez besoin pour acheter sans frontières',
-  ftSub:'Une seule adresse pour recevoir n\'importe quel envoi, avec la tranquillité de savoir qu\'il sera toujours surveillé.',
-  f1h:'Recevez n\'importe quel envoi',
-  f1p:'Nous travaillons avec GLS, Correos, DHL, SEUR, FedEx, MRW, NACEX, Amazon, InPost et tout autre transporteur.',
-  f2h:'Vous saurez toujours quand ça arrive',
-  f2p:'Chaque après-midi, nous vous envoyons un e-mail avec tous les colis reçus. Besoin de plus de rapidité ? Avec Pickup Express, nous vous prévenons dès l\'arrivée.',
-  f3h:'Nous signons pour vous',
-  f3p:'Pas besoin d\'attendre le livreur. Nous acceptons l\'envoi en votre nom et le gardons jusqu\'à ce que vous le récupériez.',
-  f4h:'Récupérez quand ça vous arrange',
-  f4p:'Pendant les horaires d\'ouverture, nous vous accueillons personnellement. En dehors, vous pouvez utiliser le casier automatique.',
-  f5h:'Vous ne payez que quand vous recevez un colis',
-  f5p:'L\'inscription est gratuite. Sans engagement. Sans frais mensuels. Vous ne payez que pour les envois que vous utilisez réellement.',
-  f6h:'Toujours la même adresse',
-  f6p:'Av. Valls d\'Andorra 18, à seulement 10 minutes d\'Andorre. Stationnement facile et accès rapide depuis la frontière.',
-  f7h:'Vos colis sont protégés',
-  f7p:'Chaque envoi est enregistré. Garde sécurisée jusqu\'au moment de la récupération.',
-  f8h:'Sans chercher de place',
-  f8p:'Garez-vous devant la porte et récupérez votre colis en une minute.',
-  f9h:'Aucune application nécessaire',
-  f9p:'Vous recevrez simplement un e-mail quand votre colis sera disponible.',
-  priceLabel:'Tarifs clairs',
-  priceTitle:'Combien coûte le service ?',
-  priceSub:'Sans abonnement ni engagement. Vous ne payez que pour les envois que vous recevez.',
-  ptH1:'Type d\'envoi',
-  ptH2:'Prix de base<span>(14 jours calendaires)</span>',
-  ptH3:'Jour supplémentaire<span>à partir du jour indiqué</span>',
-  pr1t:'Jusqu\'à 15 kg et 200 cm',
-  pr1s:'en additionnant les trois côtés',
-  pr1iva:'(2,89€ + 21% TVA)',
-  pr1e:'chaque jour supplémentaire (à partir du jour 15)',
-  pr2t:'De 15 à 40 kg ou plus de 200 cm',
-  pr2iva:'(6,20€ + 21% TVA)',
-  pr2e:'chaque jour supplémentaire (à partir du jour 15)',
-  pr3t:'Envois palettisés',
-  pr3iva:'(20,66€ + 21% TVA)',
-  pr3e:'chaque jour supplémentaire (à partir du jour 8)',
-  expTitle:'Pickup Express <span class="express-price">+2,50€</span>',
-  expDesc:'Nous priorisons le traitement de votre envoi pour que vous puissiez le récupérer le jour même de son arrivée.',
-  priceNote:'Les prix incluent la réception, la garde pendant la période indiquée et la remise au casier ou au comptoir. TVA applicable selon la réglementation en vigueur.',
-  lockerBadge:'Nouveau',
-  lockerLabel:'Nouveau service',
-  lockerTitle:'Récupérez vos colis quand vous voulez',
-  lockerDesc:'Sans précipitation. Sans files d\'attente. Sans dépendre des horaires. Notre casier vous permet de récupérer vos envois quand cela vous arrange.',
-  lmc1t:'24/7',
-  lmc1s:'Toujours disponible',
-  lmc2t:'1 minute',
-  lmc2s:'Récupération très rapide',
-  lmc3t:'100% sûr',
-  lmc3s:'Accès personnalisé',
-  lmc4t:'Alerte par e-mail',
-  lmc4s:'Quand le colis arrive',
-  billingRestriction:'Uniquement disponible pour les clients inscrits avec facturation mensuelle.',
-  billTag1:'Paiement par prélèvement',
-  billSub1:'virement / prélèvement bancaire',
-  billLbl1:'Économisez 0,50€ sur chaque envoi',
-  billNote1:'Les clients payant par prélèvement bénéficient d\'une remise automatique de 0,50€ par colis et d\'un accès complet au casier.',
-  billBtn1:'Activer le prélèvement',
-  billTag2:'Paiement en espèces',
-  billSub2:'cash, sans coordonnées bancaires',
-  billLbl2:'Payez seulement les envois que vous utilisez',
-  billNote2:'Sans coordonnées bancaires. Accès au casier également inclus. Seule la remise de 0,50€ ne s\'applique pas.',
-  trkLabel:'Pour les clients inscrits',
-  trkTitle:'Suivez vos envois',
-  trkSub:'Indiquez votre téléphone et votre nom de famille pour voir les envois actuellement en attente à votre nom.',
-  trkTelLbl:'Téléphone',
-  trkCognomLbl:'Nom de famille',
-  trkBtn:'Vérifier',
-  trkLoading:'Recherche...',
-  trkErrInput:'Veuillez indiquer un téléphone et un nom de famille valides.',
-  trkErrGeneric:'La recherche n\'a pas pu aboutir. Réessayez plus tard.',
-  trkEmpty:'Nous n\'avons trouvé aucun envoi en attente avec ces informations.',
-  trkAlbara:'Bordereau',
-  trkBultos:'Colis',
-  trkPes:'Poids',
-  trkReemborsament:'Contre-remboursement',
-  trkDataRegistre:'Date d\'enregistrement',
-  trkSummary1:'Vous avez 1 envoi en attente',
-  trkSummaryN:'Vous avez {n} envois en attente',
-  trkHint:'Si vous êtes en dehors de l\'Espagne, indiquez votre téléphone avec l\'indicatif international de votre pays mais sans le 0 initial (ex. Andorre : 376 600 000 · France : 33 6 12 34 56 78).',
-  opsTitle:'Recevez des colis de n\'importe quel transporteur ⭐',
-  opsSub:'Peu importe où vous achetez. Si ça peut être expédié en Espagne, nous le recevons pour vous.',
-  opsBrands:'Amazon · AliExpress · Zara · PCComponentes · Decathlon · MediaMarkt · El Corte Inglés · Ikea · Temu',
-  opsNote:'Vous ne trouvez pas votre transporteur ? Pas de souci. Nous acceptons aussi beaucoup d\'autres opérateurs.',
-  opsClosing:'Et si une boutique ne livre pas directement en Andorre, nous sommes votre adresse en Espagne.',
-  faqLabel:'Questions courantes',
-  faqTitle:'Questions fréquentes',
-  fq1:'Quelle adresse dois-je indiquer pour mes achats ?',
-  fa1:'Indiquez notre adresse avec vos propres informations : <strong>Av. Valls d\'Andorra 18, 25700 La Seu d\'Urgell</strong>, en précisant votre prénom et vos deux noms de famille. Si le transporteur le demande, indiquez aussi votre téléphone et votre e-mail de contact.',
-  fq2:'Le service a-t-il un coût ?',
-  fa2:'L\'inscription est gratuite. Chaque envoi reçu a un prix selon le poids et la taille (à partir de 3,50€), garde incluse. Consultez le tableau des <a href="#preus">tarifs</a> pour tous les détails.',
-  fq3:'Combien de temps garderez-vous mon colis ?',
-  fa3:'La garde incluse est de 14 jours calendaires pour les colis (7 jours pour les palettes). Passé ce délai, un coût supplémentaire par jour s\'applique, indiqué dans le tableau des tarifs.',
-  fq4:'Pouvez-vous recevoir des colis contre remboursement ?',
-  fa4:'Pour les colis contre remboursement, une coordination préalable est nécessaire. Contactez-nous avant l\'achat pour confirmer la disponibilité de ce service.',
-  fq5:'Pouvez-vous recevoir des colis d\'entreprise ?',
-  fa5:'Le service est ouvert à tous : particuliers et entreprises. Dans le formulaire, vous pouvez indiquer si vous agissez en tant qu\'entreprise et votre numéro fiscal.',
-  fq6:'Pourquoi de nombreux e-commerces ne livrent-ils pas en Andorre ?',
-  fa6:'L\'Andorre ne fait pas partie de l\'Union douanière européenne, et de nombreuses boutiques en ligne ne gèrent pas les formalités douanières ou excluent directement l\'Andorre de leurs livraisons. En recevant votre colis à notre adresse à la Seu d\'Urgell (Espagne), vous évitez cette restriction.',
-  fq7:'Comment fonctionnent le paiement et la remise pour prélèvement automatique ?',
-  fa7:'Vous pouvez payer par virement/prélèvement bancaire (−0,50€ de remise par envoi) ou en espèces sans communiquer vos coordonnées bancaires (sans remise). Dans les deux cas, vous avez un accès complet au casier 24/7.',
-  regLabel:'Inscription gratuite',
-  regTitle:'Commencez maintenant',
-  regSub:'Remplissez le formulaire en moins de 2 minutes. L\'inscription est immédiate, sans attente.',
-  indl1:'E-mail',
-  indl2:'Informations',
-  indl3:'Adresse',
-  indl4:'Autorisation',
-  st1h:'Commençons !',
-  st1d:'Vous pourrez regrouper tous vos envois en un seul endroit et les récupérer quand cela vous arrange.',
-  st2h:'Informations personnelles',
-  st2d:'Nous avons besoin de vos informations pour identifier correctement vos colis.',
-  st3h:'Votre adresse',
-  st3d:'Votre adresse de contact pour les notifications et la facturation le cas échéant.',
-  st4h:'Autorisations',
-  st4d:'Pour pouvoir gérer le service, nous avons besoin de votre autorisation.',
-  authLbl:'<strong>Autorisation de réception</strong> — J\'autorise Recollit i Entregat S.L. à recevoir, signer et garder des colis en mon nom à l\'adresse Av. Valls d\'Andorra 18. <span class="req">*</span>',
-  rgpdLbl:'J\'accepte la <a href="#" onclick="return false;">politique de confidentialité</a> et le traitement de mes données personnelles conformément au RGPD pour la gestion du service. <span class="req">*</span>',
-  comLbl:'J\'accepte de recevoir des communications sur le service et ses nouveautés (facultatif).',
-  succH:'Inscription terminée !',
-  succP:'Nous avons bien reçu vos informations. Vous pouvez désormais utiliser notre adresse : Av. Valls d\'Andorra 18, 25700 La Seu d\'Urgell, avec votre prénom et nom — pour vos prochains achats en ligne. Vous recevrez également un e-mail de confirmation avec ces informations.',
-  succSub:'Merci de faire confiance à Pickup Point !',
-  navCta:'Inscription gratuite',
-  ci1:'Av. Valls d\'Andorra 18',
-  ci4:'Consultez nos horaires',
-  privLink:'Politique de confidentialité',
-  cookieLink:'Cookies',
-  },
-  ru: {
-  heroBadge:'✦ Адрес в Испании · Приём посылок всех служб доставки',
-  heroTitle:'Ваш адрес в Испании,<br>всего в <em>10 минутах</em> от Андорры',
-  heroTagline:'Покупайте где угодно. Получайте здесь. Забирайте, когда удобно.',
-  heroDesc:'Многие магазины не доставляют в Андорру или берут за это гораздо больше. С Pickup Point у вас есть адрес в Ла-Сеу-д\'Уржель для получения всех ваших посылок, с уведомлением по e-mail и доступом к locker-у 24/7.',
-  heroCta1:'Зарегистрироваться сейчас — бесплатно',
-  heroCta2:'Смотреть цены',
-  stat1:'Бесплатная регистрация',
-  stat2:'Доступ к locker-у',
-  stat3:'Хранение включено',
-  stat4:'служб доставки: получайте любую посылку',
-  trustHeadline:'Более 40 лет в управлении посылками',
-  trustText:'Мы — компания, отвечающая за <strong>официальное агентство GLS в Ла-Сеу-д\'Уржель</strong>. Каждый день мы обрабатываем сотни посылок, чтобы вы получали свои посылки с полным доверием.',
-  trustB1:'🚚 Официальное агентство GLS',
-  trustB2:'📅 Более 40 лет',
-  trustB3:'👥 Профессиональная команда',
-  howLabel:'Процесс',
-  howTitle:'Как работает сервис?',
-  howSub:'Регистрация займёт всего две минуты. После этого просто покупайте как обычно — обо всём остальном позаботимся мы.',
-  s1h:'Зарегистрируйтесь бесплатно',
-  s1p:'Нам нужны только ваши данные. Менее чем за 2 минуты вы получите по e-mail ваш новый адрес для получения посылок.',
-  s2h:'Покупайте где угодно',
-  s2p:'Когда совершаете покупку онлайн, используйте ваш новый адрес Pickup Point. Мы принимаем посылки от GLS, Correos, DHL, SEUR, FedEx, Amazon, MRW, NACEX и любой другой службы доставки.',
-  s3h:'Мы сообщим о прибытии',
-  s3p:'Как только мы получим вашу посылку, мы отправим вам e-mail. Вы сможете забрать её, когда вам удобно, или воспользоваться нашим locker-ом 24/7, если он у вас подключён.',
-  s4h:'Без спешки',
-  s4p:'У нас есть:<br>• 14 бесплатных дней для посылок<br>• 7 бесплатных дней для паллет<br>Нужно больше времени? Это тоже возможно.',
-  whyTitle:'Почему всё больше андоррцев выбирают нас',
-  why1:'✅ Покупайте в магазинах, которые не доставляют в Андорру.',
-  why2:'✅ Пользуйтесь акциями с бесплатной доставкой по Испании.',
-  why3:'✅ Получайте посылки от всех служб доставки по одному адресу.',
-  why4:'✅ Locker доступен круглосуточно.',
-  why5:'✅ Без ежемесячной платы.',
-  ftLabel:'Почему Pickup Point?',
-  ftTitle:'Всё, что нужно для покупок без границ',
-  ftSub:'Единый адрес для получения любой посылки, со спокойствием от того, что она всегда под контролем.',
-  f1h:'Получайте любую посылку',
-  f1p:'Мы работаем с GLS, Correos, DHL, SEUR, FedEx, MRW, NACEX, Amazon, InPost и любой другой службой доставки.',
-  f2h:'Вы всегда будете знать о прибытии',
-  f2p:'Каждый день во второй половине дня мы отправляем вам e-mail со всеми полученными посылками. Нужно быстрее? С Pickup Express мы уведомим вас сразу по прибытии.',
-  f3h:'Мы распишемся за вас',
-  f3p:'Не нужно ждать курьера. Мы принимаем посылку от вашего имени и храним её до тех пор, пока вы её не заберёте.',
-  f4h:'Забирайте, когда удобно',
-  f4p:'В часы работы мы обслужим вас лично. В остальное время вы можете воспользоваться автоматическим locker-ом.',
-  f5h:'Платите только когда получаете посылку',
-  f5p:'Регистрация бесплатна. Без обязательств. Без ежемесячной платы. Вы платите только за те посылки, которыми реально пользуетесь.',
-  f6h:'Всегда один и тот же адрес',
-  f6p:'Av. Valls d\'Andorra 18, всего в 10 минутах от Андорры. Удобная парковка и быстрый доступ от границы.',
-  f7h:'Ваши посылки защищены',
-  f7p:'Каждая посылка регистрируется. Надёжное хранение до момента получения.',
-  f8h:'Не нужно искать место',
-  f8p:'Припаркуйтесь прямо у входа и заберите посылку за одну минуту.',
-  f9h:'Не нужно ничего устанавливать',
-  f9p:'Вы просто получите e-mail, когда посылка будет готова к выдаче.',
-  priceLabel:'Прозрачные тарифы',
-  priceTitle:'Сколько стоит сервис?',
-  priceSub:'Без абонементов и обязательств. Вы платите только за полученные посылки.',
-  ptH1:'Тип посылки',
-  ptH2:'Базовая цена<span>(14 календарных дней)</span>',
-  ptH3:'Дополнительный день<span>начиная с указанного дня</span>',
-  pr1t:'До 15 кг и 200 см',
-  pr1s:'по сумме трёх измерений',
-  pr1iva:'(2,89€ + 21% НДС)',
-  pr1e:'за каждый доп. день (начиная с 15-го дня)',
-  pr2t:'От 15 до 40 кг или более 200 см',
-  pr2iva:'(6,20€ + 21% НДС)',
-  pr2e:'за каждый доп. день (начиная с 15-го дня)',
-  pr3t:'Паллетные отправления',
-  pr3iva:'(20,66€ + 21% НДС)',
-  pr3e:'за каждый доп. день (начиная с 8-го дня)',
-  expTitle:'Pickup Express <span class="express-price">+2,50€</span>',
-  expDesc:'Мы приоритизируем обработку вашей посылки, чтобы вы могли забрать её в день прибытия.',
-  priceNote:'Цены включают приём, хранение в течение указанного периода и выдачу через locker или на стойке. НДС применяется согласно действующему законодательству.',
-  lockerBadge:'Новинка',
-  lockerLabel:'Новая услуга',
-  lockerTitle:'Забирайте посылки, когда вам удобно',
-  lockerDesc:'Без спешки. Без очередей. Без зависимости от часов работы. Наш locker позволяет забирать посылки в любое удобное для вас время.',
-  lmc1t:'24/7',
-  lmc1s:'Всегда доступен',
-  lmc2t:'1 минута',
-  lmc2s:'Очень быстрое получение',
-  lmc3t:'100% безопасно',
-  lmc3s:'Персональный доступ',
-  lmc4t:'Уведомление по e-mail',
-  lmc4s:'Когда посылка прибывает',
-  billingRestriction:'Доступно только для зарегистрированных клиентов с ежемесячным выставлением счетов.',
-  billTag1:'Оплата прямым дебетованием',
-  billSub1:'перевод / прямое дебетование',
-  billLbl1:'Экономьте 0,50€ на каждой посылке',
-  billNote1:'Клиенты с прямым дебетованием получают автоматическую скидку 0,50€ за посылку и полный доступ к locker-у.',
-  billBtn1:'Подключить прямое дебетование',
-  billTag2:'Оплата наличными',
-  billSub2:'наличные, без банковских данных',
-  billLbl2:'Платите только за используемые посылки',
-  billNote2:'Без банковских данных. Доступ к locker-у также включён. Не применяется только скидка 0,50€.',
-  trkLabel:'Для зарегистрированных клиентов',
-  trkTitle:'Отследить ваши посылки',
-  trkSub:'Введите ваш телефон и фамилию, чтобы увидеть посылки, которые сейчас ожидают вас.',
-  trkTelLbl:'Телефон',
-  trkCognomLbl:'Фамилия',
-  trkBtn:'Проверить',
-  trkLoading:'Поиск...',
-  trkErrInput:'Введите корректный телефон и фамилию.',
-  trkErrGeneric:'Не удалось выполнить запрос. Попробуйте позже.',
-  trkEmpty:'Мы не нашли ни одной ожидающей посылки с этими данными.',
-  trkAlbara:'Накладная',
-  trkBultos:'Мест',
-  trkPes:'Вес',
-  trkReemborsament:'Наложенный платёж',
-  trkDataRegistre:'Дата регистрации',
-  trkSummary1:'У вас 1 посылка ожидает',
-  trkSummaryN:'У вас {n} посылок ожидает',
-  trkHint:'Если вы находитесь за пределами Испании, укажите телефон с международным кодом вашей страны, но без начального 0 (например, Андорра: 376 600 000 · Франция: 33 6 12 34 56 78).',
-  opsTitle:'Получайте посылки от любой службы доставки ⭐',
-  opsSub:'Неважно, где вы покупаете. Если это можно отправить в Испанию, мы получим это за вас.',
-  opsBrands:'Amazon · AliExpress · Zara · PCComponentes · Decathlon · MediaMarkt · El Corte Inglés · Ikea · Temu',
-  opsNote:'Не нашли свою службу доставки? Не проблема. Мы также принимаем многих других операторов.',
-  opsClosing:'А если магазин не доставляет напрямую в Андорру, мы — ваш адрес в Испании.',
-  faqLabel:'Частые вопросы',
-  faqTitle:'Часто задаваемые вопросы',
-  fq1:'Какой адрес указывать при покупках?',
-  fa1:'Указывайте наш адрес со своими данными: <strong>Av. Valls d\'Andorra 18, 25700 La Seu d\'Urgell</strong>, с указанием вашего имени и обеих фамилий. Если служба доставки требует, укажите также телефон и контактный e-mail.',
-  fq2:'Есть ли плата за сервис?',
-  fa2:'Регистрация бесплатна. Каждая полученная посылка имеет цену в зависимости от веса и размера (от 3,50€), с учётом хранения. Все детали смотрите в таблице <a href="#preus">цен</a>.',
-  fq3:'Сколько времени вы храните мою посылку?',
-  fa3:'Включённое хранение — 14 календарных дней для посылок (7 дней для паллет). По истечении этого срока применяется дополнительная плата за день, указанная в таблице цен.',
-  fq4:'Принимаете ли вы посылки наложенным платежом?',
-  fa4:'Для посылок наложенным платежом требуется предварительное согласование. Свяжитесь с нами перед покупкой, чтобы подтвердить доступность этой услуги.',
-  fq5:'Принимаете ли вы посылки для юридических лиц?',
-  fa5:'Сервис доступен для всех: частных лиц и компаний. В форме вы можете указать, что действуете от имени компании, и указать ваш налоговый номер.',
-  fq6:'Почему многие интернет-магазины не доставляют в Андорру?',
-  fa6:'Андорра не входит в Таможенный союз ЕС, и многие интернет-магазины не занимаются таможенным оформлением или просто исключают Андорру из зоны доставки. Получая посылку по нашему адресу в Ла-Сеу-д\'Уржель (Испания), вы избегаете этого ограничения.',
-  fq7:'Как работает оплата и скидка за прямое дебетование?',
-  fa7:'Вы можете платить банковским переводом/прямым дебетованием (скидка −0,50€ за посылку) или наличными без предоставления банковских данных (без скидки). В обоих случаях у вас полный доступ к locker-у 24/7.',
-  regLabel:'Бесплатная регистрация',
-  regTitle:'Начните сейчас',
-  regSub:'Заполните форму менее чем за 2 минуты. Регистрация происходит мгновенно, без ожидания.',
-  indl1:'Email',
-  indl2:'Данные',
-  indl3:'Адрес',
-  indl4:'Разрешение',
-  st1h:'Начнём!',
-  st1d:'Вы сможете объединить все свои посылки в одном месте и забирать их, когда вам удобно.',
-  st2h:'Личные данные',
-  st2d:'Нам нужны ваши данные, чтобы правильно идентифицировать ваши посылки.',
-  st3h:'Ваш адрес',
-  st3d:'Ваш контактный адрес для уведомлений и, при необходимости, для выставления счетов.',
-  st4h:'Разрешения',
-  st4d:'Для работы сервиса нам необходимо ваше разрешение.',
-  authLbl:'<strong>Разрешение на приём</strong> — Я разрешаю Recollit i Entregat S.L. получать, расписываться и хранить посылки от моего имени по адресу Av. Valls d\'Andorra 18. <span class="req">*</span>',
-  rgpdLbl:'Я принимаю <a href="#" onclick="return false;">политику конфиденциальности</a> и обработку моих персональных данных в соответствии с GDPR для управления сервисом. <span class="req">*</span>',
-  comLbl:'Я согласен получать сообщения об услуге и новостях (необязательно).',
-  succH:'Регистрация завершена!',
-  succP:'Мы успешно получили ваши данные. Теперь вы можете использовать наш адрес: Av. Valls d\'Andorra 18, 25700 La Seu d\'Urgell, с указанием вашего имени и фамилии — для ваших будущих покупок онлайн. Вы также получите письмо с подтверждением этой информации.',
-  succSub:'Спасибо, что доверяете Pickup Point!',
-  navCta:'Зарегистрироваться бесплатно',
-  ci1:'Av. Valls d\'Andorra 18',
-  ci4:'Узнайте наши часы работы',
-  privLink:'Политика конфиденциальности',
-  cookieLink:'Cookies',
-  },
+  }
 };
 
 let lang = 'ca';
-function setLang(newLang) {
-  lang = newLang;
-  document.getElementById('langBtn').value = lang;
+function toggleLang() {
+  lang = lang === 'ca' ? 'es' : 'ca';
+  document.getElementById('langBtn').textContent = lang === 'ca' ? 'ES' : 'CA';
   document.documentElement.lang = lang;
   const t = translations[lang];
   // Update all translatable elements
@@ -1819,7 +860,7 @@ function setLang(newLang) {
   });
   // Nav links
   document.querySelectorAll('nav a[data-ca]').forEach(a => {
-    a.textContent = a.dataset[lang] || a.dataset.ca;
+    a.textContent = lang === 'ca' ? a.dataset.ca : a.dataset.es;
   });
 }
 
