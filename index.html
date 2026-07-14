@@ -85,7 +85,7 @@
       color: #fff; padding: 90px 20px 80px; text-align: center; position: relative; overflow: hidden;
     }
     .hero::before {
-      content: ''; position: absolute; inset: 0;
+      content: ''; position: absolute; inset: 0; pointer-events: none;
       background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
     }
     .hero-badge {
@@ -104,8 +104,22 @@
     .stat strong { display: block; font-size: 2rem; font-weight: 900; color: var(--brand); }
     .stat span { font-size: .85rem; opacity: .7; }
 
+    /* ─── Confiança ─── */
+    .trust { background: var(--light); padding: 34px 0; }
+    .trust-inner {
+      display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+    }
+    .trust-text { color: var(--dark); font-size: .98rem; max-width: 560px; }
+    .trust-text strong { color: var(--brand-navy); }
+    .trust-badges { display: flex; gap: 10px; flex-wrap: wrap; }
+    .trust-badge {
+      background: #fff; border: 1px solid var(--border); border-radius: 50px;
+      padding: 8px 16px; font-size: .82rem; font-weight: 700; color: var(--dark);
+      white-space: nowrap;
+    }
+
     /* ─── Sections generic ─── */
-    section { padding: 80px 0; }
+    section { padding: 80px 0; scroll-margin-top: 84px; }
     .section-label {
       font-size: .8rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
       color: var(--brand); margin-bottom: 10px;
@@ -212,7 +226,7 @@
     .billing-amount span:first-child { font-size: .85rem; font-weight: 700; }
     .billing-amount strong { font-size: 1.8rem; font-weight: 900; }
     .billing-amount-good span:first-child, .billing-amount-good strong { color: var(--brand-green); }
-    .billing-amount-neutral span:first-child, .billing-amount-neutral strong { color: var(--muted); }
+    .billing-amount-neutral strong { color: var(--brand-blue); font-size: 1.3rem; }
     .billing-amount span:last-child { font-size: .82rem; color: var(--muted); }
     .billing-note { font-size: .85rem; color: var(--muted); }
 
@@ -383,6 +397,8 @@
       .locker-grid { grid-template-columns: 1fr; }
       .locker-visual { margin: 0 auto; }
       .billing-compare { grid-template-columns: 1fr; }
+      .trust-inner { flex-direction: column; text-align: center; }
+      .trust-badges { justify-content: center; }
     }
   </style>
 </head>
@@ -416,7 +432,7 @@
   <div class="container">
     <div class="hero-badge" id="heroBadge">✦ A 10 minuts d'Andorra la Vella · Recepció multimarca</div>
     <h1 id="heroTitle">La teva adreça<br>a <em>un pas</em> de fronteres</h1>
-    <p id="heroDesc">Molts e-commerce no envien a Andorra per restriccions duaneres. Amb Pickup Point tens una adreça a la Seu d'Urgell per rebre qualsevol paquet i el recollides quan et vagi bé — amb accés a locker 24/7.</p>
+    <p id="heroDesc">Moltes botigues online no envien directament a Andorra per les restriccions duaneres del país. Per això, amb Pickup Point tens una adreça a la Seu d'Urgell per rebre qualsevol paquet i recollir-lo quan et vagi bé — amb accés a locker 24/7.</p>
     <div class="hero-actions">
       <a href="#registra-t" class="btn btn-primary" id="heroCta1">Registra't ara — és gratis</a>
       <a href="#preus" class="btn btn-outline" id="heroCta2">Veure preus</a>
@@ -425,6 +441,20 @@
       <div class="stat"><strong>0€</strong><span id="stat1">cost de registre</span></div>
       <div class="stat"><strong>24/7</strong><span id="stat2">accés al locker</span></div>
       <div class="stat"><strong>14 dies</strong><span id="stat3">de custòdia inclosa</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ CONFIANÇA ════ -->
+<section class="trust">
+  <div class="container">
+    <div class="trust-inner">
+      <p class="trust-text" id="trustText">Som la mateixa empresa que gestiona l'<strong>agència oficial de GLS a la Seu d'Urgell</strong>: una llarga trajectòria logística i un equip professional al teu servei.</p>
+      <div class="trust-badges">
+        <span class="trust-badge" id="trustB1">🚚 Agència oficial GLS</span>
+        <span class="trust-badge" id="trustB2">📅 Llarga trajectòria</span>
+        <span class="trust-badge" id="trustB3">👥 Equip professional</span>
+      </div>
     </div>
   </div>
 </section>
@@ -439,7 +469,7 @@
       <div class="step">
         <div class="step-num">1</div>
         <h3 id="s1h">Registra't</h3>
-        <p id="s1p">Omple el formulari en menys de 2 minuts i rep la confirmació per e-mail amb les teves dades de lliurament.</p>
+        <p id="s1p">Omple el formulari en menys de 2 minuts i rep per e-mail la confirmació amb l'adreça exacta que has d'utilitzar en les teves compres.</p>
       </div>
       <div class="step">
         <div class="step-num">2</div>
@@ -539,9 +569,7 @@
         <p class="billing-tag" id="billTag2">Facturació amb pagament en efectiu</p>
         <span class="billing-sub" id="billSub2">cash, sense dades bancàries</span>
         <div class="billing-amount billing-amount-neutral">
-          <span id="billLbl2">Sense descompte</span>
-          <strong>0,00€</strong>
-          <span id="billUnit2">per enviament</span>
+          <strong id="billLbl2">Sense descompte</strong>
         </div>
         <p class="billing-note" id="billNote2">Accés complet al locker igualment inclòs.</p>
       </div>
@@ -563,8 +591,8 @@
       </div>
       <div class="feature">
         <div class="feature-icon">🔔</div>
-        <h3 id="f2h">Notificació immediata</h3>
-        <p id="f2p">T'informem en el moment que arriba el teu paquet. Pots recollir-lo quan tu triïs, dins l'horari comercial.</p>
+        <h3 id="f2h">Avís diari centralitzat</h3>
+        <p id="f2p">Per motius operatius, avisem un cop al dia (cap a les 18h) de tots els paquets rebuts. Amb Pickup Express t'avisem abans, el mateix dia.</p>
       </div>
       <div class="feature">
         <div class="feature-icon">🔒</div>
@@ -573,8 +601,8 @@
       </div>
       <div class="feature">
         <div class="feature-icon">🕐</div>
-        <h3 id="f4h">Horari flexible</h3>
-        <p id="f4p">Ens adaptem a la teva rutina. Consulta l'horari d'atenció per planificar la teva recollida.</p>
+        <h3 id="f4h">Atenció presencial + locker 24/7</h3>
+        <p id="f4p">Tenim horari d'atenció presencial (8h al dia). La resta del temps, accés lliure al locker sense necessitat de personal.</p>
       </div>
       <div class="feature">
         <div class="feature-icon">💶</div>
@@ -585,6 +613,11 @@
         <div class="feature-icon">📍</div>
         <h3 id="f6h">Punt fix i conegut</h3>
         <p id="f6p">Sempre la mateixa adreça: Av. Valls d'Andorra 18. Fàcil d'accedir i amb aparcament proper.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🛡️</div>
+        <h3 id="f7h">Enviaments assegurats</h3>
+        <p id="f7p">Els teus paquets estan assegurats amb nosaltres durant tot el temps de custòdia. Tranquil·litat total.</p>
       </div>
     </div>
   </div>
@@ -835,7 +868,7 @@
    2. Copia la URL que Google et dóna
    3. Enganxa-la aquí:
    ───────────────────────────────────────────────── */
-const SCRIPT_URL = 'https://script.google.com/macros/s/ENGANXA_AQUI_LA_TEVA_URL/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzVAecW5h4Rw435qDBGQ-HLbchZUJs0ppfUmfaq_nrzNUWEFmV8tHJILRmw2t4uRjEp/exec';
 
 /* ─── Anys footer ─── */
 document.getElementById('yr').textContent = new Date().getFullYear();
@@ -940,7 +973,7 @@ async function submitForm() {
     const res = await fetch(SCRIPT_URL, {
       method: 'POST',
       mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(data)
     });
     // no-cors always returns opaque — assume success
@@ -964,23 +997,26 @@ const translations = {
   ca: {
     heroBadge: '✦ A 10 minuts d\'Andorra la Vella · Recepció multimarca',
     heroTitle: 'La teva adreça<br>a <em>un pas</em> de fronteres',
-    heroDesc: 'Molts e-commerce no envien a Andorra per restriccions duaneres. Amb Pickup Point tens una adreça a la Seu d\'Urgell per rebre qualsevol paquet i el recollides quan et vagi bé — amb accés a locker 24/7.',
+    heroDesc: 'Moltes botigues online no envien directament a Andorra per les restriccions duaneres del país. Per això, amb Pickup Point tens una adreça a la Seu d\'Urgell per rebre qualsevol paquet i recollir-lo quan et vagi bé — amb accés a locker 24/7.',
     heroCta1: 'Registra\'t ara — és gratis',
     heroCta2: 'Veure preus',
     stat1: 'cost de registre', stat2: 'accés al locker', stat3: 'de custòdia inclosa',
+    trustText:'Som la mateixa empresa que gestiona l\'<strong>agència oficial de GLS a la Seu d\'Urgell</strong>: una llarga trajectòria logística i un equip professional al teu servei.',
+    trustB1:'🚚 Agència oficial GLS', trustB2:'📅 Llarga trajectòria', trustB3:'👥 Equip professional',
     howLabel: 'El procés', howTitle: 'Com funciona el servei?',
     howSub: 'En tres passos senzills tens el control total dels teus enviaments.',
-    s1h:'Registra\'t', s1p:'Omple el formulari en menys de 2 minuts i rep la confirmació per e-mail amb les teves dades de lliurament.',
+    s1h:'Registra\'t', s1p:'Omple el formulari en menys de 2 minuts i rep per e-mail la confirmació amb l\'adreça exacta que has d\'utilitzar en les teves compres.',
     s2h:'Fes les teves compres', s2p:'Utilitza la nostra adreça com a punt d\'entrega en les teves compres online. Tots els transportistes funcionen aquí.',
     s3h:'Recull quan vulguis', s3p:'T\'avisarem quan arribi el paquet. Pots recollir-lo en l\'horari que et vagi millor, sense pressa.',
     s4h:'Custòdia inclosa', s4p:'Cada enviament inclou dies de custòdia gratuïts (14 dies per a paquets, 7 per a palets). Consulta els preus exactes més avall.',
     ftLabel:'Per què Pickup Point?', ftTitle:'Tot el que necessites', ftSub:'Un servei pensat per a persones que valoren el seu temps i la comoditat.',
     f1h:'Multimarca i multitransportista', f1p:'Acceptem paquets de GLS, SEUR, MRW, Correos, DHL, Amazon, Inpost i molts més. Sense exclusivitats.',
-    f2h:'Notificació immediata', f2p:'T\'informem en el moment que arriba el teu paquet. Pots recollir-lo quan tu triïs, dins l\'horari comercial.',
+    f2h:'Avís diari centralitzat', f2p:'Per motius operatius, avisem un cop al dia (cap a les 18h) de tots els paquets rebuts. Amb Pickup Express t\'avisem abans, el mateix dia.',
     f3h:'Recepció autoritzada', f3p:'Signem per tu en la teva absència. La teva autorització queda registrada i tot queda documentat.',
-    f4h:'Horari flexible', f4p:'Ens adaptem a la teva rutina. Consulta l\'horari d\'atenció per planificar la teva recollida.',
+    f4h:'Atenció presencial + locker 24/7', f4p:'Tenim horari d\'atenció presencial (8h al dia). La resta del temps, accés lliure al locker sense necessitat de personal.',
     f5h:'Preus clars, sense sorpreses', f5p:'El registre és totalment gratuït. Pagues només pels enviaments que reps, amb tarifes fixes segons pes i mida.',
     f6h:'Punt fix i conegut', f6p:'Sempre la mateixa adreça: Av. Valls d\'Andorra 18. Fàcil d\'accedir i amb aparcament proper.',
+    f7h:'Enviaments assegurats', f7p:'Els teus paquets estan assegurats amb nosaltres durant tot el temps de custòdia. Tranquil·litat total.',
     priceLabel:'Tarifes clares', priceTitle:'Quant costa el servei?', priceSub:'Sense quotes ni permanències. Pagues només pels enviaments que reps.',
     ptH1:'Tipus d\'enviament', ptH2:'Preu base<span>(14 dies naturals)</span>', ptH3:'Dia addicional<span>a partir del dia indicat</span>',
     pr1t:'Fins a 15 kg i 200 cm', pr1s:'sumant els tres costats', pr1iva:'(2,89€ + 21% IVA)', pr1e:'cada dia addicional (a partir del dia 15)',
@@ -992,7 +1028,7 @@ const translations = {
     lockerDesc:'Per als nostres clients, disposem d\'un locker automàtic per recollir o deixar enviaments quan et vagi millor, sense dependre del nostre horari d\'atenció.',
     lf1:'Segur i confidencial', lf2:'Disponible 24/7', lf3:'Fàcil i ràpid d\'utilitzar',
     billTag1:'Facturació amb pagament bancari', billSub1:'transferència / domiciliació', billLbl1:'Descompte', billUnit1:'per enviament', billNote1:'Accés complet al locker inclòs.',
-    billTag2:'Facturació amb pagament en efectiu', billSub2:'cash, sense dades bancàries', billLbl2:'Sense descompte', billUnit2:'per enviament', billNote2:'Accés complet al locker igualment inclòs.',
+    billTag2:'Facturació amb pagament en efectiu', billSub2:'cash, sense dades bancàries', billLbl2:'Sense descompte', billNote2:'Accés complet al locker igualment inclòs.',
     opsTitle:'Transportistes compatibles', opsSub:'Acceptem paquets de tots els operadors principals i molts més.',
     faqLabel:'Dubtes habituals', faqTitle:'Preguntes freqüents',
     fq1:'Quina adreça he de posar a les meves compres?', fa1:'Un cop registrat, et facilitarem la informació exacta d\'adreça i les instruccions per a cada transportista. En general: <strong>Av. Valls d\'Andorra 18, [a/c de: el teu nom]</strong>.',
@@ -1020,23 +1056,26 @@ const translations = {
   es: {
     heroBadge: '✦ A 10 minutos de Andorra la Vella · Recepción multimarca',
     heroTitle: 'Tu dirección<br>a <em>un paso</em> de fronteras',
-    heroDesc: 'Muchos e-commerce no envían a Andorra por restricciones aduaneras. Con Pickup Point tienes una dirección en la Seu d\'Urgell para recibir cualquier paquete y recogerlo cuando quieras — con acceso a locker 24/7.',
+    heroDesc: 'Muchas tiendas online no envían directamente a Andorra por las restricciones aduaneras del país. Por eso, con Pickup Point tienes una dirección en la Seu d\'Urgell para recibir cualquier paquete y recogerlo cuando quieras — con acceso a locker 24/7.',
     heroCta1: 'Regístrate ahora — es gratis',
     heroCta2: 'Ver precios',
     stat1: 'coste de registro', stat2: 'acceso al locker', stat3: 'de custodia incluida',
+    trustText:'Somos la misma empresa que gestiona la <strong>agencia oficial de GLS en la Seu d\'Urgell</strong>: una larga trayectoria logística y un equipo profesional a tu servicio.',
+    trustB1:'🚚 Agencia oficial GLS', trustB2:'📅 Larga trayectoria', trustB3:'👥 Equipo profesional',
     howLabel: 'El proceso', howTitle: '¿Cómo funciona el servicio?',
     howSub: 'En tres sencillos pasos tienes el control total de tus envíos.',
-    s1h:'Regístrate', s1p:'Rellena el formulario en menos de 2 minutos y recibe la confirmación por e-mail con tus datos de entrega.',
+    s1h:'Regístrate', s1p:'Rellena el formulario en menos de 2 minutos y recibe por e-mail la confirmación con la dirección exacta que debes utilizar en tus compras.',
     s2h:'Haz tus compras', s2p:'Usa nuestra dirección como punto de entrega en tus compras online. Todos los transportistas funcionan aquí.',
     s3h:'Recoge cuando quieras', s3p:'Te avisaremos cuando llegue el paquete. Puedes recogerlo en el horario que mejor te venga, sin prisas.',
     s4h:'Custodia incluida', s4p:'Cada envío incluye días de custodia gratuitos (14 días para paquetes, 7 para palets). Consulta los precios exactos más abajo.',
     ftLabel:'¿Por qué Pickup Point?', ftTitle:'Todo lo que necesitas', ftSub:'Un servicio pensado para personas que valoran su tiempo y la comodidad.',
     f1h:'Multimarca y multitransportista', f1p:'Aceptamos paquetes de GLS, SEUR, MRW, Correos, DHL, Amazon, Inpost y muchos más. Sin exclusividades.',
-    f2h:'Notificación inmediata', f2p:'Te informamos en el momento en que llega tu paquete. Puedes recogerlo cuando decidas, dentro del horario comercial.',
+    f2h:'Aviso diario centralizado', f2p:'Por motivos operativos, avisamos una vez al día (hacia las 18h) de todos los paquetes recibidos. Con Pickup Express te avisamos antes, el mismo día.',
     f3h:'Recepción autorizada', f3p:'Firmamos por ti en tu ausencia. Tu autorización queda registrada y todo queda documentado.',
-    f4h:'Horario flexible', f4p:'Nos adaptamos a tu rutina. Consulta el horario de atención para planificar tu recogida.',
+    f4h:'Atención presencial + locker 24/7', f4p:'Tenemos horario de atención presencial (8h al día). El resto del tiempo, acceso libre al locker sin necesidad de personal.',
     f5h:'Precios claros, sin sorpresas', f5p:'El registro es totalmente gratuito. Pagas solo por los envíos que recibes, con tarifas fijas según peso y tamaño.',
     f6h:'Punto fijo y conocido', f6p:'Siempre la misma dirección: Av. Valls d\'Andorra 18. Fácil de acceder y con aparcamiento cercano.',
+    f7h:'Envíos asegurados', f7p:'Tus paquetes están asegurados con nosotros durante todo el tiempo de custodia. Tranquilidad total.',
     priceLabel:'Tarifas claras', priceTitle:'¿Cuánto cuesta el servicio?', priceSub:'Sin cuotas ni permanencias. Pagas solo por los envíos que recibes.',
     ptH1:'Tipo de envío', ptH2:'Precio base<span>(14 días naturales)</span>', ptH3:'Día adicional<span>a partir del día indicado</span>',
     pr1t:'Hasta 15 kg y 200 cm', pr1s:'sumando los tres lados', pr1iva:'(2,89€ + 21% IVA)', pr1e:'cada día adicional (a partir del día 15)',
@@ -1048,7 +1087,7 @@ const translations = {
     lockerDesc:'Para nuestros clientes, disponemos de un locker automático para recoger o dejar envíos cuando mejor te venga, sin depender de nuestro horario de atención.',
     lf1:'Seguro y confidencial', lf2:'Disponible 24/7', lf3:'Fácil y rápido de utilizar',
     billTag1:'Facturación con pago bancario', billSub1:'transferencia / domiciliación', billLbl1:'Descuento', billUnit1:'por envío', billNote1:'Acceso completo al locker incluido.',
-    billTag2:'Facturación con pago en efectivo', billSub2:'cash, sin datos bancarios', billLbl2:'Sin descuento', billUnit2:'por envío', billNote2:'Acceso completo al locker igualmente incluido.',
+    billTag2:'Facturación con pago en efectivo', billSub2:'cash, sin datos bancarios', billLbl2:'Sin descuento', billNote2:'Acceso completo al locker igualmente incluido.',
     opsTitle:'Transportistas compatibles', opsSub:'Aceptamos paquetes de todos los operadores principales y muchos más.',
     faqLabel:'Dudas habituales', faqTitle:'Preguntas frecuentes',
     fq1:'¿Qué dirección debo poner en mis compras?', fa1:'Una vez registrado, te facilitaremos la información exacta de dirección e instrucciones para cada transportista. En general: <strong>Av. Valls d\'Andorra 18, [a/c de: tu nombre]</strong>.',
