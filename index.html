@@ -93,12 +93,13 @@
       color: var(--brand); border-radius: 50px; padding: 6px 18px; font-size: .85rem;
       font-weight: 600; margin-bottom: 20px; letter-spacing: .5px;
     }
-    .hero h1 { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 900; line-height: 1.15; margin-bottom: 22px; }
+    .hero h1 { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 900; line-height: 1.15; margin-bottom: 18px; }
     .hero h1 em { color: var(--brand); font-style: normal; }
+    .hero-tagline { font-size: 1.25rem; font-weight: 700; color: #fff; max-width: 580px; margin: 0 auto 14px; }
     .hero p { font-size: 1.15rem; opacity: .85; max-width: 580px; margin: 0 auto 36px; }
     .hero-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
     .hero-stats {
-      display: flex; gap: 40px; justify-content: center; flex-wrap: wrap;
+      display: flex; gap: 32px; justify-content: center; flex-wrap: wrap;
       margin-top: 60px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,.1);
     }
     .stat strong { display: block; font-size: 2rem; font-weight: 900; color: var(--brand); }
@@ -109,6 +110,7 @@
     .trust-inner {
       display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
     }
+    .trust-headline { font-size: 1.1rem; font-weight: 900; color: var(--brand-navy); margin-bottom: 4px; }
     .trust-text { color: var(--dark); font-size: .98rem; max-width: 560px; }
     .trust-text strong { color: var(--brand-navy); }
     .trust-badges { display: flex; gap: 10px; flex-wrap: wrap; }
@@ -117,6 +119,15 @@
       padding: 8px 16px; font-size: .82rem; font-weight: 700; color: var(--dark);
       white-space: nowrap;
     }
+
+    /* ─── Per què (band) ─── */
+    .why-band {
+      margin-top: 56px; background: var(--light); border-radius: var(--radius);
+      padding: 32px 36px;
+    }
+    .why-title { font-weight: 900; font-size: 1.15rem; color: var(--dark); margin-bottom: 16px; text-align: center; }
+    .why-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; max-width: 560px; margin: 0 auto; }
+    .why-list li { font-size: .98rem; color: var(--dark); }
 
     /* ─── Sections generic ─── */
     section { padding: 80px 0; scroll-margin-top: 84px; }
@@ -202,33 +213,39 @@
       font-size: .72rem; font-weight: 800; letter-spacing: .5px; text-transform: uppercase;
       padding: 6px 14px; border-radius: 50px; box-shadow: 0 2px 10px rgba(0,0,0,.15);
     }
-    .locker-desc { color: var(--muted); margin-bottom: 26px; max-width: 480px; }
-    .locker-features { display: flex; flex-direction: column; gap: 14px; }
-    .locker-feature {
-      display: flex; align-items: center; gap: 12px; font-weight: 600; color: var(--dark); font-size: .95rem;
+    .locker-desc { color: var(--muted); margin-bottom: 0; max-width: 480px; }
+    .locker-minicards {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+      margin: 36px 0 28px;
     }
-    .lf-icon {
-      width: 38px; height: 38px; border-radius: 50%; background: #fff; box-shadow: var(--shadow);
-      display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0;
+    .locker-minicard {
+      background: #fff; border-radius: var(--radius); box-shadow: var(--shadow);
+      padding: 20px 14px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px;
+    }
+    .lmc-icon { font-size: 1.6rem; margin-bottom: 4px; }
+    .locker-minicard strong { font-size: 1.1rem; color: var(--dark); font-weight: 900; }
+    .locker-minicard span { font-size: .8rem; color: var(--muted); }
+    .billing-restriction {
+      text-align: center; font-size: .85rem; color: var(--muted); font-style: italic;
+      margin-bottom: 20px;
     }
     .billing-compare {
       display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
     }
     .billing-card {
       background: #fff; border-radius: var(--radius); padding: 28px 26px; box-shadow: var(--shadow);
-      border-top: 4px solid var(--border);
+      border-top: 4px solid var(--border); display: flex; flex-direction: column;
     }
     .billing-bank { border-top-color: var(--brand-green); }
     .billing-cash { border-top-color: var(--brand-blue); }
     .billing-tag { font-weight: 800; color: var(--dark); font-size: .95rem; margin-bottom: 2px; }
     .billing-sub { display: block; font-size: .78rem; color: var(--muted); margin-bottom: 18px; }
-    .billing-amount { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
-    .billing-amount span:first-child { font-size: .85rem; font-weight: 700; }
-    .billing-amount strong { font-size: 1.8rem; font-weight: 900; }
-    .billing-amount-good span:first-child, .billing-amount-good strong { color: var(--brand-green); }
-    .billing-amount-neutral strong { color: var(--brand-blue); font-size: 1.3rem; }
-    .billing-amount span:last-child { font-size: .82rem; color: var(--muted); }
-    .billing-note { font-size: .85rem; color: var(--muted); }
+    .billing-amount { margin-bottom: 10px; }
+    .billing-amount strong { font-size: 1.3rem; font-weight: 900; display: block; }
+    .billing-amount-good strong { color: var(--brand-green); }
+    .billing-amount-neutral strong { color: var(--brand-blue); }
+    .billing-note { font-size: .85rem; color: var(--muted); margin-bottom: 18px; flex: 1; }
+    .billing-btn { align-self: flex-start; padding: 10px 22px; font-size: .88rem; }
 
     /* ─── Consulta enviaments ─── */
     .tracking { background: #fff; }
@@ -281,7 +298,11 @@
     /* ─── Operadors ─── */
     .operators { background: var(--dark); color: #fff; text-align: center; padding: 60px 0; }
     .operators .section-title { color: #fff; }
-    .operators .section-sub { color: rgba(255,255,255,.6); margin: 0 auto 40px; }
+    .operators .section-sub { color: rgba(255,255,255,.6); margin: 0 auto 20px; }
+    .ops-brands {
+      font-size: .95rem; color: rgba(255,255,255,.85); font-weight: 600;
+      margin: 0 auto 36px; max-width: 640px;
+    }
     .ops-grid {
       display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; align-items: center;
     }
@@ -290,6 +311,8 @@
       border-radius: 8px; padding: 10px 20px; font-weight: 700; font-size: .9rem;
       letter-spacing: .5px;
     }
+    .ops-note { margin-top: 28px; font-size: .85rem; color: rgba(255,255,255,.55); }
+    .ops-closing { margin-top: 10px; font-size: 1rem; font-weight: 700; color: var(--brand); }
 
     /* ─── FAQ ─── */
     .faq { background: var(--light); }
@@ -433,6 +456,7 @@
       .billing-compare { grid-template-columns: 1fr; }
       .trust-inner { flex-direction: column; text-align: center; }
       .trust-badges { justify-content: center; }
+      .locker-minicards { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
@@ -471,17 +495,19 @@
 <!-- ════ HERO ════ -->
 <section class="hero" id="top">
   <div class="container">
-    <div class="hero-badge" id="heroBadge">✦ A 10 minuts d'Andorra la Vella · Recepció multimarca</div>
-    <h1 id="heroTitle">La teva adreça<br>a <em>un pas</em> de la frontera</h1>
-    <p id="heroDesc">Moltes botigues online no envien directament a Andorra per les restriccions duaneres del país. Per això, amb Pickup Point tens una adreça a la Seu d'Urgell per rebre qualsevol paquet i recollir-lo quan et vagi bé — amb accés a locker 24/7.</p>
+    <div class="hero-badge" id="heroBadge">✦ Adreça a Espanya · Recepció multimarca</div>
+    <h1 id="heroTitle">La teva adreça a Espanya,<br>a només <em>10 minuts</em> d'Andorra</h1>
+    <p class="hero-tagline" id="heroTagline">Compra on vulguis. Rep aquí. Recull quan et vagi bé.</p>
+    <p id="heroDesc">Moltes botigues no envien a Andorra o cobren molt més per fer-ho. Amb Pickup Point disposes d'una adreça a la Seu d'Urgell on rebre tots els teus paquets, amb notificació per correu i accés al locker 24/7.</p>
     <div class="hero-actions">
       <a href="#registra-t" class="btn btn-primary" id="heroCta1">Registra't ara — és gratis</a>
       <a href="#preus" class="btn btn-outline" id="heroCta2">Veure preus</a>
     </div>
     <div class="hero-stats">
-      <div class="stat"><strong>0€</strong><span id="stat1">cost de registre</span></div>
-      <div class="stat"><strong>24/7</strong><span id="stat2">accés al locker</span></div>
-      <div class="stat"><strong>14 dies</strong><span id="stat3">de custòdia inclosa</span></div>
+      <div class="stat"><strong>0€</strong><span id="stat1">Registre gratuït</span></div>
+      <div class="stat"><strong>24/7</strong><span id="stat2">Accés al locker</span></div>
+      <div class="stat"><strong>14 dies</strong><span id="stat3">Custòdia inclosa</span></div>
+      <div class="stat"><strong>+40</strong><span id="stat4">transportistes: rep qualsevol enviament</span></div>
     </div>
   </div>
 </section>
@@ -490,10 +516,13 @@
 <section class="trust">
   <div class="container">
     <div class="trust-inner">
-      <p class="trust-text" id="trustText">Som la mateixa empresa que gestiona l'<strong>agència oficial de GLS a la Seu d'Urgell</strong>: una llarga trajectòria logística i un equip professional al teu servei.</p>
+      <div>
+        <p class="trust-headline" id="trustHeadline">Més de 40 anys gestionant enviaments</p>
+        <p class="trust-text" id="trustText">Som l'empresa responsable de l'<strong>agència oficial de GLS a la Seu d'Urgell</strong>. Cada dia gestionem centenars d'enviaments, perquè rebis els teus paquets amb total confiança.</p>
+      </div>
       <div class="trust-badges">
         <span class="trust-badge" id="trustB1">🚚 Agència oficial GLS</span>
-        <span class="trust-badge" id="trustB2">📅 Llarga trajectòria</span>
+        <span class="trust-badge" id="trustB2">📅 Més de 40 anys</span>
         <span class="trust-badge" id="trustB3">👥 Equip professional</span>
       </div>
     </div>
@@ -505,28 +534,38 @@
   <div class="container">
     <p class="section-label" id="howLabel">El procés</p>
     <h2 class="section-title" id="howTitle">Com funciona el servei?</h2>
-    <p class="section-sub" id="howSub">En tres passos senzills tens el control total dels teus enviaments.</p>
+    <p class="section-sub" id="howSub">Registrar-te només et portarà dos minuts. Després, només hauràs de comprar com sempre. Nosaltres ens encarreguem de la resta.</p>
     <div class="steps">
       <div class="step">
         <div class="step-num">1</div>
-        <h3 id="s1h">Registra't</h3>
-        <p id="s1p">Omple el formulari en menys de 2 minuts i rep per e-mail la confirmació amb l'adreça exacta que has d'utilitzar en les teves compres.</p>
+        <h3 id="s1h">Registra't gratuïtament</h3>
+        <p id="s1p">Només necessitem les teves dades. En menys de 2 minuts rebràs per correu electrònic la teva nova adreça de recepció.</p>
       </div>
       <div class="step">
         <div class="step-num">2</div>
-        <h3 id="s2h">Fes les teves compres</h3>
-        <p id="s2p">Utilitza la nostra adreça com a punt d'entrega en les teves compres online. Tots els transportistes funcionen aquí.</p>
+        <h3 id="s2h">Compra on vulguis</h3>
+        <p id="s2p">Quan facis una compra online, utilitza la teva nova adreça Pickup Point. Acceptem enviaments de GLS, Correos, DHL, SEUR, FedEx, Amazon, MRW, NACEX i qualsevol altre transportista.</p>
       </div>
       <div class="step">
         <div class="step-num">3</div>
-        <h3 id="s3h">Recull quan vulguis</h3>
-        <p id="s3p">T'avisarem quan arribi el paquet. Pots recollir-lo en l'horari que et vagi millor, sense pressa.</p>
+        <h3 id="s3h">T'avisem quan arribi</h3>
+        <p id="s3p">Tan bon punt rebem el teu paquet t'enviarem un correu electrònic. Podràs passar a recollir-lo quan et vagi millor o utilitzar el nostre locker 24/7 si el tens habilitat.</p>
       </div>
       <div class="step">
         <div class="step-num">4</div>
-        <h3 id="s4h">Custòdia inclosa</h3>
-        <p id="s4p">Cada enviament inclou dies de custòdia gratuïts (14 dies per a paquets, 7 per a palets). Consulta els preus exactes més avall.</p>
+        <h3 id="s4h">Sense presses</h3>
+        <p id="s4p">Disposem de:<br>• 14 dies gratuïts per a paquets<br>• 7 dies gratuïts per a palets<br>Necessites més temps? També és possible.</p>
       </div>
+    </div>
+    <div class="why-band" id="whyBand">
+      <p class="why-title" id="whyTitle">Per què cada vegada més andorrans ens utilitzen?</p>
+      <ul class="why-list">
+        <li id="why1">✅ Compra a botigues que no envien a Andorra.</li>
+        <li id="why2">✅ Aprofita les promocions amb enviament gratuït dins d'Espanya.</li>
+        <li id="why3">✅ Rep tots els transportistes en una única adreça.</li>
+        <li id="why4">✅ Locker disponible les 24 hores.</li>
+        <li id="why5">✅ Sense quotes mensuals.</li>
+      </ul>
     </div>
   </div>
 </section>
@@ -585,34 +624,37 @@
       </div>
       <div class="locker-content">
         <p class="section-label" id="lockerLabel">Nou servei</p>
-        <h2 class="section-title" id="lockerTitle">Locker disponible 24/7</h2>
-        <p class="locker-desc" id="lockerDesc">Per als nostres clients, disposem d'un locker automàtic per recollir els teus enviaments quan et vagi millor, sense dependre del nostre horari d'atenció.</p>
-        <div class="locker-features">
-          <div class="locker-feature"><span class="lf-icon">🔒</span><span id="lf1">Segur i confidencial</span></div>
-          <div class="locker-feature"><span class="lf-icon">🕐</span><span id="lf2">Disponible 24/7</span></div>
-          <div class="locker-feature"><span class="lf-icon">📦</span><span id="lf3">Fàcil i ràpid d'utilitzar</span></div>
-        </div>
+        <h2 class="section-title" id="lockerTitle">Recull els teus paquets quan vulguis</h2>
+        <p class="locker-desc" id="lockerDesc">Sense presses. Sense cues. Sense dependre dels horaris. El nostre locker et permet recollir els teus enviaments sempre que et vagi bé.</p>
       </div>
     </div>
 
+    <div class="locker-minicards">
+      <div class="locker-minicard"><span class="lmc-icon">🕒</span><strong id="lmc1t">24/7</strong><span id="lmc1s">Sempre disponible</span></div>
+      <div class="locker-minicard"><span class="lmc-icon">⚡</span><strong id="lmc2t">1 minut</strong><span id="lmc2s">Recollida molt ràpida</span></div>
+      <div class="locker-minicard"><span class="lmc-icon">🔒</span><strong id="lmc3t">100% segur</strong><span id="lmc3s">Accés personalitzat</span></div>
+      <div class="locker-minicard"><span class="lmc-icon">📧</span><strong id="lmc4t">Avís per correu</strong><span id="lmc4s">Quan el paquet arriba</span></div>
+    </div>
+
+    <p class="billing-restriction" id="billingRestriction">Només disponible per a clients registrats amb facturació mensual.</p>
+
     <div class="billing-compare">
       <div class="billing-card billing-bank">
-        <p class="billing-tag" id="billTag1">Facturació amb pagament bancari</p>
-        <span class="billing-sub" id="billSub1">transferència / domiciliació</span>
+        <p class="billing-tag" id="billTag1">Pagament per domiciliació</p>
+        <span class="billing-sub" id="billSub1">transferència / domiciliació bancària</span>
         <div class="billing-amount billing-amount-good">
-          <span id="billLbl1">Descompte</span>
-          <strong>−0,50€</strong>
-          <span id="billUnit1">per enviament</span>
+          <strong id="billLbl1">Estalvia 0,50€ en cada enviament</strong>
         </div>
-        <p class="billing-note" id="billNote1">Accés complet al locker inclòs.</p>
+        <p class="billing-note" id="billNote1">Els clients amb pagament domiciliat gaudeixen d'un descompte automàtic de 0,50€ per paquet i accés complet al locker.</p>
+        <a href="#registra-t" class="btn btn-primary billing-btn" id="billBtn1">Activar domiciliació</a>
       </div>
       <div class="billing-card billing-cash">
-        <p class="billing-tag" id="billTag2">Facturació amb pagament en efectiu</p>
+        <p class="billing-tag" id="billTag2">Pagament en efectiu</p>
         <span class="billing-sub" id="billSub2">cash, sense dades bancàries</span>
         <div class="billing-amount billing-amount-neutral">
-          <strong id="billLbl2">Sense descompte</strong>
+          <strong id="billLbl2">Paga només pels enviaments que utilitzes</strong>
         </div>
-        <p class="billing-note" id="billNote2">Accés complet al locker igualment inclòs.</p>
+        <p class="billing-note" id="billNote2">Sense domiciliació bancària. Accés al locker també inclòs. Només no s'aplica el descompte de 0,50€.</p>
       </div>
     </div>
   </div>
@@ -646,43 +688,53 @@
 <section class="features" id="avantatges">
   <div class="container">
     <p class="section-label" id="ftLabel">Per què Pickup Point?</p>
-    <h2 class="section-title" id="ftTitle">Tot el que necessites</h2>
-    <p class="section-sub" id="ftSub">Un servei pensat per a persones que valoren el seu temps i la comoditat.</p>
+    <h2 class="section-title" id="ftTitle">Tot el que necessites per comprar sense fronteres</h2>
+    <p class="section-sub" id="ftSub">Una única adreça per rebre qualsevol enviament, amb la tranquil·litat de saber que sempre estarà controlat.</p>
     <div class="features-grid">
       <div class="feature">
         <div class="feature-icon">📦</div>
-        <h3 id="f1h">Multimarca i multitransportista</h3>
-        <p id="f1p">Acceptem paquets de GLS, SEUR, MRW, Correos, DHL, Amazon, Inpost i molts més. Sense exclusivitats.</p>
+        <h3 id="f1h">Rep qualsevol enviament</h3>
+        <p id="f1p">Treballem amb GLS, Correos, DHL, SEUR, FedEx, MRW, NACEX, Amazon, InPost i qualsevol altre transportista.</p>
       </div>
       <div class="feature">
         <div class="feature-icon">🔔</div>
-        <h3 id="f2h">Avís diari centralitzat</h3>
-        <p id="f2p">Per motius operatius, avisem un cop al dia (cap a les 18h) de tots els paquets rebuts. Amb Pickup Express t'avisem abans, el mateix dia.</p>
+        <h3 id="f2h">Sempre sabràs quan arriba</h3>
+        <p id="f2p">Cada tarda t'enviem un correu amb tots els paquets rebuts. Necessites més rapidesa? Amb Pickup Express t'avisem tan bon punt arriba.</p>
       </div>
       <div class="feature">
         <div class="feature-icon">🔒</div>
-        <h3 id="f3h">Recepció autoritzada</h3>
-        <p id="f3p">Signem per tu en la teva absència. La teva autorització queda registrada i tot queda documentat.</p>
+        <h3 id="f3h">Nosaltres signem per tu</h3>
+        <p id="f3p">No cal que estiguis pendent del repartidor. Acceptem l'enviament en nom teu i el custodiem fins que el recullis.</p>
       </div>
       <div class="feature">
         <div class="feature-icon">🕐</div>
-        <h3 id="f4h">Atenció presencial + locker 24/7</h3>
-        <p id="f4p">Tenim horari d'atenció presencial (8h al dia). La resta del temps, accés lliure al locker sense necessitat de personal.</p>
+        <h3 id="f4h">Recull quan et vagi bé</h3>
+        <p id="f4p">Durant l'horari comercial t'atendrem personalment. Fora d'horari podràs utilitzar el locker automàtic.</p>
       </div>
       <div class="feature">
         <div class="feature-icon">💶</div>
-        <h3 id="f5h">Preus clars, sense sorpreses</h3>
-        <p id="f5p">El registre és totalment gratuït. Pagues només pels enviaments que reps, amb tarifes fixes segons pes i mida.</p>
+        <h3 id="f5h">Només pagues quan reps un paquet</h3>
+        <p id="f5p">Registrar-te és gratuït. Sense permanències. Sense quotes mensuals. Només pagues pels enviaments que realment utilitzes.</p>
       </div>
       <div class="feature">
         <div class="feature-icon">📍</div>
-        <h3 id="f6h">Punt fix i conegut</h3>
-        <p id="f6p">Sempre la mateixa adreça: Av. Valls d'Andorra 18. Fàcil d'accedir i amb aparcament proper.</p>
+        <h3 id="f6h">Sempre la mateixa adreça</h3>
+        <p id="f6p">Av. Valls d'Andorra 18, a només 10 minuts d'Andorra. Fàcil aparcament i accés ràpid des de la frontera.</p>
       </div>
       <div class="feature">
         <div class="feature-icon">🛡️</div>
-        <h3 id="f7h">Enviaments assegurats</h3>
-        <p id="f7p">Els teus paquets estan assegurats amb nosaltres durant tot el temps de custòdia. Tranquil·litat total.</p>
+        <h3 id="f7h">Els teus paquets estan protegits</h3>
+        <p id="f7p">Cada enviament queda registrat. Custòdia segura fins al moment de la recollida.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🚗</div>
+        <h3 id="f8h">Sense buscar lloc</h3>
+        <p id="f8p">Para davant de la porta i recull en un minut.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">📱</div>
+        <h3 id="f9h">No necessites instal·lar res</h3>
+        <p id="f9p">Només rebràs un correu quan el paquet estigui disponible.</p>
       </div>
     </div>
   </div>
@@ -691,8 +743,9 @@
 <!-- ════ OPERADORS ════ -->
 <section class="operators">
   <div class="container">
-    <h2 class="section-title" id="opsTitle">Transportistes compatibles</h2>
-    <p class="section-sub" id="opsSub">Acceptem paquets de tots els operadors principals i molts més.</p>
+    <h2 class="section-title" id="opsTitle">Rep paquets de qualsevol transportista ⭐</h2>
+    <p class="section-sub" id="opsSub">No importa on compris. Si t'ho poden enviar a Espanya, nosaltres ho rebem per tu.</p>
+    <p class="ops-brands" id="opsBrands">Amazon · AliExpress · Zara · PCComponentes · Decathlon · MediaMarkt · El Corte Inglés · Ikea · Temu</p>
     <div class="ops-grid">
       <span class="op-badge">GLS</span>
       <span class="op-badge">SEUR</span>
@@ -707,6 +760,8 @@
       <span class="op-badge">Correos Express</span>
       <span class="op-badge">+ molts més</span>
     </div>
+    <p class="ops-note" id="opsNote">No trobes el teu transportista? No passa res. També acceptem molts altres operadors.</p>
+    <p class="ops-closing" id="opsClosing">I si una botiga no envia directament a Andorra, nosaltres som la teva adreça a Espanya.</p>
   </div>
 </section>
 
@@ -1107,28 +1162,35 @@ function showSuccess() {
 /* ─── Bilingual ─── */
 const translations = {
   ca: {
-    heroBadge: '✦ A 10 minuts d\'Andorra la Vella · Recepció multimarca',
-    heroTitle: 'La teva adreça<br>a <em>un pas</em> de la frontera',
-    heroDesc: 'Moltes botigues online no envien directament a Andorra per les restriccions duaneres del país. Per això, amb Pickup Point tens una adreça a la Seu d\'Urgell per rebre qualsevol paquet i recollir-lo quan et vagi bé — amb accés a locker 24/7.',
+    heroBadge: '✦ Adreça a Espanya · Recepció multimarca',
+    heroTitle: 'La teva adreça a Espanya,<br>a només <em>10 minuts</em> d\'Andorra',
+    heroTagline: 'Compra on vulguis. Rep aquí. Recull quan et vagi bé.',
+    heroDesc: 'Moltes botigues no envien a Andorra o cobren molt més per fer-ho. Amb Pickup Point disposes d\'una adreça a la Seu d\'Urgell on rebre tots els teus paquets, amb notificació per correu i accés al locker 24/7.',
     heroCta1: 'Registra\'t ara — és gratis',
     heroCta2: 'Veure preus',
-    stat1: 'cost de registre', stat2: 'accés al locker', stat3: 'de custòdia inclosa',
-    trustText:'Som la mateixa empresa que gestiona l\'<strong>agència oficial de GLS a la Seu d\'Urgell</strong>: una llarga trajectòria logística i un equip professional al teu servei.',
-    trustB1:'🚚 Agència oficial GLS', trustB2:'📅 Llarga trajectòria', trustB3:'👥 Equip professional',
+    stat1: 'Registre gratuït', stat2: 'Accés al locker', stat3: 'Custòdia inclosa', stat4: 'transportistes: rep qualsevol enviament',
+    trustHeadline: 'Més de 40 anys gestionant enviaments',
+    trustText:'Som l\'empresa responsable de l\'<strong>agència oficial de GLS a la Seu d\'Urgell</strong>. Cada dia gestionem centenars d\'enviaments, perquè rebis els teus paquets amb total confiança.',
+    trustB1:'🚚 Agència oficial GLS', trustB2:'📅 Més de 40 anys', trustB3:'👥 Equip professional',
     howLabel: 'El procés', howTitle: 'Com funciona el servei?',
-    howSub: 'En tres passos senzills tens el control total dels teus enviaments.',
-    s1h:'Registra\'t', s1p:'Omple el formulari en menys de 2 minuts i rep per e-mail la confirmació amb l\'adreça exacta que has d\'utilitzar en les teves compres.',
-    s2h:'Fes les teves compres', s2p:'Utilitza la nostra adreça com a punt d\'entrega en les teves compres online. Tots els transportistes funcionen aquí.',
-    s3h:'Recull quan vulguis', s3p:'T\'avisarem quan arribi el paquet. Pots recollir-lo en l\'horari que et vagi millor, sense pressa.',
-    s4h:'Custòdia inclosa', s4p:'Cada enviament inclou dies de custòdia gratuïts (14 dies per a paquets, 7 per a palets). Consulta els preus exactes més avall.',
-    ftLabel:'Per què Pickup Point?', ftTitle:'Tot el que necessites', ftSub:'Un servei pensat per a persones que valoren el seu temps i la comoditat.',
-    f1h:'Multimarca i multitransportista', f1p:'Acceptem paquets de GLS, SEUR, MRW, Correos, DHL, Amazon, Inpost i molts més. Sense exclusivitats.',
-    f2h:'Avís diari centralitzat', f2p:'Per motius operatius, avisem un cop al dia (cap a les 18h) de tots els paquets rebuts. Amb Pickup Express t\'avisem abans, el mateix dia.',
-    f3h:'Recepció autoritzada', f3p:'Signem per tu en la teva absència. La teva autorització queda registrada i tot queda documentat.',
-    f4h:'Atenció presencial + locker 24/7', f4p:'Tenim horari d\'atenció presencial (8h al dia). La resta del temps, accés lliure al locker sense necessitat de personal.',
-    f5h:'Preus clars, sense sorpreses', f5p:'El registre és totalment gratuït. Pagues només pels enviaments que reps, amb tarifes fixes segons pes i mida.',
-    f6h:'Punt fix i conegut', f6p:'Sempre la mateixa adreça: Av. Valls d\'Andorra 18. Fàcil d\'accedir i amb aparcament proper.',
-    f7h:'Enviaments assegurats', f7p:'Els teus paquets estan assegurats amb nosaltres durant tot el temps de custòdia. Tranquil·litat total.',
+    howSub: 'Registrar-te només et portarà dos minuts. Després, només hauràs de comprar com sempre. Nosaltres ens encarreguem de la resta.',
+    s1h:'Registra\'t gratuïtament', s1p:'Només necessitem les teves dades. En menys de 2 minuts rebràs per correu electrònic la teva nova adreça de recepció.',
+    s2h:'Compra on vulguis', s2p:'Quan facis una compra online, utilitza la teva nova adreça Pickup Point. Acceptem enviaments de GLS, Correos, DHL, SEUR, FedEx, Amazon, MRW, NACEX i qualsevol altre transportista.',
+    s3h:'T\'avisem quan arribi', s3p:'Tan bon punt rebem el teu paquet t\'enviarem un correu electrònic. Podràs passar a recollir-lo quan et vagi millor o utilitzar el nostre locker 24/7 si el tens habilitat.',
+    s4h:'Sense presses', s4p:'Disposem de:<br>• 14 dies gratuïts per a paquets<br>• 7 dies gratuïts per a palets<br>Necessites més temps? També és possible.',
+    whyTitle:'Per què cada vegada més andorrans ens utilitzen?',
+    why1:'✅ Compra a botigues que no envien a Andorra.', why2:'✅ Aprofita les promocions amb enviament gratuït dins d\'Espanya.',
+    why3:'✅ Rep tots els transportistes en una única adreça.', why4:'✅ Locker disponible les 24 hores.', why5:'✅ Sense quotes mensuals.',
+    ftLabel:'Per què Pickup Point?', ftTitle:'Tot el que necessites per comprar sense fronteres', ftSub:'Una única adreça per rebre qualsevol enviament, amb la tranquil·litat de saber que sempre estarà controlat.',
+    f1h:'Rep qualsevol enviament', f1p:'Treballem amb GLS, Correos, DHL, SEUR, FedEx, MRW, NACEX, Amazon, InPost i qualsevol altre transportista.',
+    f2h:'Sempre sabràs quan arriba', f2p:'Cada tarda t\'enviem un correu amb tots els paquets rebuts. Necessites més rapidesa? Amb Pickup Express t\'avisem tan bon punt arriba.',
+    f3h:'Nosaltres signem per tu', f3p:'No cal que estiguis pendent del repartidor. Acceptem l\'enviament en nom teu i el custodiem fins que el recullis.',
+    f4h:'Recull quan et vagi bé', f4p:'Durant l\'horari comercial t\'atendrem personalment. Fora d\'horari podràs utilitzar el locker automàtic.',
+    f5h:'Només pagues quan reps un paquet', f5p:'Registrar-te és gratuït. Sense permanències. Sense quotes mensuals. Només pagues pels enviaments que realment utilitzes.',
+    f6h:'Sempre la mateixa adreça', f6p:'Av. Valls d\'Andorra 18, a només 10 minuts d\'Andorra. Fàcil aparcament i accés ràpid des de la frontera.',
+    f7h:'Els teus paquets estan protegits', f7p:'Cada enviament queda registrat. Custòdia segura fins al moment de la recollida.',
+    f8h:'Sense buscar lloc', f8p:'Para davant de la porta i recull en un minut.',
+    f9h:'No necessites instal·lar res', f9p:'Només rebràs un correu quan el paquet estigui disponible.',
     priceLabel:'Tarifes clares', priceTitle:'Quant costa el servei?', priceSub:'Sense quotes ni permanències. Pagues només pels enviaments que reps.',
     ptH1:'Tipus d\'enviament', ptH2:'Preu base<span>(14 dies naturals)</span>', ptH3:'Dia addicional<span>a partir del dia indicat</span>',
     pr1t:'Fins a 15 kg i 200 cm', pr1s:'sumant els tres costats', pr1iva:'(2,89€ + 21% IVA)', pr1e:'cada dia addicional (a partir del dia 15)',
@@ -1136,11 +1198,15 @@ const translations = {
     pr3t:'Enviaments paletitzats', pr3iva:'(20,66€ + 21% IVA)', pr3e:'cada dia addicional (a partir del dia 8)',
     expTitle:'Pickup Express <span class="express-price">+2,50€</span>', expDesc:'Prioritzem la tramitació del teu enviament perquè el puguis recollir el mateix dia que arriba.',
     priceNote:'Els preus inclouen la recepció, custòdia durant el període indicat i l\'entrega al locker o al taulell. IVA aplicable segons normativa vigent.',
-    lockerBadge:'Novetat', lockerLabel:'Nou servei', lockerTitle:'Locker disponible 24/7',
-    lockerDesc:'Per als nostres clients, disposem d\'un locker automàtic per recollir els teus enviaments quan et vagi millor, sense dependre del nostre horari d\'atenció.',
-    lf1:'Segur i confidencial', lf2:'Disponible 24/7', lf3:'Fàcil i ràpid d\'utilitzar',
-    billTag1:'Facturació amb pagament bancari', billSub1:'transferència / domiciliació', billLbl1:'Descompte', billUnit1:'per enviament', billNote1:'Accés complet al locker inclòs.',
-    billTag2:'Facturació amb pagament en efectiu', billSub2:'cash, sense dades bancàries', billLbl2:'Sense descompte', billNote2:'Accés complet al locker igualment inclòs.',
+    lockerBadge:'Novetat', lockerLabel:'Nou servei', lockerTitle:'Recull els teus paquets quan vulguis',
+    lockerDesc:'Sense presses. Sense cues. Sense dependre dels horaris. El nostre locker et permet recollir els teus enviaments sempre que et vagi bé.',
+    lmc1t:'24/7', lmc1s:'Sempre disponible', lmc2t:'1 minut', lmc2s:'Recollida molt ràpida',
+    lmc3t:'100% segur', lmc3s:'Accés personalitzat', lmc4t:'Avís per correu', lmc4s:'Quan el paquet arriba',
+    billingRestriction:'Només disponible per a clients registrats amb facturació mensual.',
+    billTag1:'Pagament per domiciliació', billSub1:'transferència / domiciliació bancària', billLbl1:'Estalvia 0,50€ en cada enviament',
+    billNote1:'Els clients amb pagament domiciliat gaudeixen d\'un descompte automàtic de 0,50€ per paquet i accés complet al locker.', billBtn1:'Activar domiciliació',
+    billTag2:'Pagament en efectiu', billSub2:'cash, sense dades bancàries', billLbl2:'Paga només pels enviaments que utilitzes',
+    billNote2:'Sense domiciliació bancària. Accés al locker també inclòs. Només no s\'aplica el descompte de 0,50€.',
     trkLabel:'Per a clients registrats', trkTitle:'Consulta els teus enviaments', trkSub:'Introdueix el teu telèfon i cognom per veure els enviaments que tenim pendents al teu nom.',
     trkTelLbl:'Telèfon', trkCognomLbl:'Cognom', trkBtn:'Consultar',
     trkLoading:'Cercant...', trkErrInput:'Introdueix un telèfon i un cognom vàlids.', trkErrGeneric:'No s\'ha pogut fer la consulta. Torna-ho a provar més tard.',
@@ -1148,7 +1214,10 @@ const translations = {
     trkAlbara:'Albarà', trkBultos:'Bultos', trkPes:'Pes', trkReemborsament:'Reemborsament',
     trkDataRegistre:'Data de registre', trkSummary1:'Tens 1 enviament pendent', trkSummaryN:'Tens {n} enviaments pendents',
     trkHint:'Si ets de fora d\'Espanya, escriu el teu telèfon amb el prefix internacional del teu país però sense el 0 inicial (per exemple, Andorra: 376 600 000 · França: 33 6 12 34 56 78).',
-    opsTitle:'Transportistes compatibles', opsSub:'Acceptem paquets de tots els operadors principals i molts més.',
+    opsTitle:'Rep paquets de qualsevol transportista ⭐', opsSub:'No importa on compris. Si t\'ho poden enviar a Espanya, nosaltres ho rebem per tu.',
+    opsBrands:'Amazon · AliExpress · Zara · PCComponentes · Decathlon · MediaMarkt · El Corte Inglés · Ikea · Temu',
+    opsNote:'No trobes el teu transportista? No passa res. També acceptem molts altres operadors.',
+    opsClosing:'I si una botiga no envia directament a Andorra, nosaltres som la teva adreça a Espanya.',
     faqLabel:'Dubtes habituals', faqTitle:'Preguntes freqüents',
     fq1:'Quina adreça he de posar a les meves compres?', fa1:'Has de posar la nostra adreça amb les teves dades: <strong>Av. Valls d\'Andorra 18, 25700 La Seu d\'Urgell</strong>, indicant el teu nom i els dos cognoms. Si el transportista ho demana, indica també el teu telèfon i email de contacte.',
     fq2:'Té algun cost el servei?', fa2:'El registre és gratuït. Cada enviament rebut té un preu segons pes i mida (des de 3,50€), amb la custòdia inclosa. Consulta la taula de <a href="#preus">preus</a> per a tots els detalls.',
@@ -1173,28 +1242,35 @@ const translations = {
     privLink:'Política de privacitat', cookieLink:'Cookies',
   },
   es: {
-    heroBadge: '✦ A 10 minutos de Andorra la Vella · Recepción multimarca',
-    heroTitle: 'Tu dirección<br>a <em>un paso</em> de la frontera',
-    heroDesc: 'Muchas tiendas online no envían directamente a Andorra por las restricciones aduaneras del país. Por eso, con Pickup Point tienes una dirección en la Seu d\'Urgell para recibir cualquier paquete y recogerlo cuando quieras — con acceso a locker 24/7.',
+    heroBadge: '✦ Dirección en España · Recepción multimarca',
+    heroTitle: 'Tu dirección en España,<br>a solo <em>10 minutos</em> de Andorra',
+    heroTagline: 'Compra donde quieras. Recibe aquí. Recoge cuando quieras.',
+    heroDesc: 'Muchas tiendas no envían a Andorra o cobran mucho más por hacerlo. Con Pickup Point dispones de una dirección en la Seu d\'Urgell donde recibir todos tus paquetes, con notificación por correo y acceso al locker 24/7.',
     heroCta1: 'Regístrate ahora — es gratis',
     heroCta2: 'Ver precios',
-    stat1: 'coste de registro', stat2: 'acceso al locker', stat3: 'de custodia incluida',
-    trustText:'Somos la misma empresa que gestiona la <strong>agencia oficial de GLS en la Seu d\'Urgell</strong>: una larga trayectoria logística y un equipo profesional a tu servicio.',
-    trustB1:'🚚 Agencia oficial GLS', trustB2:'📅 Larga trayectoria', trustB3:'👥 Equipo profesional',
+    stat1: 'Registro gratuito', stat2: 'Acceso al locker', stat3: 'Custodia incluida', stat4: 'transportistas: recibe cualquier envío',
+    trustHeadline: 'Más de 40 años gestionando envíos',
+    trustText:'Somos la empresa responsable de la <strong>agencia oficial de GLS en la Seu d\'Urgell</strong>. Cada día gestionamos cientos de envíos, para que recibas tus paquetes con total confianza.',
+    trustB1:'🚚 Agencia oficial GLS', trustB2:'📅 Más de 40 años', trustB3:'👥 Equipo profesional',
     howLabel: 'El proceso', howTitle: '¿Cómo funciona el servicio?',
-    howSub: 'En tres sencillos pasos tienes el control total de tus envíos.',
-    s1h:'Regístrate', s1p:'Rellena el formulario en menos de 2 minutos y recibe por e-mail la confirmación con la dirección exacta que debes utilizar en tus compras.',
-    s2h:'Haz tus compras', s2p:'Usa nuestra dirección como punto de entrega en tus compras online. Todos los transportistas funcionan aquí.',
-    s3h:'Recoge cuando quieras', s3p:'Te avisaremos cuando llegue el paquete. Puedes recogerlo en el horario que mejor te venga, sin prisas.',
-    s4h:'Custodia incluida', s4p:'Cada envío incluye días de custodia gratuitos (14 días para paquetes, 7 para palets). Consulta los precios exactos más abajo.',
-    ftLabel:'¿Por qué Pickup Point?', ftTitle:'Todo lo que necesitas', ftSub:'Un servicio pensado para personas que valoran su tiempo y la comodidad.',
-    f1h:'Multimarca y multitransportista', f1p:'Aceptamos paquetes de GLS, SEUR, MRW, Correos, DHL, Amazon, Inpost y muchos más. Sin exclusividades.',
-    f2h:'Aviso diario centralizado', f2p:'Por motivos operativos, avisamos una vez al día (hacia las 18h) de todos los paquetes recibidos. Con Pickup Express te avisamos antes, el mismo día.',
-    f3h:'Recepción autorizada', f3p:'Firmamos por ti en tu ausencia. Tu autorización queda registrada y todo queda documentado.',
-    f4h:'Atención presencial + locker 24/7', f4p:'Tenemos horario de atención presencial (8h al día). El resto del tiempo, acceso libre al locker sin necesidad de personal.',
-    f5h:'Precios claros, sin sorpresas', f5p:'El registro es totalmente gratuito. Pagas solo por los envíos que recibes, con tarifas fijas según peso y tamaño.',
-    f6h:'Punto fijo y conocido', f6p:'Siempre la misma dirección: Av. Valls d\'Andorra 18. Fácil de acceder y con aparcamiento cercano.',
-    f7h:'Envíos asegurados', f7p:'Tus paquetes están asegurados con nosotros durante todo el tiempo de custodia. Tranquilidad total.',
+    howSub: 'Registrarte solo te llevará dos minutos. Después, solo tendrás que comprar como siempre. Nosotros nos encargamos del resto.',
+    s1h:'Regístrate gratuitamente', s1p:'Solo necesitamos tus datos. En menos de 2 minutos recibirás por correo electrónico tu nueva dirección de recepción.',
+    s2h:'Compra donde quieras', s2p:'Cuando hagas una compra online, usa tu nueva dirección Pickup Point. Aceptamos envíos de GLS, Correos, DHL, SEUR, FedEx, Amazon, MRW, NACEX y cualquier otro transportista.',
+    s3h:'Te avisamos cuando llega', s3p:'En cuanto recibamos tu paquete te enviaremos un correo electrónico. Podrás pasar a recogerlo cuando mejor te venga o usar nuestro locker 24/7 si lo tienes habilitado.',
+    s4h:'Sin prisas', s4p:'Disponemos de:<br>• 14 días gratuitos para paquetes<br>• 7 días gratuitos para palets<br>¿Necesitas más tiempo? También es posible.',
+    whyTitle:'¿Por qué cada vez más andorranos nos utilizan?',
+    why1:'✅ Compra en tiendas que no envían a Andorra.', why2:'✅ Aprovecha las promociones con envío gratuito dentro de España.',
+    why3:'✅ Recibe todos los transportistas en una única dirección.', why4:'✅ Locker disponible las 24 horas.', why5:'✅ Sin cuotas mensuales.',
+    ftLabel:'¿Por qué Pickup Point?', ftTitle:'Todo lo que necesitas para comprar sin fronteras', ftSub:'Una única dirección para recibir cualquier envío, con la tranquilidad de saber que siempre estará controlado.',
+    f1h:'Recibe cualquier envío', f1p:'Trabajamos con GLS, Correos, DHL, SEUR, FedEx, MRW, NACEX, Amazon, InPost y cualquier otro transportista.',
+    f2h:'Siempre sabrás cuándo llega', f2p:'Cada tarde te enviamos un correo con todos los paquetes recibidos. ¿Necesitas más rapidez? Con Pickup Express te avisamos en cuanto llega.',
+    f3h:'Nosotros firmamos por ti', f3p:'No hace falta que estés pendiente del repartidor. Aceptamos el envío en tu nombre y lo custodiamos hasta que lo recojas.',
+    f4h:'Recoge cuando mejor te venga', f4p:'Durante el horario comercial te atenderemos personalmente. Fuera de horario podrás usar el locker automático.',
+    f5h:'Solo pagas cuando recibes un paquete', f5p:'Registrarte es gratis. Sin permanencias. Sin cuotas mensuales. Solo pagas por los envíos que realmente utilizas.',
+    f6h:'Siempre la misma dirección', f6p:'Av. Valls d\'Andorra 18, a solo 10 minutos de Andorra. Fácil aparcamiento y acceso rápido desde la frontera.',
+    f7h:'Tus paquetes están protegidos', f7p:'Cada envío queda registrado. Custodia segura hasta el momento de la recogida.',
+    f8h:'Sin buscar sitio', f8p:'Aparca delante de la puerta y recoge en un minuto.',
+    f9h:'No necesitas instalar nada', f9p:'Solo recibirás un correo cuando el paquete esté disponible.',
     priceLabel:'Tarifas claras', priceTitle:'¿Cuánto cuesta el servicio?', priceSub:'Sin cuotas ni permanencias. Pagas solo por los envíos que recibes.',
     ptH1:'Tipo de envío', ptH2:'Precio base<span>(14 días naturales)</span>', ptH3:'Día adicional<span>a partir del día indicado</span>',
     pr1t:'Hasta 15 kg y 200 cm', pr1s:'sumando los tres lados', pr1iva:'(2,89€ + 21% IVA)', pr1e:'cada día adicional (a partir del día 15)',
@@ -1202,11 +1278,15 @@ const translations = {
     pr3t:'Envíos paletizados', pr3iva:'(20,66€ + 21% IVA)', pr3e:'cada día adicional (a partir del día 8)',
     expTitle:'Pickup Express <span class="express-price">+2,50€</span>', expDesc:'Priorizamos la tramitación de tu envío para que puedas recogerlo el mismo día que llega.',
     priceNote:'Los precios incluyen la recepción, custodia durante el período indicado y la entrega en el locker o en el mostrador. IVA aplicable según normativa vigente.',
-    lockerBadge:'Novedad', lockerLabel:'Nuevo servicio', lockerTitle:'Locker disponible 24/7',
-    lockerDesc:'Para nuestros clientes, disponemos de un locker automático para recoger tus envíos cuando mejor te venga, sin depender de nuestro horario de atención.',
-    lf1:'Seguro y confidencial', lf2:'Disponible 24/7', lf3:'Fácil y rápido de utilizar',
-    billTag1:'Facturación con pago bancario', billSub1:'transferencia / domiciliación', billLbl1:'Descuento', billUnit1:'por envío', billNote1:'Acceso completo al locker incluido.',
-    billTag2:'Facturación con pago en efectivo', billSub2:'cash, sin datos bancarios', billLbl2:'Sin descuento', billNote2:'Acceso completo al locker igualmente incluido.',
+    lockerBadge:'Novedad', lockerLabel:'Nuevo servicio', lockerTitle:'Recoge tus paquetes cuando quieras',
+    lockerDesc:'Sin prisas. Sin colas. Sin depender de horarios. Nuestro locker te permite recoger tus envíos siempre que te venga bien.',
+    lmc1t:'24/7', lmc1s:'Siempre disponible', lmc2t:'1 minuto', lmc2s:'Recogida muy rápida',
+    lmc3t:'100% seguro', lmc3s:'Acceso personalizado', lmc4t:'Aviso por correo', lmc4s:'Cuando el paquete llega',
+    billingRestriction:'Solo disponible para clientes registrados con facturación mensual.',
+    billTag1:'Pago por domiciliación', billSub1:'transferencia / domiciliación bancaria', billLbl1:'Ahorra 0,50€ en cada envío',
+    billNote1:'Los clientes con pago domiciliado disfrutan de un descuento automático de 0,50€ por paquete y acceso completo al locker.', billBtn1:'Activar domiciliación',
+    billTag2:'Pago en efectivo', billSub2:'cash, sin datos bancarios', billLbl2:'Paga solo por los envíos que utilizas',
+    billNote2:'Sin domiciliación bancaria. Acceso al locker también incluido. Solo no se aplica el descuento de 0,50€.',
     trkLabel:'Para clientes registrados', trkTitle:'Consulta tus envíos', trkSub:'Introduce tu teléfono y apellido para ver los envíos que tenemos pendientes a tu nombre.',
     trkTelLbl:'Teléfono', trkCognomLbl:'Apellido', trkBtn:'Consultar',
     trkLoading:'Buscando...', trkErrInput:'Introduce un teléfono y un apellido válidos.', trkErrGeneric:'No se ha podido realizar la consulta. Inténtalo más tarde.',
@@ -1214,7 +1294,10 @@ const translations = {
     trkAlbara:'Albarán', trkBultos:'Bultos', trkPes:'Peso', trkReemborsament:'Reembolso',
     trkDataRegistre:'Fecha de registro', trkSummary1:'Tienes 1 envío pendiente', trkSummaryN:'Tienes {n} envíos pendientes',
     trkHint:'Si eres de fuera de España, escribe tu teléfono con el prefijo internacional de tu país pero sin el 0 inicial (por ejemplo, Andorra: 376 600 000 · Francia: 33 6 12 34 56 78).',
-    opsTitle:'Transportistas compatibles', opsSub:'Aceptamos paquetes de todos los operadores principales y muchos más.',
+    opsTitle:'Recibe paquetes de cualquier transportista ⭐', opsSub:'No importa dónde compres. Si te lo pueden enviar a España, nosotros lo recibimos por ti.',
+    opsBrands:'Amazon · AliExpress · Zara · PCComponentes · Decathlon · MediaMarkt · El Corte Inglés · Ikea · Temu',
+    opsNote:'¿No encuentras tu transportista? No pasa nada. También aceptamos muchos otros operadores.',
+    opsClosing:'Y si una tienda no envía directamente a Andorra, nosotros somos tu dirección en España.',
     faqLabel:'Dudas habituales', faqTitle:'Preguntas frecuentes',
     fq1:'¿Qué dirección debo poner en mis compras?', fa1:'Debes poner nuestra dirección con tus datos: <strong>Av. Valls d\'Andorra 18, 25700 La Seu d\'Urgell</strong>, indicando tu nombre y los dos apellidos. Si el transportista lo pide, indica también tu teléfono y email de contacto.',
     fq2:'¿Tiene algún coste el servicio?', fa2:'El registro es gratuito. Cada envío recibido tiene un precio según peso y tamaño (desde 3,50€), con la custodia incluida. Consulta la tabla de <a href="#preus">precios</a> para todos los detalles.',
@@ -1239,46 +1322,59 @@ const translations = {
     privLink:'Política de privacidad', cookieLink:'Cookies',
   },
   en: {
-  heroBadge:'✦ 10 minutes from Andorra la Vella · Multi-carrier reception',
-  heroTitle:'Your address<br>just <em>one step</em> from the border',
-  heroDesc:'Many online shops don\'t ship directly to Andorra due to customs restrictions. That\'s why with Pickup Point you get an address in La Seu d\'Urgell to receive any package and pick it up whenever suits you — with 24/7 locker access.',
+  heroBadge:'✦ Address in Spain · Multi-carrier reception',
+  heroTitle:'Your address in Spain,<br>just <em>10 minutes</em> from Andorra',
+  heroTagline:'Shop anywhere. Receive here. Pick up whenever you like.',
+  heroDesc:'Many shops don\'t ship to Andorra, or charge a lot more to do so. With Pickup Point you get an address in La Seu d\'Urgell to receive all your packages, with an email notification and 24/7 locker access.',
   heroCta1:'Sign up now — it\'s free',
   heroCta2:'See prices',
-  stat1:'registration cost',
-  stat2:'locker access',
-  stat3:'storage included',
-  trustText:'We\'re the same company that runs the <strong>official GLS agency in La Seu d\'Urgell</strong>: years of logistics experience and a professional team at your service.',
+  stat1:'Free registration',
+  stat2:'Locker access',
+  stat3:'Storage included',
+  stat4:'carriers: receive any shipment',
+  trustHeadline:'Over 40 years managing shipments',
+  trustText:'We\'re the company behind the <strong>official GLS agency in La Seu d\'Urgell</strong>. Every day we handle hundreds of shipments, so you can receive your packages with total confidence.',
   trustB1:'🚚 Official GLS agency',
-  trustB2:'📅 Long track record',
+  trustB2:'📅 Over 40 years',
   trustB3:'👥 Professional team',
   howLabel:'The process',
   howTitle:'How does the service work?',
-  howSub:'Three simple steps give you full control over your shipments.',
-  s1h:'Sign up',
-  s1p:'Fill in the form in under 2 minutes and get an e-mail confirmation with the exact address to use for your purchases.',
-  s2h:'Shop online',
-  s2p:'Use our address as the delivery point for your online purchases. All carriers work here.',
-  s3h:'Pick up whenever you like',
-  s3p:'We\'ll let you know when your package arrives. You can pick it up whenever suits you, no rush.',
-  s4h:'Storage included',
-  s4p:'Every shipment includes free storage days (14 days for parcels, 7 for pallets). Check exact prices below.',
+  howSub:'Signing up only takes two minutes. After that, just shop as usual — we take care of the rest.',
+  s1h:'Sign up for free',
+  s1p:'We only need your details. In under 2 minutes you\'ll get your new reception address by e-mail.',
+  s2h:'Shop anywhere',
+  s2p:'When you make an online purchase, use your new Pickup Point address. We accept shipments from GLS, Correos, DHL, SEUR, FedEx, Amazon, MRW, NACEX and any other carrier.',
+  s3h:'We\'ll let you know when it arrives',
+  s3p:'As soon as we receive your package we\'ll send you an e-mail. You can come pick it up whenever suits you, or use our 24/7 locker if you have it enabled.',
+  s4h:'No rush',
+  s4p:'We offer:<br>• 14 free days for parcels<br>• 7 free days for pallets<br>Need more time? That\'s possible too.',
+  whyTitle:'Why more and more Andorrans use us',
+  why1:'✅ Shop at stores that don\'t ship to Andorra.',
+  why2:'✅ Take advantage of free-shipping promotions within Spain.',
+  why3:'✅ Receive every carrier at a single address.',
+  why4:'✅ Locker available around the clock.',
+  why5:'✅ No monthly fees.',
   ftLabel:'Why Pickup Point?',
-  ftTitle:'Everything you need',
-  ftSub:'A service designed for people who value their time and convenience.',
-  f1h:'Multi-brand, multi-carrier',
-  f1p:'We accept packages from GLS, SEUR, MRW, Correos, DHL, Amazon, Inpost and many more. No exclusivity.',
-  f2h:'Once-a-day notification',
-  f2p:'For operational reasons, we notify everyone once a day (around 6 PM) about received packages. With Pickup Express we notify you sooner, the same day.',
-  f3h:'Authorised reception',
-  f3p:'We sign for you in your absence. Your authorisation is recorded and everything is documented.',
-  f4h:'Staffed hours + 24/7 locker',
-  f4p:'We have staffed opening hours (8h a day). The rest of the time, free locker access with no staff needed.',
-  f5h:'Clear pricing, no surprises',
-  f5p:'Registration is completely free. You only pay for the shipments you receive, with fixed rates based on weight and size.',
-  f6h:'One fixed, well-known spot',
-  f6p:'Always the same address: Av. Valls d\'Andorra 18. Easy to reach, with nearby parking.',
-  f7h:'Insured shipments',
-  f7p:'Your packages are insured with us for the whole storage period. Total peace of mind.',
+  ftTitle:'Everything you need to shop without borders',
+  ftSub:'A single address to receive any shipment, with the peace of mind of knowing it will always be looked after.',
+  f1h:'Receive any shipment',
+  f1p:'We work with GLS, Correos, DHL, SEUR, FedEx, MRW, NACEX, Amazon, InPost and any other carrier.',
+  f2h:'You\'ll always know when it arrives',
+  f2p:'Every afternoon we send you an e-mail with all the packages received. Need it faster? With Pickup Express we notify you as soon as it arrives.',
+  f3h:'We sign for you',
+  f3p:'No need to wait around for the courier. We accept the shipment on your behalf and look after it until you pick it up.',
+  f4h:'Pick up whenever suits you',
+  f4p:'During opening hours we\'ll assist you in person. Outside those hours you can use the automatic locker.',
+  f5h:'You only pay when you receive a package',
+  f5p:'Signing up is free. No commitments. No monthly fees. You only pay for the shipments you actually use.',
+  f6h:'Always the same address',
+  f6p:'Av. Valls d\'Andorra 18, just 10 minutes from Andorra. Easy parking and quick access from the border.',
+  f7h:'Your packages are protected',
+  f7p:'Every shipment is logged. Secure storage until the moment you collect it.',
+  f8h:'No hunting for parking',
+  f8p:'Pull up right outside and pick up in a minute.',
+  f9h:'No app needed',
+  f9p:'You\'ll just get an e-mail when your package is ready.',
   priceLabel:'Clear rates',
   priceTitle:'How much does the service cost?',
   priceSub:'No subscriptions, no commitments. You only pay for the shipments you receive.',
@@ -1300,20 +1396,26 @@ const translations = {
   priceNote:'Prices include reception, storage for the indicated period and delivery at the locker or the counter. VAT applies as per current regulations.',
   lockerBadge:'New',
   lockerLabel:'New service',
-  lockerTitle:'Locker available 24/7',
-  lockerDesc:'For our clients, we have an automatic locker to pick up your shipments whenever suits you best, without depending on our opening hours.',
-  lf1:'Secure and confidential',
-  lf2:'Available 24/7',
-  lf3:'Easy and quick to use',
-  billTag1:'Billing with bank payment',
+  lockerTitle:'Pick up your packages whenever you like',
+  lockerDesc:'No rush. No queues. No depending on opening hours. Our locker lets you pick up your shipments whenever suits you.',
+  lmc1t:'24/7',
+  lmc1s:'Always available',
+  lmc2t:'1 minute',
+  lmc2s:'Very quick pickup',
+  lmc3t:'100% secure',
+  lmc3s:'Personalised access',
+  lmc4t:'E-mail alert',
+  lmc4s:'When your package arrives',
+  billingRestriction:'Only available for registered clients with monthly billing.',
+  billTag1:'Direct-debit payment',
   billSub1:'bank transfer / direct debit',
-  billLbl1:'Discount',
-  billUnit1:'per shipment',
-  billNote1:'Full locker access included.',
-  billTag2:'Billing with cash payment',
+  billLbl1:'Save €0.50 on every shipment',
+  billNote1:'Clients paying by direct debit get an automatic €0.50 discount per package and full locker access.',
+  billBtn1:'Activate direct debit',
+  billTag2:'Cash payment',
   billSub2:'cash, no bank details',
-  billLbl2:'No discount',
-  billNote2:'Full locker access included as well.',
+  billLbl2:'Only pay for the shipments you use',
+  billNote2:'No bank details needed. Locker access included too. Only the €0.50 discount doesn\'t apply.',
   trkLabel:'For registered clients',
   trkTitle:'Track your shipments',
   trkSub:'Enter your phone number and surname to see the shipments we currently have waiting for you.',
@@ -1332,8 +1434,11 @@ const translations = {
   trkSummary1:'You have 1 pending shipment',
   trkSummaryN:'You have {n} pending shipments',
   trkHint:'If you\'re outside Spain, enter your phone with your country\'s international code but without the leading 0 (e.g. Andorra: 376 600 000 · France: 33 6 12 34 56 78).',
-  opsTitle:'Compatible carriers',
-  opsSub:'We accept packages from all major carriers and many more.',
+  opsTitle:'Receive packages from any carrier ⭐',
+  opsSub:'It doesn\'t matter where you shop. If it can be shipped to Spain, we\'ll receive it for you.',
+  opsBrands:'Amazon · AliExpress · Zara · PCComponentes · Decathlon · MediaMarkt · El Corte Inglés · Ikea · Temu',
+  opsNote:'Can\'t find your carrier? No problem. We also accept many other operators.',
+  opsClosing:'And if a shop doesn\'t ship directly to Andorra, we\'re your address in Spain.',
   faqLabel:'Common questions',
   faqTitle:'Frequently asked questions',
   fq1:'What address should I use for my purchases?',
@@ -1378,46 +1483,59 @@ const translations = {
   cookieLink:'Cookies',
   },
   fr: {
-  heroBadge:'✦ À 10 minutes d\'Andorre-la-Vieille · Réception multi-transporteurs',
-  heroTitle:'Votre adresse<br>à <em>deux pas</em> de la frontière',
-  heroDesc:'De nombreuses boutiques en ligne ne livrent pas directement en Andorre à cause des restrictions douanières. C\'est pourquoi Pickup Point vous offre une adresse à la Seu d\'Urgell pour recevoir n\'importe quel colis et le récupérer quand vous le souhaitez — avec un accès au casier 24h/24 et 7j/7.',
+  heroBadge:'✦ Adresse en Espagne · Réception multi-transporteurs',
+  heroTitle:'Votre adresse en Espagne,<br>à seulement <em>10 minutes</em> d\'Andorre',
+  heroTagline:'Achetez où vous voulez. Recevez ici. Récupérez quand vous voulez.',
+  heroDesc:'De nombreuses boutiques ne livrent pas en Andorre, ou facturent bien plus cher pour le faire. Avec Pickup Point, vous disposez d\'une adresse à la Seu d\'Urgell pour recevoir tous vos colis, avec notification par e-mail et accès au casier 24h/24 et 7j/7.',
   heroCta1:'Inscrivez-vous maintenant — c\'est gratuit',
   heroCta2:'Voir les tarifs',
-  stat1:'coût d\'inscription',
-  stat2:'accès au casier',
-  stat3:'de garde inclus',
-  trustText:'Nous sommes la même entreprise qui gère l\'<strong>agence officielle GLS à la Seu d\'Urgell</strong> : une longue expérience logistique et une équipe professionnelle à votre service.',
+  stat1:'Inscription gratuite',
+  stat2:'Accès au casier',
+  stat3:'Garde incluse',
+  stat4:'transporteurs : recevez n\'importe quel envoi',
+  trustHeadline:'Plus de 40 ans dans la gestion d\'envois',
+  trustText:'Nous sommes l\'entreprise responsable de l\'<strong>agence officielle GLS à la Seu d\'Urgell</strong>. Chaque jour, nous gérons des centaines d\'envois, pour que vous receviez vos colis en toute confiance.',
   trustB1:'🚚 Agence officielle GLS',
-  trustB2:'📅 Longue expérience',
+  trustB2:'📅 Plus de 40 ans',
   trustB3:'👥 Équipe professionnelle',
   howLabel:'Le processus',
   howTitle:'Comment fonctionne le service ?',
-  howSub:'En trois étapes simples, vous gardez le contrôle total de vos envois.',
-  s1h:'Inscrivez-vous',
-  s1p:'Remplissez le formulaire en moins de 2 minutes et recevez par e-mail la confirmation avec l\'adresse exacte à utiliser pour vos achats.',
-  s2h:'Faites vos achats',
-  s2p:'Utilisez notre adresse comme point de livraison pour vos achats en ligne. Tous les transporteurs fonctionnent ici.',
-  s3h:'Récupérez quand vous voulez',
-  s3p:'Nous vous préviendrons dès l\'arrivée du colis. Vous pouvez le récupérer à l\'heure qui vous convient, sans vous presser.',
-  s4h:'Garde incluse',
-  s4p:'Chaque envoi inclut des jours de garde gratuits (14 jours pour les colis, 7 pour les palettes). Consultez les tarifs exacts ci-dessous.',
+  howSub:'L\'inscription ne vous prendra que deux minutes. Ensuite, il vous suffira d\'acheter comme d\'habitude. Nous nous occupons du reste.',
+  s1h:'Inscrivez-vous gratuitement',
+  s1p:'Nous avons seulement besoin de vos informations. En moins de 2 minutes, vous recevrez par e-mail votre nouvelle adresse de réception.',
+  s2h:'Achetez où vous voulez',
+  s2p:'Lorsque vous faites un achat en ligne, utilisez votre nouvelle adresse Pickup Point. Nous acceptons les envois de GLS, Correos, DHL, SEUR, FedEx, Amazon, MRW, NACEX et de tout autre transporteur.',
+  s3h:'Nous vous préviendrons à l\'arrivée',
+  s3p:'Dès que nous recevons votre colis, nous vous envoyons un e-mail. Vous pourrez venir le récupérer quand cela vous arrange, ou utiliser notre casier 24/7 si vous l\'avez activé.',
+  s4h:'Sans précipitation',
+  s4p:'Nous proposons :<br>• 14 jours gratuits pour les colis<br>• 7 jours gratuits pour les palettes<br>Besoin de plus de temps ? C\'est possible aussi.',
+  whyTitle:'Pourquoi de plus en plus d\'Andorrans nous font confiance',
+  why1:'✅ Achetez dans des boutiques qui ne livrent pas en Andorre.',
+  why2:'✅ Profitez des promotions avec livraison gratuite en Espagne.',
+  why3:'✅ Recevez tous les transporteurs à une seule adresse.',
+  why4:'✅ Casier disponible 24h/24.',
+  why5:'✅ Sans frais mensuels.',
   ftLabel:'Pourquoi Pickup Point ?',
-  ftTitle:'Tout ce dont vous avez besoin',
-  ftSub:'Un service pensé pour les personnes qui valorisent leur temps et leur confort.',
-  f1h:'Multi-marques et multi-transporteurs',
-  f1p:'Nous acceptons les colis de GLS, SEUR, MRW, Correos, DHL, Amazon, Inpost et bien d\'autres. Sans exclusivité.',
-  f2h:'Avis quotidien centralisé',
-  f2p:'Pour des raisons opérationnelles, nous prévenons tout le monde une fois par jour (vers 18h) des colis reçus. Avec Pickup Express, nous vous prévenons plus tôt, le jour même.',
-  f3h:'Réception autorisée',
-  f3p:'Nous signons pour vous en votre absence. Votre autorisation est enregistrée et tout est documenté.',
-  f4h:'Accueil physique + casier 24/7',
-  f4p:'Nous avons un horaire d\'accueil physique (8h par jour). Le reste du temps, accès libre au casier sans besoin de personnel.',
-  f5h:'Tarifs clairs, sans surprise',
-  f5p:'L\'inscription est entièrement gratuite. Vous ne payez que pour les envois que vous recevez, avec des tarifs fixes selon le poids et la taille.',
-  f6h:'Un point fixe et bien connu',
-  f6p:'Toujours la même adresse : Av. Valls d\'Andorra 18. Facile d\'accès, avec parking à proximité.',
-  f7h:'Envois assurés',
-  f7p:'Vos colis sont assurés chez nous pendant toute la durée de garde. Tranquillité totale.',
+  ftTitle:'Tout ce dont vous avez besoin pour acheter sans frontières',
+  ftSub:'Une seule adresse pour recevoir n\'importe quel envoi, avec la tranquillité de savoir qu\'il sera toujours surveillé.',
+  f1h:'Recevez n\'importe quel envoi',
+  f1p:'Nous travaillons avec GLS, Correos, DHL, SEUR, FedEx, MRW, NACEX, Amazon, InPost et tout autre transporteur.',
+  f2h:'Vous saurez toujours quand ça arrive',
+  f2p:'Chaque après-midi, nous vous envoyons un e-mail avec tous les colis reçus. Besoin de plus de rapidité ? Avec Pickup Express, nous vous prévenons dès l\'arrivée.',
+  f3h:'Nous signons pour vous',
+  f3p:'Pas besoin d\'attendre le livreur. Nous acceptons l\'envoi en votre nom et le gardons jusqu\'à ce que vous le récupériez.',
+  f4h:'Récupérez quand ça vous arrange',
+  f4p:'Pendant les horaires d\'ouverture, nous vous accueillons personnellement. En dehors, vous pouvez utiliser le casier automatique.',
+  f5h:'Vous ne payez que quand vous recevez un colis',
+  f5p:'L\'inscription est gratuite. Sans engagement. Sans frais mensuels. Vous ne payez que pour les envois que vous utilisez réellement.',
+  f6h:'Toujours la même adresse',
+  f6p:'Av. Valls d\'Andorra 18, à seulement 10 minutes d\'Andorre. Stationnement facile et accès rapide depuis la frontière.',
+  f7h:'Vos colis sont protégés',
+  f7p:'Chaque envoi est enregistré. Garde sécurisée jusqu\'au moment de la récupération.',
+  f8h:'Sans chercher de place',
+  f8p:'Garez-vous devant la porte et récupérez votre colis en une minute.',
+  f9h:'Aucune application nécessaire',
+  f9p:'Vous recevrez simplement un e-mail quand votre colis sera disponible.',
   priceLabel:'Tarifs clairs',
   priceTitle:'Combien coûte le service ?',
   priceSub:'Sans abonnement ni engagement. Vous ne payez que pour les envois que vous recevez.',
@@ -1439,20 +1557,26 @@ const translations = {
   priceNote:'Les prix incluent la réception, la garde pendant la période indiquée et la remise au casier ou au comptoir. TVA applicable selon la réglementation en vigueur.',
   lockerBadge:'Nouveau',
   lockerLabel:'Nouveau service',
-  lockerTitle:'Casier disponible 24/7',
-  lockerDesc:'Pour nos clients, nous disposons d\'un casier automatique pour récupérer vos envois quand cela vous arrange le mieux, sans dépendre de nos horaires d\'accueil.',
-  lf1:'Sûr et confidentiel',
-  lf2:'Disponible 24/7',
-  lf3:'Facile et rapide à utiliser',
-  billTag1:'Facturation par paiement bancaire',
-  billSub1:'virement / prélèvement',
-  billLbl1:'Remise',
-  billUnit1:'par envoi',
-  billNote1:'Accès complet au casier inclus.',
-  billTag2:'Facturation par paiement en espèces',
+  lockerTitle:'Récupérez vos colis quand vous voulez',
+  lockerDesc:'Sans précipitation. Sans files d\'attente. Sans dépendre des horaires. Notre casier vous permet de récupérer vos envois quand cela vous arrange.',
+  lmc1t:'24/7',
+  lmc1s:'Toujours disponible',
+  lmc2t:'1 minute',
+  lmc2s:'Récupération très rapide',
+  lmc3t:'100% sûr',
+  lmc3s:'Accès personnalisé',
+  lmc4t:'Alerte par e-mail',
+  lmc4s:'Quand le colis arrive',
+  billingRestriction:'Uniquement disponible pour les clients inscrits avec facturation mensuelle.',
+  billTag1:'Paiement par prélèvement',
+  billSub1:'virement / prélèvement bancaire',
+  billLbl1:'Économisez 0,50€ sur chaque envoi',
+  billNote1:'Les clients payant par prélèvement bénéficient d\'une remise automatique de 0,50€ par colis et d\'un accès complet au casier.',
+  billBtn1:'Activer le prélèvement',
+  billTag2:'Paiement en espèces',
   billSub2:'cash, sans coordonnées bancaires',
-  billLbl2:'Sans remise',
-  billNote2:'Accès complet au casier inclus également.',
+  billLbl2:'Payez seulement les envois que vous utilisez',
+  billNote2:'Sans coordonnées bancaires. Accès au casier également inclus. Seule la remise de 0,50€ ne s\'applique pas.',
   trkLabel:'Pour les clients inscrits',
   trkTitle:'Suivez vos envois',
   trkSub:'Indiquez votre téléphone et votre nom de famille pour voir les envois actuellement en attente à votre nom.',
@@ -1471,8 +1595,11 @@ const translations = {
   trkSummary1:'Vous avez 1 envoi en attente',
   trkSummaryN:'Vous avez {n} envois en attente',
   trkHint:'Si vous êtes en dehors de l\'Espagne, indiquez votre téléphone avec l\'indicatif international de votre pays mais sans le 0 initial (ex. Andorre : 376 600 000 · France : 33 6 12 34 56 78).',
-  opsTitle:'Transporteurs compatibles',
-  opsSub:'Nous acceptons les colis de tous les principaux opérateurs et bien d\'autres encore.',
+  opsTitle:'Recevez des colis de n\'importe quel transporteur ⭐',
+  opsSub:'Peu importe où vous achetez. Si ça peut être expédié en Espagne, nous le recevons pour vous.',
+  opsBrands:'Amazon · AliExpress · Zara · PCComponentes · Decathlon · MediaMarkt · El Corte Inglés · Ikea · Temu',
+  opsNote:'Vous ne trouvez pas votre transporteur ? Pas de souci. Nous acceptons aussi beaucoup d\'autres opérateurs.',
+  opsClosing:'Et si une boutique ne livre pas directement en Andorre, nous sommes votre adresse en Espagne.',
   faqLabel:'Questions courantes',
   faqTitle:'Questions fréquentes',
   fq1:'Quelle adresse dois-je indiquer pour mes achats ?',
@@ -1517,46 +1644,59 @@ const translations = {
   cookieLink:'Cookies',
   },
   ru: {
-  heroBadge:'✦ В 10 минутах от Андорра-ла-Велья · Приём посылок всех служб доставки',
-  heroTitle:'Ваш адрес<br>в <em>двух шагах</em> от границы',
-  heroDesc:'Многие интернет-магазины не доставляют напрямую в Андорру из-за таможенных ограничений. Поэтому Pickup Point предоставляет вам адрес в Ла-Сеу-д\'Уржель для получения любых посылок и забирайте их, когда вам удобно — с доступом к locker-у 24/7.',
+  heroBadge:'✦ Адрес в Испании · Приём посылок всех служб доставки',
+  heroTitle:'Ваш адрес в Испании,<br>всего в <em>10 минутах</em> от Андорры',
+  heroTagline:'Покупайте где угодно. Получайте здесь. Забирайте, когда удобно.',
+  heroDesc:'Многие магазины не доставляют в Андорру или берут за это гораздо больше. С Pickup Point у вас есть адрес в Ла-Сеу-д\'Уржель для получения всех ваших посылок, с уведомлением по e-mail и доступом к locker-у 24/7.',
   heroCta1:'Зарегистрироваться сейчас — бесплатно',
   heroCta2:'Смотреть цены',
-  stat1:'стоимость регистрации',
-  stat2:'доступ к locker-у',
-  stat3:'бесплатное хранение',
-  trustText:'Мы та же компания, которая управляет <strong>официальным агентством GLS в Ла-Сеу-д\'Уржель</strong>: многолетний опыт в логистике и профессиональная команда к вашим услугам.',
+  stat1:'Бесплатная регистрация',
+  stat2:'Доступ к locker-у',
+  stat3:'Хранение включено',
+  stat4:'служб доставки: получайте любую посылку',
+  trustHeadline:'Более 40 лет в управлении посылками',
+  trustText:'Мы — компания, отвечающая за <strong>официальное агентство GLS в Ла-Сеу-д\'Уржель</strong>. Каждый день мы обрабатываем сотни посылок, чтобы вы получали свои посылки с полным доверием.',
   trustB1:'🚚 Официальное агентство GLS',
-  trustB2:'📅 Многолетний опыт',
+  trustB2:'📅 Более 40 лет',
   trustB3:'👥 Профессиональная команда',
   howLabel:'Процесс',
   howTitle:'Как работает сервис?',
-  howSub:'Три простых шага дают вам полный контроль над вашими посылками.',
-  s1h:'Зарегистрируйтесь',
-  s1p:'Заполните форму менее чем за 2 минуты и получите по e-mail подтверждение с точным адресом, который нужно указывать при покупках.',
-  s2h:'Совершайте покупки',
-  s2p:'Используйте наш адрес как пункт доставки при покупках онлайн. Здесь работают все службы доставки.',
-  s3h:'Забирайте, когда удобно',
-  s3p:'Мы сообщим вам, когда придёт посылка. Вы можете забрать её в удобное для вас время, без спешки.',
-  s4h:'Хранение включено',
-  s4p:'Каждая посылка включает бесплатные дни хранения (14 дней для посылок, 7 для паллет). Точные цены смотрите ниже.',
+  howSub:'Регистрация займёт всего две минуты. После этого просто покупайте как обычно — обо всём остальном позаботимся мы.',
+  s1h:'Зарегистрируйтесь бесплатно',
+  s1p:'Нам нужны только ваши данные. Менее чем за 2 минуты вы получите по e-mail ваш новый адрес для получения посылок.',
+  s2h:'Покупайте где угодно',
+  s2p:'Когда совершаете покупку онлайн, используйте ваш новый адрес Pickup Point. Мы принимаем посылки от GLS, Correos, DHL, SEUR, FedEx, Amazon, MRW, NACEX и любой другой службы доставки.',
+  s3h:'Мы сообщим о прибытии',
+  s3p:'Как только мы получим вашу посылку, мы отправим вам e-mail. Вы сможете забрать её, когда вам удобно, или воспользоваться нашим locker-ом 24/7, если он у вас подключён.',
+  s4h:'Без спешки',
+  s4p:'У нас есть:<br>• 14 бесплатных дней для посылок<br>• 7 бесплатных дней для паллет<br>Нужно больше времени? Это тоже возможно.',
+  whyTitle:'Почему всё больше андоррцев выбирают нас',
+  why1:'✅ Покупайте в магазинах, которые не доставляют в Андорру.',
+  why2:'✅ Пользуйтесь акциями с бесплатной доставкой по Испании.',
+  why3:'✅ Получайте посылки от всех служб доставки по одному адресу.',
+  why4:'✅ Locker доступен круглосуточно.',
+  why5:'✅ Без ежемесячной платы.',
   ftLabel:'Почему Pickup Point?',
-  ftTitle:'Всё, что вам нужно',
-  ftSub:'Сервис создан для людей, которые ценят своё время и удобство.',
-  f1h:'Все бренды и службы доставки',
-  f1p:'Мы принимаем посылки от GLS, SEUR, MRW, Correos, DHL, Amazon, Inpost и многих других. Без эксклюзивности.',
-  f2h:'Единое уведомление раз в день',
-  f2p:'По операционным причинам мы уведомляем всех клиентов раз в день (около 18:00) о полученных посылках. С услугой Pickup Express мы уведомим вас раньше, в тот же день.',
-  f3h:'Приём по доверенности',
-  f3p:'Мы распишемся за вас в ваше отсутствие. Ваше разрешение фиксируется, и всё документируется.',
-  f4h:'Личный приём + locker 24/7',
-  f4p:'У нас есть часы личного приёма (8 часов в день). В остальное время — свободный доступ к locker-у без необходимости присутствия персонала.',
-  f5h:'Чёткие цены, без сюрпризов',
-  f5p:'Регистрация полностью бесплатна. Вы платите только за полученные посылки, по фиксированным тарифам в зависимости от веса и размера.',
-  f6h:'Постоянное, известное место',
-  f6p:'Всегда один и тот же адрес: Av. Valls d\'Andorra 18. Удобный доступ и парковка рядом.',
-  f7h:'Застрахованные посылки',
-  f7p:'Ваши посылки застрахованы у нас на весь период хранения. Полное спокойствие.',
+  ftTitle:'Всё, что нужно для покупок без границ',
+  ftSub:'Единый адрес для получения любой посылки, со спокойствием от того, что она всегда под контролем.',
+  f1h:'Получайте любую посылку',
+  f1p:'Мы работаем с GLS, Correos, DHL, SEUR, FedEx, MRW, NACEX, Amazon, InPost и любой другой службой доставки.',
+  f2h:'Вы всегда будете знать о прибытии',
+  f2p:'Каждый день во второй половине дня мы отправляем вам e-mail со всеми полученными посылками. Нужно быстрее? С Pickup Express мы уведомим вас сразу по прибытии.',
+  f3h:'Мы распишемся за вас',
+  f3p:'Не нужно ждать курьера. Мы принимаем посылку от вашего имени и храним её до тех пор, пока вы её не заберёте.',
+  f4h:'Забирайте, когда удобно',
+  f4p:'В часы работы мы обслужим вас лично. В остальное время вы можете воспользоваться автоматическим locker-ом.',
+  f5h:'Платите только когда получаете посылку',
+  f5p:'Регистрация бесплатна. Без обязательств. Без ежемесячной платы. Вы платите только за те посылки, которыми реально пользуетесь.',
+  f6h:'Всегда один и тот же адрес',
+  f6p:'Av. Valls d\'Andorra 18, всего в 10 минутах от Андорры. Удобная парковка и быстрый доступ от границы.',
+  f7h:'Ваши посылки защищены',
+  f7p:'Каждая посылка регистрируется. Надёжное хранение до момента получения.',
+  f8h:'Не нужно искать место',
+  f8p:'Припаркуйтесь прямо у входа и заберите посылку за одну минуту.',
+  f9h:'Не нужно ничего устанавливать',
+  f9p:'Вы просто получите e-mail, когда посылка будет готова к выдаче.',
   priceLabel:'Прозрачные тарифы',
   priceTitle:'Сколько стоит сервис?',
   priceSub:'Без абонементов и обязательств. Вы платите только за полученные посылки.',
@@ -1578,20 +1718,26 @@ const translations = {
   priceNote:'Цены включают приём, хранение в течение указанного периода и выдачу через locker или на стойке. НДС применяется согласно действующему законодательству.',
   lockerBadge:'Новинка',
   lockerLabel:'Новая услуга',
-  lockerTitle:'Locker доступен 24/7',
-  lockerDesc:'Для наших клиентов у нас есть автоматический locker для получения ваших посылок, когда вам удобно, независимо от часов работы персонала.',
-  lf1:'Безопасно и конфиденциально',
-  lf2:'Доступно 24/7',
-  lf3:'Просто и быстро в использовании',
-  billTag1:'Оплата банковским переводом',
+  lockerTitle:'Забирайте посылки, когда вам удобно',
+  lockerDesc:'Без спешки. Без очередей. Без зависимости от часов работы. Наш locker позволяет забирать посылки в любое удобное для вас время.',
+  lmc1t:'24/7',
+  lmc1s:'Всегда доступен',
+  lmc2t:'1 минута',
+  lmc2s:'Очень быстрое получение',
+  lmc3t:'100% безопасно',
+  lmc3s:'Персональный доступ',
+  lmc4t:'Уведомление по e-mail',
+  lmc4s:'Когда посылка прибывает',
+  billingRestriction:'Доступно только для зарегистрированных клиентов с ежемесячным выставлением счетов.',
+  billTag1:'Оплата прямым дебетованием',
   billSub1:'перевод / прямое дебетование',
-  billLbl1:'Скидка',
-  billUnit1:'за посылку',
-  billNote1:'Полный доступ к locker-у включён.',
+  billLbl1:'Экономьте 0,50€ на каждой посылке',
+  billNote1:'Клиенты с прямым дебетованием получают автоматическую скидку 0,50€ за посылку и полный доступ к locker-у.',
+  billBtn1:'Подключить прямое дебетование',
   billTag2:'Оплата наличными',
   billSub2:'наличные, без банковских данных',
-  billLbl2:'Без скидки',
-  billNote2:'Полный доступ к locker-у также включён.',
+  billLbl2:'Платите только за используемые посылки',
+  billNote2:'Без банковских данных. Доступ к locker-у также включён. Не применяется только скидка 0,50€.',
   trkLabel:'Для зарегистрированных клиентов',
   trkTitle:'Отследить ваши посылки',
   trkSub:'Введите ваш телефон и фамилию, чтобы увидеть посылки, которые сейчас ожидают вас.',
@@ -1610,8 +1756,11 @@ const translations = {
   trkSummary1:'У вас 1 посылка ожидает',
   trkSummaryN:'У вас {n} посылок ожидает',
   trkHint:'Если вы находитесь за пределами Испании, укажите телефон с международным кодом вашей страны, но без начального 0 (например, Андорра: 376 600 000 · Франция: 33 6 12 34 56 78).',
-  opsTitle:'Совместимые службы доставки',
-  opsSub:'Мы принимаем посылки от всех основных операторов и многих других.',
+  opsTitle:'Получайте посылки от любой службы доставки ⭐',
+  opsSub:'Неважно, где вы покупаете. Если это можно отправить в Испанию, мы получим это за вас.',
+  opsBrands:'Amazon · AliExpress · Zara · PCComponentes · Decathlon · MediaMarkt · El Corte Inglés · Ikea · Temu',
+  opsNote:'Не нашли свою службу доставки? Не проблема. Мы также принимаем многих других операторов.',
+  opsClosing:'А если магазин не доставляет напрямую в Андорру, мы — ваш адрес в Испании.',
   faqLabel:'Частые вопросы',
   faqTitle:'Часто задаваемые вопросы',
   fq1:'Какой адрес указывать при покупках?',
