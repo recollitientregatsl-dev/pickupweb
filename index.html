@@ -230,6 +230,37 @@
     .billing-amount span:last-child { font-size: .82rem; color: var(--muted); }
     .billing-note { font-size: .85rem; color: var(--muted); }
 
+    /* ─── Consulta enviaments ─── */
+    .tracking { background: #fff; }
+    .tracking-form {
+      display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap;
+      background: var(--light); border: 1.5px solid var(--border); border-radius: var(--radius);
+      padding: 24px; margin-bottom: 8px;
+    }
+    .tracking-form .field { flex: 1; min-width: 180px; }
+    .tracking-form label { display: block; font-size: .82rem; font-weight: 700; color: var(--dark); margin-bottom: 6px; }
+    .tracking-form input {
+      width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 8px;
+      font-size: .95rem; font-family: var(--font);
+    }
+    .tracking-form input:focus { outline: none; border-color: var(--brand); }
+    .tracking-form .btn { white-space: nowrap; }
+    .tracking-results { margin-top: 20px; }
+    .trk-card {
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+      background: #fff; border: 1.5px solid var(--border); border-radius: var(--radius);
+      padding: 18px 22px; margin-bottom: 12px; flex-wrap: wrap;
+    }
+    .trk-card-main strong { display: block; color: var(--dark); font-size: .98rem; margin-bottom: 4px; }
+    .trk-card-main span { display: block; font-size: .82rem; color: var(--muted); }
+    .trk-status {
+      font-size: .78rem; font-weight: 800; padding: 6px 14px; border-radius: 50px;
+      background: rgba(44,156,138,.12); color: var(--brand-dk); white-space: nowrap;
+    }
+    .trk-empty, .trk-error { color: var(--muted); font-size: .92rem; padding: 16px 0; }
+    .trk-error { color: #b3261e; }
+    .trk-loading { color: var(--muted); font-size: .92rem; padding: 16px 0; }
+
     /* ─── Avantatges ─── */
     .features { background: #fff; }
     .features-grid {
@@ -416,12 +447,19 @@
     </div>
     <nav>
       <div class="nav-links" style="display:flex;gap:24px;">
-        <a href="#com-funciona" data-ca="Com funciona" data-es="Cómo funciona">Com funciona</a>
-        <a href="#preus" data-ca="Preus" data-es="Precios">Preus</a>
-        <a href="#locker" data-ca="Locker" data-es="Locker">Locker</a>
-        <a href="#preguntes" data-ca="Preguntes freqüents" data-es="FAQ">Preguntes freqüents</a>
+        <a href="#com-funciona" data-ca="Com funciona" data-es="Cómo funciona" data-en="How it works" data-fr="Comment ça marche" data-ru="Как это работает">Com funciona</a>
+        <a href="#preus" data-ca="Preus" data-es="Precios" data-en="Prices" data-fr="Tarifs" data-ru="Цены">Preus</a>
+        <a href="#locker" data-ca="Locker" data-es="Locker" data-en="Locker" data-fr="Casier" data-ru="Locker">Locker</a>
+        <a href="#consulta" data-ca="Consulta enviaments" data-es="Consultar envíos" data-en="Track shipment" data-fr="Suivre un envoi" data-ru="Отследить посылку">Consulta enviaments</a>
+        <a href="#preguntes" data-ca="Preguntes freqüents" data-es="FAQ" data-en="FAQ" data-fr="FAQ" data-ru="Частые вопросы">Preguntes freqüents</a>
       </div>
-      <button class="lang-btn" onclick="toggleLang()" id="langBtn">ES</button>
+      <select class="lang-btn" onchange="setLang(this.value)" id="langBtn">
+        <option value="ca">CA</option>
+        <option value="es">ES</option>
+        <option value="en">EN</option>
+        <option value="fr">FR</option>
+        <option value="ru">RU</option>
+      </select>
       <a href="#registra-t" class="btn btn-primary nav-cta" id="navCta">Registra't gratis</a>
     </nav>
   </div>
@@ -545,7 +583,7 @@
       <div class="locker-content">
         <p class="section-label" id="lockerLabel">Nou servei</p>
         <h2 class="section-title" id="lockerTitle">Locker disponible 24/7</h2>
-        <p class="locker-desc" id="lockerDesc">Per als nostres clients, disposem d'un locker automàtic per recollir o deixar enviaments quan et vagi millor, sense dependre del nostre horari d'atenció.</p>
+        <p class="locker-desc" id="lockerDesc">Per als nostres clients, disposem d'un locker automàtic per recollir els teus enviaments quan et vagi millor, sense dependre del nostre horari d'atenció.</p>
         <div class="locker-features">
           <div class="locker-feature"><span class="lf-icon">🔒</span><span id="lf1">Segur i confidencial</span></div>
           <div class="locker-feature"><span class="lf-icon">🕐</span><span id="lf2">Disponible 24/7</span></div>
@@ -574,6 +612,29 @@
         <p class="billing-note" id="billNote2">Accés complet al locker igualment inclòs.</p>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ════ CONSULTA ENVIAMENTS ════ -->
+<section class="tracking" id="consulta">
+  <div class="container">
+    <p class="section-label" id="trkLabel">Per a clients registrats</p>
+    <h2 class="section-title" id="trkTitle">Consulta els teus enviaments</h2>
+    <p class="section-sub" id="trkSub">Introdueix el teu telèfon i cognom per veure els enviaments que tenim pendents al teu nom.</p>
+
+    <div class="tracking-form">
+      <div class="field">
+        <label for="trkTel" id="trkTelLbl">Telèfon</label>
+        <input type="tel" id="trkTel" placeholder="376 600 000">
+      </div>
+      <div class="field">
+        <label for="trkCognom" id="trkCognomLbl">Cognom</label>
+        <input type="text" id="trkCognom" placeholder="Garcia">
+      </div>
+      <button class="btn btn-primary" id="trkBtn" onclick="consultarEnviaments()">Consultar</button>
+    </div>
+
+    <div id="trkResults" class="tracking-results"></div>
   </div>
 </section>
 
@@ -653,7 +714,7 @@
     <div class="faq-list">
       <div class="faq-item">
         <button class="faq-q" id="fq1">Quina adreça he de posar a les meves compres?</button>
-        <div class="faq-a"><p id="fa1">Un cop registrat, et facilitarem la informació exacta d'adreça i les instruccions per a cada transportista. En general: <strong>Av. Valls d'Andorra 18, [a/c de: el teu nom]</strong>.</p></div>
+        <div class="faq-a"><p id="fa1">Has de posar la nostra adreça amb les teves dades: <strong>Av. Valls d'Andorra 18, 25700 La Seu d'Urgell</strong>, indicant el teu nom i els dos cognoms. Si el transportista ho demana, indica també el teu telèfon i email de contacte.</p></div>
       </div>
       <div class="faq-item">
         <button class="faq-q" id="fq2">Té algun cost el servei?</button>
@@ -688,7 +749,7 @@
   <div class="container">
     <p class="section-label" style="color:rgba(255,255,255,.5);letter-spacing:2px;" id="regLabel">Registre gratuït</p>
     <h2 class="section-title" id="regTitle">Comença ara</h2>
-    <p class="section-sub" id="regSub">Omple el formulari i en 24h tindràs la confirmació per e-mail amb les teves dades de lliurament.</p>
+    <p class="section-sub" id="regSub">Omple el formulari en menys de 2 minuts. El registre és immediat, sense esperes.</p>
 
     <div class="form-card">
       <!-- Step indicator -->
@@ -829,7 +890,7 @@
       <div class="form-success" id="formSuccess">
         <div class="success-icon">✅</div>
         <h3 id="succH">Registre completat!</h3>
-        <p id="succP">Hem rebut les teves dades. En 24 hores laborables rebràs un correu de confirmació amb la teva adreça de lliurament personalitzada.</p>
+        <p id="succP">Hem rebut les teves dades correctament. Ja pots utilitzar la nostra adreça: Av. Valls d'Andorra 18, 25700 La Seu d'Urgell, amb el teu nom i cognoms — per a les teves properes compres online. Rebràs també un email de confirmació amb aquesta informació.</p>
         <br>
         <p style="color:var(--brand);font-weight:600;" id="succSub">Gràcies per confiar en Pickup Point!</p>
       </div>
@@ -945,6 +1006,50 @@ function nextStep(n) {
 }
 function prevStep(n) { if (n > 1) showStep(n - 1); }
 
+async function consultarEnviaments() {
+  const tel = document.getElementById('trkTel').value.trim();
+  const cognom = document.getElementById('trkCognom').value.trim();
+  const results = document.getElementById('trkResults');
+  const t = translations[lang];
+
+  if (tel.length < 6 || cognom.length < 2) {
+    results.innerHTML = `<p class="trk-error">${t.trkErrInput}</p>`;
+    return;
+  }
+
+  results.innerHTML = `<p class="trk-loading">${t.trkLoading}</p>`;
+
+  try {
+    const url = SCRIPT_URL + '?action=consulta&telefon=' + encodeURIComponent(tel) + '&cognom=' + encodeURIComponent(cognom);
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if (data.status !== 'ok') {
+      results.innerHTML = `<p class="trk-error">${t.trkErrGeneric}</p>`;
+      return;
+    }
+
+    if (!data.enviaments || data.enviaments.length === 0) {
+      results.innerHTML = `<p class="trk-empty">${t.trkEmpty}</p>`;
+      return;
+    }
+
+    results.innerHTML = data.enviaments.map(env => `
+      <div class="trk-card">
+        <div class="trk-card-main">
+          <strong>${t.trkAlbara} ${env.albara || '—'}</strong>
+          <span>${env.data || ''} · ${env.descripcio || ''}</span>
+          <span>${t.trkBultos}: ${env.bultos || '—'} · ${t.trkPes}: ${env.pes || '—'} kg${env.reemborsament ? ' · ' + t.trkReemborsament + ': ' + env.reemborsament + '€' : ''}</span>
+        </div>
+        <div class="trk-status">${env.estat}</div>
+      </div>
+    `).join('');
+
+  } catch (err) {
+    results.innerHTML = `<p class="trk-error">${t.trkErrGeneric}</p>`;
+  }
+}
+
 async function submitForm() {
   if (!validateStep(4)) return;
   const btn = document.getElementById('submitBtn');
@@ -1025,20 +1130,25 @@ const translations = {
     expTitle:'Pickup Express <span class="express-price">+2,50€</span>', expDesc:'Prioritzem la tramitació del teu enviament perquè el puguis recollir el mateix dia que arriba.',
     priceNote:'Els preus inclouen la recepció, custòdia durant el període indicat i l\'entrega al locker o al taulell. IVA aplicable segons normativa vigent.',
     lockerBadge:'Novetat', lockerLabel:'Nou servei', lockerTitle:'Locker disponible 24/7',
-    lockerDesc:'Per als nostres clients, disposem d\'un locker automàtic per recollir o deixar enviaments quan et vagi millor, sense dependre del nostre horari d\'atenció.',
+    lockerDesc:'Per als nostres clients, disposem d\'un locker automàtic per recollir els teus enviaments quan et vagi millor, sense dependre del nostre horari d\'atenció.',
     lf1:'Segur i confidencial', lf2:'Disponible 24/7', lf3:'Fàcil i ràpid d\'utilitzar',
     billTag1:'Facturació amb pagament bancari', billSub1:'transferència / domiciliació', billLbl1:'Descompte', billUnit1:'per enviament', billNote1:'Accés complet al locker inclòs.',
     billTag2:'Facturació amb pagament en efectiu', billSub2:'cash, sense dades bancàries', billLbl2:'Sense descompte', billNote2:'Accés complet al locker igualment inclòs.',
+    trkLabel:'Per a clients registrats', trkTitle:'Consulta els teus enviaments', trkSub:'Introdueix el teu telèfon i cognom per veure els enviaments que tenim pendents al teu nom.',
+    trkTelLbl:'Telèfon', trkCognomLbl:'Cognom', trkBtn:'Consultar',
+    trkLoading:'Cercant...', trkErrInput:'Introdueix un telèfon i un cognom vàlids.', trkErrGeneric:'No s\'ha pogut fer la consulta. Torna-ho a provar més tard.',
+    trkEmpty:'No hem trobat cap enviament pendent amb aquestes dades.',
+    trkAlbara:'Albarà', trkBultos:'Bultos', trkPes:'Pes', trkReemborsament:'Reemborsament',
     opsTitle:'Transportistes compatibles', opsSub:'Acceptem paquets de tots els operadors principals i molts més.',
     faqLabel:'Dubtes habituals', faqTitle:'Preguntes freqüents',
-    fq1:'Quina adreça he de posar a les meves compres?', fa1:'Un cop registrat, et facilitarem la informació exacta d\'adreça i les instruccions per a cada transportista. En general: <strong>Av. Valls d\'Andorra 18, [a/c de: el teu nom]</strong>.',
+    fq1:'Quina adreça he de posar a les meves compres?', fa1:'Has de posar la nostra adreça amb les teves dades: <strong>Av. Valls d\'Andorra 18, 25700 La Seu d\'Urgell</strong>, indicant el teu nom i els dos cognoms. Si el transportista ho demana, indica també el teu telèfon i email de contacte.',
     fq2:'Té algun cost el servei?', fa2:'El registre és gratuït. Cada enviament rebut té un preu segons pes i mida (des de 3,50€), amb la custòdia inclosa. Consulta la taula de <a href="#preus">preus</a> per a tots els detalls.',
     fq3:'Quant de temps guardareu el meu paquet?', fa3:'La custòdia inclosa és de 14 dies naturals per a paquets (7 dies per a palets). Passat aquest període s\'aplica un cost addicional per dia, indicat a la taula de preus.',
     fq4:'Podeu rebre paquets amb reemborsament?', fa4:'Per a paquets amb reemborsament cal coordinació prèvia. Contacta\'ns abans de fer la compra per confirmar la disponibilitat d\'aquest servei.',
     fq5:'Podeu rebre paquets d\'empresa?', fa5:'El servei és per a tothom: particulars i empreses. En el formulari pots indicar si actues com a empresa i el teu NIF.',
     fq6:'Per què molts e-commerce no envien a Andorra?', fa6:'Andorra no forma part de la Unió Duanera Europea, i moltes botigues online no gestionen els tràmits duaners o directament exclouen Andorra dels seus enviaments. Rebent el paquet a la nostra adreça a la Seu d\'Urgell (Espanya) evites aquesta restricció.',
     fq7:'Com funciona el pagament i el descompte per domiciliació?', fa7:'Pots facturar per transferència/domiciliació bancària (−0,50€ de descompte per enviament) o en efectiu sense donar dades bancàries (sense descompte). En tots dos casos tens accés complet al locker 24/7.',
-    regLabel:'Registre gratuït', regTitle:'Comença ara', regSub:'Omple el formulari i en 24h tindràs la confirmació per e-mail amb les teves dades de lliurament.',
+    regLabel:'Registre gratuït', regTitle:'Comença ara', regSub:'Omple el formulari en menys de 2 minuts. El registre és immediat, sense esperes.',
     indl1:'Email', indl2:'Dades', indl3:'Adreça', indl4:'Autorització',
     st1h:'Comencem!', st1d:'Podràs concentrar tots els teus enviaments en un sol punt i recollir-los quan et vagi bé.',
     st2h:'Dades personals', st2d:'Necessitem les teves dades per identificar els teus paquets correctament.',
@@ -1047,7 +1157,7 @@ const translations = {
     authLbl:'<strong>Autorització de recepció</strong> — Autoritzo a Recollit i Entregat S.L. a rebre, signar i custodiar paquets en el meu nom a l\'adreça Av. Valls d\'Andorra 18. <span class="req">*</span>',
     rgpdLbl:'Accepto la <a href="#" onclick="return false;">política de privacitat</a> i el tractament de les meves dades personals conforme al RGPD per a la gestió del servei. <span class="req">*</span>',
     comLbl:'Accepto rebre comunicacions sobre el servei i novetats (opcional).',
-    succH:'Registre completat!', succP:'Hem rebut les teves dades. En 24 hores laborables rebràs un correu de confirmació amb la teva adreça de lliurament personalitzada.',
+    succH:'Registre completat!', succP:'Hem rebut les teves dades correctament. Ja pots utilitzar la nostra adreça: Av. Valls d\'Andorra 18, 25700 La Seu d\'Urgell, amb el teu nom i cognoms — per a les teves properes compres online. Rebràs també un email de confirmació amb aquesta informació.',
     succSub:'Gràcies per confiar en Pickup Point!',
     navCta:'Registra\'t gratis',
     ci1:'Av. Valls d\'Andorra 18', ci4:'Consulta el nostre horari',
@@ -1084,20 +1194,25 @@ const translations = {
     expTitle:'Pickup Express <span class="express-price">+2,50€</span>', expDesc:'Priorizamos la tramitación de tu envío para que puedas recogerlo el mismo día que llega.',
     priceNote:'Los precios incluyen la recepción, custodia durante el período indicado y la entrega en el locker o en el mostrador. IVA aplicable según normativa vigente.',
     lockerBadge:'Novedad', lockerLabel:'Nuevo servicio', lockerTitle:'Locker disponible 24/7',
-    lockerDesc:'Para nuestros clientes, disponemos de un locker automático para recoger o dejar envíos cuando mejor te venga, sin depender de nuestro horario de atención.',
+    lockerDesc:'Para nuestros clientes, disponemos de un locker automático para recoger tus envíos cuando mejor te venga, sin depender de nuestro horario de atención.',
     lf1:'Seguro y confidencial', lf2:'Disponible 24/7', lf3:'Fácil y rápido de utilizar',
     billTag1:'Facturación con pago bancario', billSub1:'transferencia / domiciliación', billLbl1:'Descuento', billUnit1:'por envío', billNote1:'Acceso completo al locker incluido.',
     billTag2:'Facturación con pago en efectivo', billSub2:'cash, sin datos bancarios', billLbl2:'Sin descuento', billNote2:'Acceso completo al locker igualmente incluido.',
+    trkLabel:'Para clientes registrados', trkTitle:'Consulta tus envíos', trkSub:'Introduce tu teléfono y apellido para ver los envíos que tenemos pendientes a tu nombre.',
+    trkTelLbl:'Teléfono', trkCognomLbl:'Apellido', trkBtn:'Consultar',
+    trkLoading:'Buscando...', trkErrInput:'Introduce un teléfono y un apellido válidos.', trkErrGeneric:'No se ha podido realizar la consulta. Inténtalo más tarde.',
+    trkEmpty:'No hemos encontrado ningún envío pendiente con estos datos.',
+    trkAlbara:'Albarán', trkBultos:'Bultos', trkPes:'Peso', trkReemborsament:'Reembolso',
     opsTitle:'Transportistas compatibles', opsSub:'Aceptamos paquetes de todos los operadores principales y muchos más.',
     faqLabel:'Dudas habituales', faqTitle:'Preguntas frecuentes',
-    fq1:'¿Qué dirección debo poner en mis compras?', fa1:'Una vez registrado, te facilitaremos la información exacta de dirección e instrucciones para cada transportista. En general: <strong>Av. Valls d\'Andorra 18, [a/c de: tu nombre]</strong>.',
+    fq1:'¿Qué dirección debo poner en mis compras?', fa1:'Debes poner nuestra dirección con tus datos: <strong>Av. Valls d\'Andorra 18, 25700 La Seu d\'Urgell</strong>, indicando tu nombre y los dos apellidos. Si el transportista lo pide, indica también tu teléfono y email de contacto.',
     fq2:'¿Tiene algún coste el servicio?', fa2:'El registro es gratuito. Cada envío recibido tiene un precio según peso y tamaño (desde 3,50€), con la custodia incluida. Consulta la tabla de <a href="#preus">precios</a> para todos los detalles.',
     fq3:'¿Cuánto tiempo guardaréis mi paquete?', fa3:'La custodia incluida es de 14 días naturales para paquetes (7 días para palets). Pasado este período se aplica un coste adicional por día, indicado en la tabla de precios.',
     fq4:'¿Podéis recibir paquetes con reembolso?', fa4:'Para paquetes con reembolso es necesaria coordinación previa. Contáctanos antes de hacer la compra para confirmar la disponibilidad de este servicio.',
     fq5:'¿Podéis recibir paquetes de empresa?', fa5:'El servicio es para todos: particulares y empresas. En el formulario puedes indicar si actúas como empresa y tu NIF.',
     fq6:'¿Por qué muchos e-commerce no envían a Andorra?', fa6:'Andorra no forma parte de la Unión Aduanera Europea, y muchas tiendas online no gestionan los trámites aduaneros o directamente excluyen Andorra de sus envíos. Recibiendo el paquete en nuestra dirección en la Seu d\'Urgell (España) evitas esta restricción.',
     fq7:'¿Cómo funciona el pago y el descuento por domiciliación?', fa7:'Puedes facturar por transferencia/domiciliación bancaria (−0,50€ de descuento por envío) o en efectivo sin dar datos bancarios (sin descuento). En ambos casos tienes acceso completo al locker 24/7.',
-    regLabel:'Registro gratuito', regTitle:'Empieza ahora', regSub:'Rellena el formulario y en 24h tendrás la confirmación por e-mail con tus datos de entrega.',
+    regLabel:'Registro gratuito', regTitle:'Empieza ahora', regSub:'Rellena el formulario en menos de 2 minutos. El registro es inmediato, sin esperas.',
     indl1:'Email', indl2:'Datos', indl3:'Dirección', indl4:'Autorización',
     st1h:'¡Empezamos!', st1d:'Podrás concentrar todos tus envíos en un solo punto y recogerlos cuando quieras.',
     st2h:'Datos personales', st2d:'Necesitamos tus datos para identificar tus paquetes correctamente.',
@@ -1106,18 +1221,423 @@ const translations = {
     authLbl:'<strong>Autorización de recepción</strong> — Autorizo a Recollit i Entregat S.L. a recibir, firmar y custodiar paquetes en mi nombre en la dirección Av. Valls d\'Andorra 18. <span class="req">*</span>',
     rgpdLbl:'Acepto la <a href="#" onclick="return false;">política de privacidad</a> y el tratamiento de mis datos personales conforme al RGPD para la gestión del servicio. <span class="req">*</span>',
     comLbl:'Acepto recibir comunicaciones sobre el servicio y novedades (opcional).',
-    succH:'¡Registro completado!', succP:'Hemos recibido tus datos. En 24 horas laborables recibirás un correo de confirmación con tu dirección de entrega personalizada.',
+    succH:'¡Registro completado!', succP:'Hemos recibido tus datos correctamente. Ya puedes utilizar nuestra dirección: Av. Valls d\'Andorra 18, 25700 La Seu d\'Urgell, con tu nombre y apellidos — para tus próximas compras online. Recibirás también un email de confirmación con esta información.',
     succSub:'¡Gracias por confiar en Pickup Point!',
     navCta:'Regístrate gratis',
     ci1:'Av. Valls d\'Andorra 18', ci4:'Consulta nuestro horario',
     privLink:'Política de privacidad', cookieLink:'Cookies',
-  }
+  },
+  en: {
+  heroBadge:'✦ 10 minutes from Andorra la Vella · Multi-carrier reception',
+  heroTitle:'Your address<br>just <em>one step</em> from the border',
+  heroDesc:'Many online shops don\'t ship directly to Andorra due to customs restrictions. That\'s why with Pickup Point you get an address in La Seu d\'Urgell to receive any package and pick it up whenever suits you — with 24/7 locker access.',
+  heroCta1:'Sign up now — it\'s free',
+  heroCta2:'See prices',
+  stat1:'registration cost',
+  stat2:'locker access',
+  stat3:'storage included',
+  trustText:'We\'re the same company that runs the <strong>official GLS agency in La Seu d\'Urgell</strong>: years of logistics experience and a professional team at your service.',
+  trustB1:'🚚 Official GLS agency',
+  trustB2:'📅 Long track record',
+  trustB3:'👥 Professional team',
+  howLabel:'The process',
+  howTitle:'How does the service work?',
+  howSub:'Three simple steps give you full control over your shipments.',
+  s1h:'Sign up',
+  s1p:'Fill in the form in under 2 minutes and get an e-mail confirmation with the exact address to use for your purchases.',
+  s2h:'Shop online',
+  s2p:'Use our address as the delivery point for your online purchases. All carriers work here.',
+  s3h:'Pick up whenever you like',
+  s3p:'We\'ll let you know when your package arrives. You can pick it up whenever suits you, no rush.',
+  s4h:'Storage included',
+  s4p:'Every shipment includes free storage days (14 days for parcels, 7 for pallets). Check exact prices below.',
+  ftLabel:'Why Pickup Point?',
+  ftTitle:'Everything you need',
+  ftSub:'A service designed for people who value their time and convenience.',
+  f1h:'Multi-brand, multi-carrier',
+  f1p:'We accept packages from GLS, SEUR, MRW, Correos, DHL, Amazon, Inpost and many more. No exclusivity.',
+  f2h:'Once-a-day notification',
+  f2p:'For operational reasons, we notify everyone once a day (around 6 PM) about received packages. With Pickup Express we notify you sooner, the same day.',
+  f3h:'Authorised reception',
+  f3p:'We sign for you in your absence. Your authorisation is recorded and everything is documented.',
+  f4h:'Staffed hours + 24/7 locker',
+  f4p:'We have staffed opening hours (8h a day). The rest of the time, free locker access with no staff needed.',
+  f5h:'Clear pricing, no surprises',
+  f5p:'Registration is completely free. You only pay for the shipments you receive, with fixed rates based on weight and size.',
+  f6h:'One fixed, well-known spot',
+  f6p:'Always the same address: Av. Valls d\'Andorra 18. Easy to reach, with nearby parking.',
+  f7h:'Insured shipments',
+  f7p:'Your packages are insured with us for the whole storage period. Total peace of mind.',
+  priceLabel:'Clear rates',
+  priceTitle:'How much does the service cost?',
+  priceSub:'No subscriptions, no commitments. You only pay for the shipments you receive.',
+  ptH1:'Shipment type',
+  ptH2:'Base price<span>(14 calendar days)</span>',
+  ptH3:'Extra day<span>from the day indicated</span>',
+  pr1t:'Up to 15 kg and 200 cm',
+  pr1s:'adding the three sides',
+  pr1iva:'(€2.89 + 21% VAT)',
+  pr1e:'each extra day (from day 15)',
+  pr2t:'From 15 to 40 kg or over 200 cm',
+  pr2iva:'(€6.20 + 21% VAT)',
+  pr2e:'each extra day (from day 15)',
+  pr3t:'Palletised shipments',
+  pr3iva:'(€20.66 + 21% VAT)',
+  pr3e:'each extra day (from day 8)',
+  expTitle:'Pickup Express <span class="express-price">+€2.50</span>',
+  expDesc:'We prioritise the processing of your shipment so you can pick it up the same day it arrives.',
+  priceNote:'Prices include reception, storage for the indicated period and delivery at the locker or the counter. VAT applies as per current regulations.',
+  lockerBadge:'New',
+  lockerLabel:'New service',
+  lockerTitle:'Locker available 24/7',
+  lockerDesc:'For our clients, we have an automatic locker to pick up your shipments whenever suits you best, without depending on our opening hours.',
+  lf1:'Secure and confidential',
+  lf2:'Available 24/7',
+  lf3:'Easy and quick to use',
+  billTag1:'Billing with bank payment',
+  billSub1:'bank transfer / direct debit',
+  billLbl1:'Discount',
+  billUnit1:'per shipment',
+  billNote1:'Full locker access included.',
+  billTag2:'Billing with cash payment',
+  billSub2:'cash, no bank details',
+  billLbl2:'No discount',
+  billNote2:'Full locker access included as well.',
+  trkLabel:'For registered clients',
+  trkTitle:'Track your shipments',
+  trkSub:'Enter your phone number and surname to see the shipments we currently have waiting for you.',
+  trkTelLbl:'Phone',
+  trkCognomLbl:'Surname',
+  trkBtn:'Check',
+  trkLoading:'Searching...',
+  trkErrInput:'Please enter a valid phone number and surname.',
+  trkErrGeneric:'The lookup could not be completed. Please try again later.',
+  trkEmpty:'We couldn\'t find any pending shipment with these details.',
+  trkAlbara:'Delivery note',
+  trkBultos:'Packages',
+  trkPes:'Weight',
+  trkReemborsament:'Cash on delivery',
+  opsTitle:'Compatible carriers',
+  opsSub:'We accept packages from all major carriers and many more.',
+  faqLabel:'Common questions',
+  faqTitle:'Frequently asked questions',
+  fq1:'What address should I use for my purchases?',
+  fa1:'Use our address with your own details: <strong>Av. Valls d\'Andorra 18, 25700 La Seu d\'Urgell</strong>, including your first name and both surnames. If the carrier asks for it, also include your phone number and contact e-mail.',
+  fq2:'Does the service cost anything?',
+  fa2:'Registration is free. Each shipment received has a price based on weight and size (from €3.50), with storage included. Check the <a href="#preus">pricing</a> table for full details.',
+  fq3:'How long will you keep my package?',
+  fa3:'Included storage is 14 calendar days for parcels (7 days for pallets). After that period, an extra daily cost applies, as shown in the pricing table.',
+  fq4:'Can you receive cash-on-delivery packages?',
+  fa4:'Cash-on-delivery packages require prior coordination. Contact us before purchasing to confirm availability of this service.',
+  fq5:'Can you receive business packages?',
+  fa5:'The service is for everyone: individuals and businesses. In the form you can indicate if you\'re acting as a business and your tax ID.',
+  fq6:'Why don\'t many online shops ship to Andorra?',
+  fa6:'Andorra isn\'t part of the European Customs Union, and many online shops don\'t handle customs procedures or simply exclude Andorra from their shipping. Receiving your package at our address in La Seu d\'Urgell (Spain) avoids this restriction.',
+  fq7:'How does payment and the direct-debit discount work?',
+  fa7:'You can pay by bank transfer/direct debit (−€0.50 discount per shipment) or in cash without giving bank details (no discount). Either way you get full 24/7 locker access.',
+  regLabel:'Free registration',
+  regTitle:'Get started',
+  regSub:'Fill in the form in under 2 minutes. Registration is instant, no waiting.',
+  indl1:'Email',
+  indl2:'Details',
+  indl3:'Address',
+  indl4:'Authorisation',
+  st1h:'Let\'s start!',
+  st1d:'You\'ll be able to bring all your shipments together in one place and pick them up whenever suits you.',
+  st2h:'Personal details',
+  st2d:'We need your details to correctly identify your packages.',
+  st3h:'Your address',
+  st3d:'Your contact address for notifications and billing where applicable.',
+  st4h:'Authorisations',
+  st4d:'To operate the service we need your authorisation.',
+  authLbl:'<strong>Reception authorisation</strong> — I authorise Recollit i Entregat S.L. to receive, sign for and store packages on my behalf at Av. Valls d\'Andorra 18. <span class="req">*</span>',
+  rgpdLbl:'I accept the <a href="#" onclick="return false;">privacy policy</a> and the processing of my personal data under GDPR for the management of the service. <span class="req">*</span>',
+  comLbl:'I agree to receive communications about the service and updates (optional).',
+  succH:'Registration complete!',
+  succP:'We\'ve received your details correctly. You can now use our address: Av. Valls d\'Andorra 18, 25700 La Seu d\'Urgell, with your first name and surname — for your upcoming online purchases. You\'ll also receive a confirmation e-mail with this information.',
+  succSub:'Thanks for trusting Pickup Point!',
+  navCta:'Sign up free',
+  ci1:'Av. Valls d\'Andorra 18',
+  ci4:'Check our opening hours',
+  privLink:'Privacy policy',
+  cookieLink:'Cookies',
+  },
+  fr: {
+  heroBadge:'✦ À 10 minutes d\'Andorre-la-Vieille · Réception multi-transporteurs',
+  heroTitle:'Votre adresse<br>à <em>deux pas</em> de la frontière',
+  heroDesc:'De nombreuses boutiques en ligne ne livrent pas directement en Andorre à cause des restrictions douanières. C\'est pourquoi Pickup Point vous offre une adresse à la Seu d\'Urgell pour recevoir n\'importe quel colis et le récupérer quand vous le souhaitez — avec un accès au casier 24h/24 et 7j/7.',
+  heroCta1:'Inscrivez-vous maintenant — c\'est gratuit',
+  heroCta2:'Voir les tarifs',
+  stat1:'coût d\'inscription',
+  stat2:'accès au casier',
+  stat3:'de garde inclus',
+  trustText:'Nous sommes la même entreprise qui gère l\'<strong>agence officielle GLS à la Seu d\'Urgell</strong> : une longue expérience logistique et une équipe professionnelle à votre service.',
+  trustB1:'🚚 Agence officielle GLS',
+  trustB2:'📅 Longue expérience',
+  trustB3:'👥 Équipe professionnelle',
+  howLabel:'Le processus',
+  howTitle:'Comment fonctionne le service ?',
+  howSub:'En trois étapes simples, vous gardez le contrôle total de vos envois.',
+  s1h:'Inscrivez-vous',
+  s1p:'Remplissez le formulaire en moins de 2 minutes et recevez par e-mail la confirmation avec l\'adresse exacte à utiliser pour vos achats.',
+  s2h:'Faites vos achats',
+  s2p:'Utilisez notre adresse comme point de livraison pour vos achats en ligne. Tous les transporteurs fonctionnent ici.',
+  s3h:'Récupérez quand vous voulez',
+  s3p:'Nous vous préviendrons dès l\'arrivée du colis. Vous pouvez le récupérer à l\'heure qui vous convient, sans vous presser.',
+  s4h:'Garde incluse',
+  s4p:'Chaque envoi inclut des jours de garde gratuits (14 jours pour les colis, 7 pour les palettes). Consultez les tarifs exacts ci-dessous.',
+  ftLabel:'Pourquoi Pickup Point ?',
+  ftTitle:'Tout ce dont vous avez besoin',
+  ftSub:'Un service pensé pour les personnes qui valorisent leur temps et leur confort.',
+  f1h:'Multi-marques et multi-transporteurs',
+  f1p:'Nous acceptons les colis de GLS, SEUR, MRW, Correos, DHL, Amazon, Inpost et bien d\'autres. Sans exclusivité.',
+  f2h:'Avis quotidien centralisé',
+  f2p:'Pour des raisons opérationnelles, nous prévenons tout le monde une fois par jour (vers 18h) des colis reçus. Avec Pickup Express, nous vous prévenons plus tôt, le jour même.',
+  f3h:'Réception autorisée',
+  f3p:'Nous signons pour vous en votre absence. Votre autorisation est enregistrée et tout est documenté.',
+  f4h:'Accueil physique + casier 24/7',
+  f4p:'Nous avons un horaire d\'accueil physique (8h par jour). Le reste du temps, accès libre au casier sans besoin de personnel.',
+  f5h:'Tarifs clairs, sans surprise',
+  f5p:'L\'inscription est entièrement gratuite. Vous ne payez que pour les envois que vous recevez, avec des tarifs fixes selon le poids et la taille.',
+  f6h:'Un point fixe et bien connu',
+  f6p:'Toujours la même adresse : Av. Valls d\'Andorra 18. Facile d\'accès, avec parking à proximité.',
+  f7h:'Envois assurés',
+  f7p:'Vos colis sont assurés chez nous pendant toute la durée de garde. Tranquillité totale.',
+  priceLabel:'Tarifs clairs',
+  priceTitle:'Combien coûte le service ?',
+  priceSub:'Sans abonnement ni engagement. Vous ne payez que pour les envois que vous recevez.',
+  ptH1:'Type d\'envoi',
+  ptH2:'Prix de base<span>(14 jours calendaires)</span>',
+  ptH3:'Jour supplémentaire<span>à partir du jour indiqué</span>',
+  pr1t:'Jusqu\'à 15 kg et 200 cm',
+  pr1s:'en additionnant les trois côtés',
+  pr1iva:'(2,89€ + 21% TVA)',
+  pr1e:'chaque jour supplémentaire (à partir du jour 15)',
+  pr2t:'De 15 à 40 kg ou plus de 200 cm',
+  pr2iva:'(6,20€ + 21% TVA)',
+  pr2e:'chaque jour supplémentaire (à partir du jour 15)',
+  pr3t:'Envois palettisés',
+  pr3iva:'(20,66€ + 21% TVA)',
+  pr3e:'chaque jour supplémentaire (à partir du jour 8)',
+  expTitle:'Pickup Express <span class="express-price">+2,50€</span>',
+  expDesc:'Nous priorisons le traitement de votre envoi pour que vous puissiez le récupérer le jour même de son arrivée.',
+  priceNote:'Les prix incluent la réception, la garde pendant la période indiquée et la remise au casier ou au comptoir. TVA applicable selon la réglementation en vigueur.',
+  lockerBadge:'Nouveau',
+  lockerLabel:'Nouveau service',
+  lockerTitle:'Casier disponible 24/7',
+  lockerDesc:'Pour nos clients, nous disposons d\'un casier automatique pour récupérer vos envois quand cela vous arrange le mieux, sans dépendre de nos horaires d\'accueil.',
+  lf1:'Sûr et confidentiel',
+  lf2:'Disponible 24/7',
+  lf3:'Facile et rapide à utiliser',
+  billTag1:'Facturation par paiement bancaire',
+  billSub1:'virement / prélèvement',
+  billLbl1:'Remise',
+  billUnit1:'par envoi',
+  billNote1:'Accès complet au casier inclus.',
+  billTag2:'Facturation par paiement en espèces',
+  billSub2:'cash, sans coordonnées bancaires',
+  billLbl2:'Sans remise',
+  billNote2:'Accès complet au casier inclus également.',
+  trkLabel:'Pour les clients inscrits',
+  trkTitle:'Suivez vos envois',
+  trkSub:'Indiquez votre téléphone et votre nom de famille pour voir les envois actuellement en attente à votre nom.',
+  trkTelLbl:'Téléphone',
+  trkCognomLbl:'Nom de famille',
+  trkBtn:'Vérifier',
+  trkLoading:'Recherche...',
+  trkErrInput:'Veuillez indiquer un téléphone et un nom de famille valides.',
+  trkErrGeneric:'La recherche n\'a pas pu aboutir. Réessayez plus tard.',
+  trkEmpty:'Nous n\'avons trouvé aucun envoi en attente avec ces informations.',
+  trkAlbara:'Bordereau',
+  trkBultos:'Colis',
+  trkPes:'Poids',
+  trkReemborsament:'Contre-remboursement',
+  opsTitle:'Transporteurs compatibles',
+  opsSub:'Nous acceptons les colis de tous les principaux opérateurs et bien d\'autres encore.',
+  faqLabel:'Questions courantes',
+  faqTitle:'Questions fréquentes',
+  fq1:'Quelle adresse dois-je indiquer pour mes achats ?',
+  fa1:'Indiquez notre adresse avec vos propres informations : <strong>Av. Valls d\'Andorra 18, 25700 La Seu d\'Urgell</strong>, en précisant votre prénom et vos deux noms de famille. Si le transporteur le demande, indiquez aussi votre téléphone et votre e-mail de contact.',
+  fq2:'Le service a-t-il un coût ?',
+  fa2:'L\'inscription est gratuite. Chaque envoi reçu a un prix selon le poids et la taille (à partir de 3,50€), garde incluse. Consultez le tableau des <a href="#preus">tarifs</a> pour tous les détails.',
+  fq3:'Combien de temps garderez-vous mon colis ?',
+  fa3:'La garde incluse est de 14 jours calendaires pour les colis (7 jours pour les palettes). Passé ce délai, un coût supplémentaire par jour s\'applique, indiqué dans le tableau des tarifs.',
+  fq4:'Pouvez-vous recevoir des colis contre remboursement ?',
+  fa4:'Pour les colis contre remboursement, une coordination préalable est nécessaire. Contactez-nous avant l\'achat pour confirmer la disponibilité de ce service.',
+  fq5:'Pouvez-vous recevoir des colis d\'entreprise ?',
+  fa5:'Le service est ouvert à tous : particuliers et entreprises. Dans le formulaire, vous pouvez indiquer si vous agissez en tant qu\'entreprise et votre numéro fiscal.',
+  fq6:'Pourquoi de nombreux e-commerces ne livrent-ils pas en Andorre ?',
+  fa6:'L\'Andorre ne fait pas partie de l\'Union douanière européenne, et de nombreuses boutiques en ligne ne gèrent pas les formalités douanières ou excluent directement l\'Andorre de leurs livraisons. En recevant votre colis à notre adresse à la Seu d\'Urgell (Espagne), vous évitez cette restriction.',
+  fq7:'Comment fonctionnent le paiement et la remise pour prélèvement automatique ?',
+  fa7:'Vous pouvez payer par virement/prélèvement bancaire (−0,50€ de remise par envoi) ou en espèces sans communiquer vos coordonnées bancaires (sans remise). Dans les deux cas, vous avez un accès complet au casier 24/7.',
+  regLabel:'Inscription gratuite',
+  regTitle:'Commencez maintenant',
+  regSub:'Remplissez le formulaire en moins de 2 minutes. L\'inscription est immédiate, sans attente.',
+  indl1:'E-mail',
+  indl2:'Informations',
+  indl3:'Adresse',
+  indl4:'Autorisation',
+  st1h:'Commençons !',
+  st1d:'Vous pourrez regrouper tous vos envois en un seul endroit et les récupérer quand cela vous arrange.',
+  st2h:'Informations personnelles',
+  st2d:'Nous avons besoin de vos informations pour identifier correctement vos colis.',
+  st3h:'Votre adresse',
+  st3d:'Votre adresse de contact pour les notifications et la facturation le cas échéant.',
+  st4h:'Autorisations',
+  st4d:'Pour pouvoir gérer le service, nous avons besoin de votre autorisation.',
+  authLbl:'<strong>Autorisation de réception</strong> — J\'autorise Recollit i Entregat S.L. à recevoir, signer et garder des colis en mon nom à l\'adresse Av. Valls d\'Andorra 18. <span class="req">*</span>',
+  rgpdLbl:'J\'accepte la <a href="#" onclick="return false;">politique de confidentialité</a> et le traitement de mes données personnelles conformément au RGPD pour la gestion du service. <span class="req">*</span>',
+  comLbl:'J\'accepte de recevoir des communications sur le service et ses nouveautés (facultatif).',
+  succH:'Inscription terminée !',
+  succP:'Nous avons bien reçu vos informations. Vous pouvez désormais utiliser notre adresse : Av. Valls d\'Andorra 18, 25700 La Seu d\'Urgell, avec votre prénom et nom — pour vos prochains achats en ligne. Vous recevrez également un e-mail de confirmation avec ces informations.',
+  succSub:'Merci de faire confiance à Pickup Point !',
+  navCta:'Inscription gratuite',
+  ci1:'Av. Valls d\'Andorra 18',
+  ci4:'Consultez nos horaires',
+  privLink:'Politique de confidentialité',
+  cookieLink:'Cookies',
+  },
+  ru: {
+  heroBadge:'✦ В 10 минутах от Андорра-ла-Велья · Приём посылок всех служб доставки',
+  heroTitle:'Ваш адрес<br>в <em>двух шагах</em> от границы',
+  heroDesc:'Многие интернет-магазины не доставляют напрямую в Андорру из-за таможенных ограничений. Поэтому Pickup Point предоставляет вам адрес в Ла-Сеу-д\'Уржель для получения любых посылок и забирайте их, когда вам удобно — с доступом к locker-у 24/7.',
+  heroCta1:'Зарегистрироваться сейчас — бесплатно',
+  heroCta2:'Смотреть цены',
+  stat1:'стоимость регистрации',
+  stat2:'доступ к locker-у',
+  stat3:'бесплатное хранение',
+  trustText:'Мы та же компания, которая управляет <strong>официальным агентством GLS в Ла-Сеу-д\'Уржель</strong>: многолетний опыт в логистике и профессиональная команда к вашим услугам.',
+  trustB1:'🚚 Официальное агентство GLS',
+  trustB2:'📅 Многолетний опыт',
+  trustB3:'👥 Профессиональная команда',
+  howLabel:'Процесс',
+  howTitle:'Как работает сервис?',
+  howSub:'Три простых шага дают вам полный контроль над вашими посылками.',
+  s1h:'Зарегистрируйтесь',
+  s1p:'Заполните форму менее чем за 2 минуты и получите по e-mail подтверждение с точным адресом, который нужно указывать при покупках.',
+  s2h:'Совершайте покупки',
+  s2p:'Используйте наш адрес как пункт доставки при покупках онлайн. Здесь работают все службы доставки.',
+  s3h:'Забирайте, когда удобно',
+  s3p:'Мы сообщим вам, когда придёт посылка. Вы можете забрать её в удобное для вас время, без спешки.',
+  s4h:'Хранение включено',
+  s4p:'Каждая посылка включает бесплатные дни хранения (14 дней для посылок, 7 для паллет). Точные цены смотрите ниже.',
+  ftLabel:'Почему Pickup Point?',
+  ftTitle:'Всё, что вам нужно',
+  ftSub:'Сервис создан для людей, которые ценят своё время и удобство.',
+  f1h:'Все бренды и службы доставки',
+  f1p:'Мы принимаем посылки от GLS, SEUR, MRW, Correos, DHL, Amazon, Inpost и многих других. Без эксклюзивности.',
+  f2h:'Единое уведомление раз в день',
+  f2p:'По операционным причинам мы уведомляем всех клиентов раз в день (около 18:00) о полученных посылках. С услугой Pickup Express мы уведомим вас раньше, в тот же день.',
+  f3h:'Приём по доверенности',
+  f3p:'Мы распишемся за вас в ваше отсутствие. Ваше разрешение фиксируется, и всё документируется.',
+  f4h:'Личный приём + locker 24/7',
+  f4p:'У нас есть часы личного приёма (8 часов в день). В остальное время — свободный доступ к locker-у без необходимости присутствия персонала.',
+  f5h:'Чёткие цены, без сюрпризов',
+  f5p:'Регистрация полностью бесплатна. Вы платите только за полученные посылки, по фиксированным тарифам в зависимости от веса и размера.',
+  f6h:'Постоянное, известное место',
+  f6p:'Всегда один и тот же адрес: Av. Valls d\'Andorra 18. Удобный доступ и парковка рядом.',
+  f7h:'Застрахованные посылки',
+  f7p:'Ваши посылки застрахованы у нас на весь период хранения. Полное спокойствие.',
+  priceLabel:'Прозрачные тарифы',
+  priceTitle:'Сколько стоит сервис?',
+  priceSub:'Без абонементов и обязательств. Вы платите только за полученные посылки.',
+  ptH1:'Тип посылки',
+  ptH2:'Базовая цена<span>(14 календарных дней)</span>',
+  ptH3:'Дополнительный день<span>начиная с указанного дня</span>',
+  pr1t:'До 15 кг и 200 см',
+  pr1s:'по сумме трёх измерений',
+  pr1iva:'(2,89€ + 21% НДС)',
+  pr1e:'за каждый доп. день (начиная с 15-го дня)',
+  pr2t:'От 15 до 40 кг или более 200 см',
+  pr2iva:'(6,20€ + 21% НДС)',
+  pr2e:'за каждый доп. день (начиная с 15-го дня)',
+  pr3t:'Паллетные отправления',
+  pr3iva:'(20,66€ + 21% НДС)',
+  pr3e:'за каждый доп. день (начиная с 8-го дня)',
+  expTitle:'Pickup Express <span class="express-price">+2,50€</span>',
+  expDesc:'Мы приоритизируем обработку вашей посылки, чтобы вы могли забрать её в день прибытия.',
+  priceNote:'Цены включают приём, хранение в течение указанного периода и выдачу через locker или на стойке. НДС применяется согласно действующему законодательству.',
+  lockerBadge:'Новинка',
+  lockerLabel:'Новая услуга',
+  lockerTitle:'Locker доступен 24/7',
+  lockerDesc:'Для наших клиентов у нас есть автоматический locker для получения ваших посылок, когда вам удобно, независимо от часов работы персонала.',
+  lf1:'Безопасно и конфиденциально',
+  lf2:'Доступно 24/7',
+  lf3:'Просто и быстро в использовании',
+  billTag1:'Оплата банковским переводом',
+  billSub1:'перевод / прямое дебетование',
+  billLbl1:'Скидка',
+  billUnit1:'за посылку',
+  billNote1:'Полный доступ к locker-у включён.',
+  billTag2:'Оплата наличными',
+  billSub2:'наличные, без банковских данных',
+  billLbl2:'Без скидки',
+  billNote2:'Полный доступ к locker-у также включён.',
+  trkLabel:'Для зарегистрированных клиентов',
+  trkTitle:'Отследить ваши посылки',
+  trkSub:'Введите ваш телефон и фамилию, чтобы увидеть посылки, которые сейчас ожидают вас.',
+  trkTelLbl:'Телефон',
+  trkCognomLbl:'Фамилия',
+  trkBtn:'Проверить',
+  trkLoading:'Поиск...',
+  trkErrInput:'Введите корректный телефон и фамилию.',
+  trkErrGeneric:'Не удалось выполнить запрос. Попробуйте позже.',
+  trkEmpty:'Мы не нашли ни одной ожидающей посылки с этими данными.',
+  trkAlbara:'Накладная',
+  trkBultos:'Мест',
+  trkPes:'Вес',
+  trkReemborsament:'Наложенный платёж',
+  opsTitle:'Совместимые службы доставки',
+  opsSub:'Мы принимаем посылки от всех основных операторов и многих других.',
+  faqLabel:'Частые вопросы',
+  faqTitle:'Часто задаваемые вопросы',
+  fq1:'Какой адрес указывать при покупках?',
+  fa1:'Указывайте наш адрес со своими данными: <strong>Av. Valls d\'Andorra 18, 25700 La Seu d\'Urgell</strong>, с указанием вашего имени и обеих фамилий. Если служба доставки требует, укажите также телефон и контактный e-mail.',
+  fq2:'Есть ли плата за сервис?',
+  fa2:'Регистрация бесплатна. Каждая полученная посылка имеет цену в зависимости от веса и размера (от 3,50€), с учётом хранения. Все детали смотрите в таблице <a href="#preus">цен</a>.',
+  fq3:'Сколько времени вы храните мою посылку?',
+  fa3:'Включённое хранение — 14 календарных дней для посылок (7 дней для паллет). По истечении этого срока применяется дополнительная плата за день, указанная в таблице цен.',
+  fq4:'Принимаете ли вы посылки наложенным платежом?',
+  fa4:'Для посылок наложенным платежом требуется предварительное согласование. Свяжитесь с нами перед покупкой, чтобы подтвердить доступность этой услуги.',
+  fq5:'Принимаете ли вы посылки для юридических лиц?',
+  fa5:'Сервис доступен для всех: частных лиц и компаний. В форме вы можете указать, что действуете от имени компании, и указать ваш налоговый номер.',
+  fq6:'Почему многие интернет-магазины не доставляют в Андорру?',
+  fa6:'Андорра не входит в Таможенный союз ЕС, и многие интернет-магазины не занимаются таможенным оформлением или просто исключают Андорру из зоны доставки. Получая посылку по нашему адресу в Ла-Сеу-д\'Уржель (Испания), вы избегаете этого ограничения.',
+  fq7:'Как работает оплата и скидка за прямое дебетование?',
+  fa7:'Вы можете платить банковским переводом/прямым дебетованием (скидка −0,50€ за посылку) или наличными без предоставления банковских данных (без скидки). В обоих случаях у вас полный доступ к locker-у 24/7.',
+  regLabel:'Бесплатная регистрация',
+  regTitle:'Начните сейчас',
+  regSub:'Заполните форму менее чем за 2 минуты. Регистрация происходит мгновенно, без ожидания.',
+  indl1:'Email',
+  indl2:'Данные',
+  indl3:'Адрес',
+  indl4:'Разрешение',
+  st1h:'Начнём!',
+  st1d:'Вы сможете объединить все свои посылки в одном месте и забирать их, когда вам удобно.',
+  st2h:'Личные данные',
+  st2d:'Нам нужны ваши данные, чтобы правильно идентифицировать ваши посылки.',
+  st3h:'Ваш адрес',
+  st3d:'Ваш контактный адрес для уведомлений и, при необходимости, для выставления счетов.',
+  st4h:'Разрешения',
+  st4d:'Для работы сервиса нам необходимо ваше разрешение.',
+  authLbl:'<strong>Разрешение на приём</strong> — Я разрешаю Recollit i Entregat S.L. получать, расписываться и хранить посылки от моего имени по адресу Av. Valls d\'Andorra 18. <span class="req">*</span>',
+  rgpdLbl:'Я принимаю <a href="#" onclick="return false;">политику конфиденциальности</a> и обработку моих персональных данных в соответствии с GDPR для управления сервисом. <span class="req">*</span>',
+  comLbl:'Я согласен получать сообщения об услуге и новостях (необязательно).',
+  succH:'Регистрация завершена!',
+  succP:'Мы успешно получили ваши данные. Теперь вы можете использовать наш адрес: Av. Valls d\'Andorra 18, 25700 La Seu d\'Urgell, с указанием вашего имени и фамилии — для ваших будущих покупок онлайн. Вы также получите письмо с подтверждением этой информации.',
+  succSub:'Спасибо, что доверяете Pickup Point!',
+  navCta:'Зарегистрироваться бесплатно',
+  ci1:'Av. Valls d\'Andorra 18',
+  ci4:'Узнайте наши часы работы',
+  privLink:'Политика конфиденциальности',
+  cookieLink:'Cookies',
+  },
 };
 
 let lang = 'ca';
-function toggleLang() {
-  lang = lang === 'ca' ? 'es' : 'ca';
-  document.getElementById('langBtn').textContent = lang === 'ca' ? 'ES' : 'CA';
+function setLang(newLang) {
+  lang = newLang;
+  document.getElementById('langBtn').value = lang;
   document.documentElement.lang = lang;
   const t = translations[lang];
   // Update all translatable elements
@@ -1127,7 +1647,7 @@ function toggleLang() {
   });
   // Nav links
   document.querySelectorAll('nav a[data-ca]').forEach(a => {
-    a.textContent = lang === 'ca' ? a.dataset.ca : a.dataset.es;
+    a.textContent = a.dataset[lang] || a.dataset.ca;
   });
 }
 
