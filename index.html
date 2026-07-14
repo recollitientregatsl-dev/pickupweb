@@ -245,6 +245,7 @@
     }
     .tracking-form input:focus { outline: none; border-color: var(--brand); }
     .tracking-form .btn { white-space: nowrap; }
+    .trk-hint { font-size: .8rem; color: var(--muted); margin: 10px 0 0; }
     .tracking-results { margin-top: 20px; }
     .trk-card {
       display: flex; justify-content: space-between; align-items: center; gap: 16px;
@@ -253,6 +254,8 @@
     }
     .trk-card-main strong { display: block; color: var(--dark); font-size: .98rem; margin-bottom: 4px; }
     .trk-card-main span { display: block; font-size: .82rem; color: var(--muted); }
+    .trk-card-main span.trk-meta { font-size: .76rem; opacity: .8; margin-top: 2px; }
+    .trk-summary { font-size: 1.05rem; font-weight: 800; color: var(--dark); margin-bottom: 14px; }
     .trk-status {
       font-size: .78rem; font-weight: 800; padding: 6px 14px; border-radius: 50px;
       background: rgba(44,156,138,.12); color: var(--brand-dk); white-space: nowrap;
@@ -469,7 +472,7 @@
 <section class="hero" id="top">
   <div class="container">
     <div class="hero-badge" id="heroBadge">✦ A 10 minuts d'Andorra la Vella · Recepció multimarca</div>
-    <h1 id="heroTitle">La teva adreça<br>a <em>un pas</em> de fronteres</h1>
+    <h1 id="heroTitle">La teva adreça<br>a <em>un pas</em> de la frontera</h1>
     <p id="heroDesc">Moltes botigues online no envien directament a Andorra per les restriccions duaneres del país. Per això, amb Pickup Point tens una adreça a la Seu d'Urgell per rebre qualsevol paquet i recollir-lo quan et vagi bé — amb accés a locker 24/7.</p>
     <div class="hero-actions">
       <a href="#registra-t" class="btn btn-primary" id="heroCta1">Registra't ara — és gratis</a>
@@ -633,6 +636,7 @@
       </div>
       <button class="btn btn-primary" id="trkBtn" onclick="consultarEnviaments()">Consultar</button>
     </div>
+    <p class="trk-hint" id="trkHint">Si ets de fora d'Espanya, escriu el teu telèfon amb el prefix internacional del teu país però sense el 0 inicial (per exemple, Andorra: 376 600 000 · França: 33 6 12 34 56 78).</p>
 
     <div id="trkResults" class="tracking-results"></div>
   </div>
@@ -1034,12 +1038,15 @@ async function consultarEnviaments() {
       return;
     }
 
-    results.innerHTML = data.enviaments.map(env => `
+    const count = data.enviaments.length;
+    const summary = count === 1 ? t.trkSummary1 : t.trkSummaryN.replace('{n}', count);
+
+    results.innerHTML = `<p class="trk-summary">📦 ${summary}</p>` + data.enviaments.map(env => `
       <div class="trk-card">
         <div class="trk-card-main">
-          <strong>${t.trkAlbara} ${env.albara || '—'}</strong>
-          <span>${env.data || ''} · ${env.descripcio || ''}</span>
-          <span>${t.trkBultos}: ${env.bultos || '—'} · ${t.trkPes}: ${env.pes || '—'} kg${env.reemborsament ? ' · ' + t.trkReemborsament + ': ' + env.reemborsament + '€' : ''}</span>
+          <strong>${env.descripcio || (t.trkAlbara + ' ' + env.albara)}</strong>
+          <span>${t.trkDataRegistre}: ${env.data || '—'}</span>
+          <span class="trk-meta">${t.trkAlbara}: ${env.albara || '—'} · ${t.trkBultos}: ${env.bultos || '—'} · ${t.trkPes}: ${env.pes || '—'} kg${env.reemborsament ? ' · ' + t.trkReemborsament + ': ' + env.reemborsament + '€' : ''}</span>
         </div>
         <div class="trk-status">${env.estat}</div>
       </div>
@@ -1101,7 +1108,7 @@ function showSuccess() {
 const translations = {
   ca: {
     heroBadge: '✦ A 10 minuts d\'Andorra la Vella · Recepció multimarca',
-    heroTitle: 'La teva adreça<br>a <em>un pas</em> de fronteres',
+    heroTitle: 'La teva adreça<br>a <em>un pas</em> de la frontera',
     heroDesc: 'Moltes botigues online no envien directament a Andorra per les restriccions duaneres del país. Per això, amb Pickup Point tens una adreça a la Seu d\'Urgell per rebre qualsevol paquet i recollir-lo quan et vagi bé — amb accés a locker 24/7.',
     heroCta1: 'Registra\'t ara — és gratis',
     heroCta2: 'Veure preus',
@@ -1139,6 +1146,8 @@ const translations = {
     trkLoading:'Cercant...', trkErrInput:'Introdueix un telèfon i un cognom vàlids.', trkErrGeneric:'No s\'ha pogut fer la consulta. Torna-ho a provar més tard.',
     trkEmpty:'No hem trobat cap enviament pendent amb aquestes dades.',
     trkAlbara:'Albarà', trkBultos:'Bultos', trkPes:'Pes', trkReemborsament:'Reemborsament',
+    trkDataRegistre:'Data de registre', trkSummary1:'Tens 1 enviament pendent', trkSummaryN:'Tens {n} enviaments pendents',
+    trkHint:'Si ets de fora d\'Espanya, escriu el teu telèfon amb el prefix internacional del teu país però sense el 0 inicial (per exemple, Andorra: 376 600 000 · França: 33 6 12 34 56 78).',
     opsTitle:'Transportistes compatibles', opsSub:'Acceptem paquets de tots els operadors principals i molts més.',
     faqLabel:'Dubtes habituals', faqTitle:'Preguntes freqüents',
     fq1:'Quina adreça he de posar a les meves compres?', fa1:'Has de posar la nostra adreça amb les teves dades: <strong>Av. Valls d\'Andorra 18, 25700 La Seu d\'Urgell</strong>, indicant el teu nom i els dos cognoms. Si el transportista ho demana, indica també el teu telèfon i email de contacte.',
@@ -1165,7 +1174,7 @@ const translations = {
   },
   es: {
     heroBadge: '✦ A 10 minutos de Andorra la Vella · Recepción multimarca',
-    heroTitle: 'Tu dirección<br>a <em>un paso</em> de fronteras',
+    heroTitle: 'Tu dirección<br>a <em>un paso</em> de la frontera',
     heroDesc: 'Muchas tiendas online no envían directamente a Andorra por las restricciones aduaneras del país. Por eso, con Pickup Point tienes una dirección en la Seu d\'Urgell para recibir cualquier paquete y recogerlo cuando quieras — con acceso a locker 24/7.',
     heroCta1: 'Regístrate ahora — es gratis',
     heroCta2: 'Ver precios',
@@ -1203,6 +1212,8 @@ const translations = {
     trkLoading:'Buscando...', trkErrInput:'Introduce un teléfono y un apellido válidos.', trkErrGeneric:'No se ha podido realizar la consulta. Inténtalo más tarde.',
     trkEmpty:'No hemos encontrado ningún envío pendiente con estos datos.',
     trkAlbara:'Albarán', trkBultos:'Bultos', trkPes:'Peso', trkReemborsament:'Reembolso',
+    trkDataRegistre:'Fecha de registro', trkSummary1:'Tienes 1 envío pendiente', trkSummaryN:'Tienes {n} envíos pendientes',
+    trkHint:'Si eres de fuera de España, escribe tu teléfono con el prefijo internacional de tu país pero sin el 0 inicial (por ejemplo, Andorra: 376 600 000 · Francia: 33 6 12 34 56 78).',
     opsTitle:'Transportistas compatibles', opsSub:'Aceptamos paquetes de todos los operadores principales y muchos más.',
     faqLabel:'Dudas habituales', faqTitle:'Preguntas frecuentes',
     fq1:'¿Qué dirección debo poner en mis compras?', fa1:'Debes poner nuestra dirección con tus datos: <strong>Av. Valls d\'Andorra 18, 25700 La Seu d\'Urgell</strong>, indicando tu nombre y los dos apellidos. Si el transportista lo pide, indica también tu teléfono y email de contacto.',
@@ -1317,6 +1328,10 @@ const translations = {
   trkBultos:'Packages',
   trkPes:'Weight',
   trkReemborsament:'Cash on delivery',
+  trkDataRegistre:'Registered on',
+  trkSummary1:'You have 1 pending shipment',
+  trkSummaryN:'You have {n} pending shipments',
+  trkHint:'If you\'re outside Spain, enter your phone with your country\'s international code but without the leading 0 (e.g. Andorra: 376 600 000 · France: 33 6 12 34 56 78).',
   opsTitle:'Compatible carriers',
   opsSub:'We accept packages from all major carriers and many more.',
   faqLabel:'Common questions',
@@ -1452,6 +1467,10 @@ const translations = {
   trkBultos:'Colis',
   trkPes:'Poids',
   trkReemborsament:'Contre-remboursement',
+  trkDataRegistre:'Date d\'enregistrement',
+  trkSummary1:'Vous avez 1 envoi en attente',
+  trkSummaryN:'Vous avez {n} envois en attente',
+  trkHint:'Si vous êtes en dehors de l\'Espagne, indiquez votre téléphone avec l\'indicatif international de votre pays mais sans le 0 initial (ex. Andorre : 376 600 000 · France : 33 6 12 34 56 78).',
   opsTitle:'Transporteurs compatibles',
   opsSub:'Nous acceptons les colis de tous les principaux opérateurs et bien d\'autres encore.',
   faqLabel:'Questions courantes',
@@ -1587,6 +1606,10 @@ const translations = {
   trkBultos:'Мест',
   trkPes:'Вес',
   trkReemborsament:'Наложенный платёж',
+  trkDataRegistre:'Дата регистрации',
+  trkSummary1:'У вас 1 посылка ожидает',
+  trkSummaryN:'У вас {n} посылок ожидает',
+  trkHint:'Если вы находитесь за пределами Испании, укажите телефон с международным кодом вашей страны, но без начального 0 (например, Андорра: 376 600 000 · Франция: 33 6 12 34 56 78).',
   opsTitle:'Совместимые службы доставки',
   opsSub:'Мы принимаем посылки от всех основных операторов и многих других.',
   faqLabel:'Частые вопросы',
