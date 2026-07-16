@@ -197,6 +197,9 @@
     .express-banner span#expDesc { font-size: .88rem; color: var(--muted); }
     .price-note { margin-top: 20px; font-size: .8rem; color: var(--muted); }
 
+    .discount-banner { border-color: var(--brand-green); background: linear-gradient(90deg, rgba(139,195,74,.10), rgba(43,61,140,.06)); margin-top: 16px; }
+    .discount-price { color: var(--brand-green); font-weight: 900; }
+
     /* ─── Locker ─── */
     .locker { background: var(--light); }
     .locker-grid {
@@ -281,6 +284,59 @@
     .trk-empty, .trk-error { color: var(--muted); font-size: .92rem; padding: 16px 0; }
     .trk-error { color: #b3261e; }
     .trk-loading { color: var(--muted); font-size: .92rem; padding: 16px 0; }
+
+    /* ─── Estadístiques ─── */
+    .stats-section { background: var(--dark); color: #fff; padding: 64px 0; }
+    .stats-head { text-align: center; margin-bottom: 44px; }
+    .stats-section .section-label { color: var(--brand-green); }
+    .stats-section .section-title { color: #fff; margin-bottom: 0; }
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 30px;
+      text-align: center; margin-bottom: 36px;
+    }
+    .stat-box strong { display: block; font-size: 2.4rem; font-weight: 900; color: var(--brand-green); line-height: 1.1; }
+    .stat-box span { display: block; font-size: .88rem; opacity: .75; margin-top: 6px; }
+    .stats-review-link { text-align: center; }
+    .stats-review-link a {
+      display: inline-flex; align-items: center; gap: 8px; font-size: .88rem; font-weight: 700;
+      color: #fff; opacity: .85; border-bottom: 1px solid rgba(255,255,255,.3); padding-bottom: 2px;
+      transition: opacity .15s;
+    }
+    .stats-review-link a:hover { opacity: 1; }
+    .parishes-row {
+      display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 34px;
+      padding-top: 34px; border-top: 1px solid rgba(255,255,255,.12);
+    }
+    .parish-chip {
+      background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15);
+      border-radius: 50px; padding: 7px 16px; font-size: .8rem; white-space: nowrap;
+    }
+    .parish-chip strong { color: var(--brand-green); font-weight: 800; }
+
+    /* ─── Testimonis ─── */
+    .testimonials { background: var(--light); }
+    .testi-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;
+    }
+    .testi-card {
+      background: #fff; border-radius: var(--radius); box-shadow: var(--shadow);
+      padding: 28px 26px; display: flex; flex-direction: column;
+    }
+    .testi-stars { color: #F5A623; font-size: .95rem; margin-bottom: 14px; letter-spacing: 2px; }
+    .testi-text { font-size: .95rem; color: var(--dark); flex: 1; margin-bottom: 18px; font-style: italic; }
+    .testi-author { display: flex; align-items: center; gap: 10px; }
+    .testi-avatar {
+      width: 36px; height: 36px; border-radius: 50%; background: var(--brand);
+      color: #fff; display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: .85rem; flex-shrink: 0;
+    }
+    .testi-author strong { display: block; font-size: .86rem; color: var(--dark); }
+    .testi-author span { display: block; font-size: .76rem; color: var(--muted); }
+    .testi-note { text-align: center; font-size: .82rem; color: var(--muted); margin-top: 30px; }
+
+    /* ─── Reveal on scroll ─── */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
 
     /* ─── Avantatges ─── */
     .features { background: #fff; }
@@ -530,8 +586,36 @@
   </div>
 </section>
 
+<!-- ════ ESTADÍSTIQUES ════ -->
+<section class="stats-section reveal">
+  <div class="container">
+    <div class="stats-head">
+      <p class="section-label" id="statsLabel">La nostra activitat</p>
+      <h2 class="section-title" id="statsTitle">Un servei en què pots confiar</h2>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-box"><strong>4,0★</strong><span id="statL1">352 ressenyes a Google</span></div>
+      <div class="stat-box"><strong>+40</strong><span id="statL2">anys com a agència oficial GLS</span></div>
+      <div class="stat-box"><strong>5</strong><span id="statL3">professionals al teu servei cada dia</span></div>
+      <div class="stat-box"><strong>10 min</strong><span id="statL4">des d'Andorra</span></div>
+    </div>
+    <div class="stats-review-link">
+      <a href="https://www.google.com/maps/search/GLS+La+Seu+d'Urgell+Avinguda+de+les+Valls+d'Andorra" target="_blank" rel="noopener" id="statsReviewLink">Veure totes les ressenyes a Google →</a>
+    </div>
+    <div class="parishes-row">
+      <span class="parish-chip"><strong>~15 min</strong> Sant Julià de Lòria</span>
+      <span class="parish-chip"><strong>~20 min</strong> Andorra la Vella</span>
+      <span class="parish-chip"><strong>~22 min</strong> Escaldes-Engordany</span>
+      <span class="parish-chip"><strong>~25 min</strong> La Massana</span>
+      <span class="parish-chip"><strong>~28 min</strong> Encamp</span>
+      <span class="parish-chip"><strong>~30 min</strong> Ordino</span>
+      <span class="parish-chip"><strong>~35 min</strong> Canillo</span>
+    </div>
+  </div>
+</section>
+
 <!-- ════ COM FUNCIONA ════ -->
-<section class="how" id="com-funciona">
+<section class="how reveal" id="com-funciona">
   <div class="container">
     <p class="section-label" id="howLabel">El procés</p>
     <h2 class="section-title" id="howTitle">Com funciona el servei?</h2>
@@ -572,7 +656,7 @@
 </section>
 
 <!-- ════ PREUS ════ -->
-<section class="pricing" id="preus">
+<section class="pricing reveal" id="preus">
   <div class="container">
     <p class="section-label" id="priceLabel">Tarifes clares</p>
     <h2 class="section-title" id="priceTitle">Quant costa el servei?</h2>
@@ -611,12 +695,22 @@
       </div>
     </div>
 
+    <div class="express-banner discount-banner">
+      <div class="express-banner-left">
+        <span class="express-icon">🏦</span>
+        <div>
+          <strong id="discTitle">Facturació mensual per domiciliació <span class="discount-price">-0,50€</span></strong>
+          <span id="discDesc">Si optes pel pagament per domiciliació bancària mensual, t'apliquem un descompte de 0,50€ en cada enviament.</span>
+        </div>
+      </div>
+    </div>
+
     <p class="price-note" id="priceNote">Els preus inclouen la recepció, custòdia durant el període indicat i l'entrega al locker o al taulell. IVA aplicable segons normativa vigent.</p>
   </div>
 </section>
 
 <!-- ════ LOCKER ════ -->
-<section class="locker" id="locker">
+<section class="locker reveal" id="locker">
   <div class="container">
     <div class="locker-grid">
       <div class="locker-visual">
@@ -662,7 +756,7 @@
 </section>
 
 <!-- ════ CONSULTA ENVIAMENTS ════ -->
-<section class="tracking" id="consulta">
+<section class="tracking reveal" id="consulta">
   <div class="container">
     <p class="section-label" id="trkLabel">Per a clients registrats</p>
     <h2 class="section-title" id="trkTitle">Consulta els teus enviaments</h2>
@@ -674,8 +768,8 @@
         <input type="email" id="trkEmail" placeholder="elteu@email.com">
       </div>
       <div class="field">
-        <label for="trkCognom" id="trkCognomLbl">Cognom</label>
-        <input type="text" id="trkCognom" placeholder="Garcia">
+        <label for="trkCognom" id="trkCognomLbl">Nom i cognom</label>
+        <input type="text" id="trkCognom" placeholder="Josep Garcia">
       </div>
       <button class="btn btn-primary" id="trkBtn" onclick="consultarEnviaments()">Consultar</button>
     </div>
@@ -685,7 +779,7 @@
 </section>
 
 <!-- ════ AVANTATGES ════ -->
-<section class="features" id="avantatges">
+<section class="features reveal" id="avantatges">
   <div class="container">
     <p class="section-label" id="ftLabel">Per què Pickup Point?</p>
     <h2 class="section-title" id="ftTitle">Tot el que necessites per comprar sense fronteres</h2>
@@ -740,8 +834,43 @@
   </div>
 </section>
 
+<!-- ════ TESTIMONIS ════ -->
+<section class="testimonials reveal">
+  <div class="container">
+    <p class="section-label" id="testiLabel">Ressenyes reals</p>
+    <h2 class="section-title" id="testiTitle">El que diuen els nostres clients</h2>
+    <p class="section-sub" id="testiSub">Opinions publicades a Google per persones que ja utilitzen el nostre servei a la Seu d'Urgell.</p>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text" id="testi1">"Sempre m'han arribat els paquets a temps i, quan he tingut algun dubte, m'han respost molt ràpid per WhatsApp."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">A</div>
+          <div><strong id="testiA1">Clienta habitual</strong><span id="testiS1">Ressenya a Google</span></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text" id="testi2">"Atenció al client excel·lent: em van resoldre un dubte en pocs minuts i sempre s'impliquen quan hi ha alguna incidència."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">M</div>
+          <div><strong id="testiA2">Client d'Andorra</strong><span id="testiS2">Ressenya a Google</span></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text" id="testi3">"Porto un any rebent-hi els meus paquets. Tracte proper i cap problema fins ara."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">J</div>
+          <div><strong id="testiA3">Client habitual</strong><span id="testiS3">Ressenya a Google</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ════ OPERADORS ════ -->
-<section class="operators">
+<section class="operators reveal">
   <div class="container">
     <h2 class="section-title" id="opsTitle">Rep paquets de qualsevol transportista ⭐</h2>
     <p class="section-sub" id="opsSub">No importa on compris. Si t'ho poden enviar a Espanya, nosaltres ho rebem per tu.</p>
@@ -766,7 +895,7 @@
 </section>
 
 <!-- ════ FAQ ════ -->
-<section class="faq" id="preguntes">
+<section class="faq reveal" id="preguntes">
   <div class="container">
     <p class="section-label" id="faqLabel">Dubtes habituals</p>
     <h2 class="section-title" id="faqTitle">Preguntes freqüents</h2>
@@ -1195,6 +1324,16 @@ const translations = {
     trustHeadline: 'Més de 40 anys gestionant enviaments',
     trustText:'Som l\'empresa responsable de l\'<strong>agència oficial de GLS a la Seu d\'Urgell</strong>. Cada dia gestionem centenars d\'enviaments, perquè rebis els teus paquets amb total confiança.',
     trustB1:'🚚 Agència oficial GLS', trustB2:'📅 Més de 40 anys', trustB3:'👥 Equip professional',
+    statsLabel:'La nostra activitat', statsTitle:'Un servei en què pots confiar',
+    statL1:'352 ressenyes a Google', statL2:'anys com a agència oficial GLS', statL3:'professionals al teu servei cada dia', statL4:'des d\'Andorra',
+    statsReviewLink:'Veure totes les ressenyes a Google →',
+    testiLabel:'Ressenyes reals', testiTitle:'El que diuen els nostres clients', testiSub:'Opinions publicades a Google per persones que ja utilitzen el nostre servei a la Seu d\'Urgell.',
+    testi1:'"Sempre m\'han arribat els paquets a temps i, quan he tingut algun dubte, m\'han respost molt ràpid per WhatsApp."',
+    testiA1:'Clienta habitual', testiS1:'Ressenya a Google',
+    testi2:'"Atenció al client excel·lent: em van resoldre un dubte en pocs minuts i sempre s\'impliquen quan hi ha alguna incidència."',
+    testiA2:'Client d\'Andorra', testiS2:'Ressenya a Google',
+    testi3:'"Porto un any rebent-hi els meus paquets. Tracte proper i cap problema fins ara."',
+    testiA3:'Client habitual', testiS3:'Ressenya a Google',
     howLabel: 'El procés', howTitle: 'Com funciona el servei?',
     howSub: 'Registrar-te només et portarà dos minuts. Després, només hauràs de comprar com sempre. Nosaltres ens encarreguem de la resta.',
     s1h:'Registra\'t gratuïtament', s1p:'Només necessitem les teves dades. En menys de 2 minuts rebràs per correu electrònic la teva nova adreça de recepció.',
@@ -1220,6 +1359,7 @@ const translations = {
     pr2t:'De 15 a 40 kg o més de 200 cm', pr2iva:'(6,20€ + 21% IVA)', pr2e:'cada dia addicional (a partir del dia 15)',
     pr3t:'Enviaments paletitzats', pr3iva:'(20,66€ + 21% IVA)', pr3e:'cada dia addicional (a partir del dia 8)',
     expTitle:'Pickup Express <span class="express-price">+2,50€</span>', expDesc:'Prioritzem la tramitació del teu enviament perquè el puguis recollir el mateix dia que arriba.',
+    discTitle:'Facturació mensual per domiciliació <span class="discount-price">-0,50€</span>', discDesc:'Si optes pel pagament per domiciliació bancària mensual, t\'apliquem un descompte de 0,50€ en cada enviament.',
     priceNote:'Els preus inclouen la recepció, custòdia durant el període indicat i l\'entrega al locker o al taulell. IVA aplicable segons normativa vigent.',
     lockerBadge:'Properament', lockerLabel:'Properament', lockerTitle:'Ben aviat: locker disponible 24/7',
     lockerDesc:'Estem preparant un locker automàtic perquè puguis recollir els teus enviaments quan vulguis, sense dependre del nostre horari. Mentrestant, t\'atenem personalment de dilluns a divendres, de 8:30 a 19:30.',
@@ -1230,8 +1370,8 @@ const translations = {
     billNote1:'Els clients amb pagament domiciliat gaudeixen d\'un descompte automàtic de 0,50€ per paquet, i seran els primers a tenir accés quan estrenem el locker 24/7.', billBtn1:'Activar domiciliació',
     billTag2:'Pagament en efectiu', billSub2:'cash, sense dades bancàries', billLbl2:'Paga només pels enviaments que utilitzes',
     billNote2:'Sense domiciliació bancària. Només no s\'aplica el descompte de 0,50€.',
-    trkLabel:'Per a clients registrats', trkTitle:'Consulta els teus enviaments', trkSub:'Introdueix el teu email i cognom per veure els enviaments que tenim pendents al teu nom.',
-    trkEmailLbl:'Email', trkCognomLbl:'Cognom', trkBtn:'Consultar',
+    trkLabel:'Per a clients registrats', trkTitle:'Consulta els teus enviaments', trkSub:'Introdueix el teu email i nom i cognom per veure els enviaments que tenim pendents al teu nom.',
+    trkEmailLbl:'Email', trkCognomLbl:'Nom i cognom', trkBtn:'Consultar',
     trkGroupAgencia:'A l\'agència', trkGroupLocker:'Al locker', trkMida:'Mida', trkDataDeposit:'Data de dipòsit', trkDataRecollida:'Data de recollida',
     trkLoading:'Cercant...', trkErrInput:'Introdueix un telèfon i un cognom vàlids.', trkErrGeneric:'No s\'ha pogut fer la consulta. Torna-ho a provar més tard.',
     trkEmpty:'No hem trobat cap enviament pendent amb aquestes dades.',
@@ -1275,6 +1415,16 @@ const translations = {
     trustHeadline: 'Más de 40 años gestionando envíos',
     trustText:'Somos la empresa responsable de la <strong>agencia oficial de GLS en la Seu d\'Urgell</strong>. Cada día gestionamos cientos de envíos, para que recibas tus paquetes con total confianza.',
     trustB1:'🚚 Agencia oficial GLS', trustB2:'📅 Más de 40 años', trustB3:'👥 Equipo profesional',
+    statsLabel:'Nuestra actividad', statsTitle:'Un servicio en el que puedes confiar',
+    statL1:'352 reseñas en Google', statL2:'años como agencia oficial GLS', statL3:'profesionales a tu servicio cada día', statL4:'desde Andorra',
+    statsReviewLink:'Ver todas las reseñas en Google →',
+    testiLabel:'Reseñas reales', testiTitle:'Lo que dicen nuestros clientes', testiSub:'Opiniones publicadas en Google por personas que ya utilizan nuestro servicio en La Seu d\'Urgell.',
+    testi1:'"Siempre me han llegado los paquetes a tiempo y, cuando he tenido alguna duda, me han respondido muy rápido por WhatsApp."',
+    testiA1:'Clienta habitual', testiS1:'Reseña en Google',
+    testi2:'"Atención al cliente excelente: me resolvieron una duda en pocos minutos y siempre se implican cuando hay alguna incidencia."',
+    testiA2:'Cliente de Andorra', testiS2:'Reseña en Google',
+    testi3:'"Llevo un año recibiendo aquí mis paquetes. Trato cercano y ningún problema hasta ahora."',
+    testiA3:'Cliente habitual', testiS3:'Reseña en Google',
     howLabel: 'El proceso', howTitle: '¿Cómo funciona el servicio?',
     howSub: 'Registrarte solo te llevará dos minutos. Después, solo tendrás que comprar como siempre. Nosotros nos encargamos del resto.',
     s1h:'Regístrate gratuitamente', s1p:'Solo necesitamos tus datos. En menos de 2 minutos recibirás por correo electrónico tu nueva dirección de recepción.',
@@ -1300,6 +1450,7 @@ const translations = {
     pr2t:'De 15 a 40 kg o más de 200 cm', pr2iva:'(6,20€ + 21% IVA)', pr2e:'cada día adicional (a partir del día 15)',
     pr3t:'Envíos paletizados', pr3iva:'(20,66€ + 21% IVA)', pr3e:'cada día adicional (a partir del día 8)',
     expTitle:'Pickup Express <span class="express-price">+2,50€</span>', expDesc:'Priorizamos la tramitación de tu envío para que puedas recogerlo el mismo día que llega.',
+    discTitle:'Facturación mensual por domiciliación <span class="discount-price">-0,50€</span>', discDesc:'Si optas por el pago por domiciliación bancaria mensual, te aplicamos un descuento de 0,50€ en cada envío.',
     priceNote:'Los precios incluyen la recepción, custodia durante el período indicado y la entrega en el locker o en el mostrador. IVA aplicable según normativa vigente.',
     lockerBadge:'Próximamente', lockerLabel:'Próximamente', lockerTitle:'Muy pronto: locker disponible 24/7',
     lockerDesc:'Estamos preparando un locker automático para que puedas recoger tus envíos cuando quieras, sin depender de nuestro horario. Mientras tanto, te atendemos personalmente de lunes a viernes, de 8:30 a 19:30.',
@@ -1310,8 +1461,8 @@ const translations = {
     billNote1:'Los clientes con pago domiciliado disfrutan de un descuento automático de 0,50€ por paquete, y serán los primeros en tener acceso cuando estrenemos el locker 24/7.', billBtn1:'Activar domiciliación',
     billTag2:'Pago en efectivo', billSub2:'cash, sin datos bancarios', billLbl2:'Paga solo por los envíos que utilizas',
     billNote2:'Sin domiciliación bancaria. Solo no se aplica el descuento de 0,50€.',
-    trkLabel:'Para clientes registrados', trkTitle:'Consulta tus envíos', trkSub:'Introduce tu email y apellido para ver los envíos que tenemos pendientes a tu nombre.',
-    trkEmailLbl:'Email', trkCognomLbl:'Apellido', trkBtn:'Consultar',
+    trkLabel:'Para clientes registrados', trkTitle:'Consulta tus envíos', trkSub:'Introduce tu email y nombre y apellidos para ver los envíos que tenemos pendientes a tu nombre.',
+    trkEmailLbl:'Email', trkCognomLbl:'Nombre y apellidos', trkBtn:'Consultar',
     trkGroupAgencia:'En la agencia', trkGroupLocker:'En el locker', trkMida:'Tamaño', trkDataDeposit:'Fecha de depósito', trkDataRecollida:'Fecha de recogida',
     trkLoading:'Buscando...', trkErrInput:'Introduce un teléfono y un apellido válidos.', trkErrGeneric:'No se ha podido realizar la consulta. Inténtalo más tarde.',
     trkEmpty:'No hemos encontrado ningún envío pendiente con estos datos.',
@@ -1360,6 +1511,16 @@ const translations = {
   trustB1:'🚚 Official GLS agency',
   trustB2:'📅 Over 40 years',
   trustB3:'👥 Professional team',
+  statsLabel:'Our activity', statsTitle:'A service you can trust',
+  statL1:'352 Google reviews', statL2:'years as an official GLS agency', statL3:'staff members serving you every day', statL4:'from Andorra',
+  statsReviewLink:'See all reviews on Google →',
+  testiLabel:'Real reviews', testiTitle:'What our customers say', testiSub:'Reviews posted on Google by people who already use our service in La Seu d\'Urgell.',
+  testi1:'"My packages have always arrived on time, and whenever I had a question, they replied very quickly on WhatsApp."',
+  testiA1:'Regular customer', testiS1:'Google review',
+  testi2:'"Excellent customer service: they solved my question in minutes and are always involved whenever there\'s an issue."',
+  testiA2:'Customer from Andorra', testiS2:'Google review',
+  testi3:'"I\'ve been receiving my packages here for a year. Friendly service and no problems so far."',
+  testiA3:'Regular customer', testiS3:'Google review',
   howLabel:'The process',
   howTitle:'How does the service work?',
   howSub:'Signing up only takes two minutes. After that, just shop as usual — we take care of the rest.',
@@ -1416,6 +1577,7 @@ const translations = {
   pr3e:'each extra day (from day 8)',
   expTitle:'Pickup Express <span class="express-price">+€2.50</span>',
   expDesc:'We prioritise the processing of your shipment so you can pick it up the same day it arrives.',
+  discTitle:'Monthly direct debit billing <span class="discount-price">-€0.50</span>', discDesc:'If you choose monthly bank direct debit payment, we apply a €0.50 discount on every shipment.',
   priceNote:'Prices include reception, storage for the indicated period and delivery at our counter (locker delivery coming soon). VAT applies as per current regulations.',
   lockerBadge:'Coming soon',
   lockerLabel:'Coming soon',
@@ -1441,9 +1603,9 @@ const translations = {
   billNote2:'No bank details needed. Locker access included too. Only the €0.50 discount doesn\'t apply.',
   trkLabel:'For registered clients',
   trkTitle:'Track your shipments',
-  trkSub:'Enter your email and surname to see the shipments we currently have waiting for you.',
+  trkSub:'Enter your email and full name to see the shipments we currently have waiting for you.',
   trkEmailLbl:'Email',
-  trkCognomLbl:'Surname',
+  trkCognomLbl:'Full name',
   trkBtn:'Check',
   trkGroupAgencia:'At the agency',
   trkGroupLocker:'At the locker',
@@ -1526,6 +1688,16 @@ const translations = {
   trustB1:'🚚 Agence officielle GLS',
   trustB2:'📅 Plus de 40 ans',
   trustB3:'👥 Équipe professionnelle',
+  statsLabel:'Notre activité', statsTitle:'Un service en qui vous pouvez avoir confiance',
+  statL1:'352 avis Google', statL2:'ans en tant qu\'agence officielle GLS', statL3:'professionnels à votre service chaque jour', statL4:'depuis l\'Andorre',
+  statsReviewLink:'Voir tous les avis sur Google →',
+  testiLabel:'Avis authentiques', testiTitle:'Ce que disent nos clients', testiSub:'Avis publiés sur Google par des personnes qui utilisent déjà notre service à La Seu d\'Urgell.',
+  testi1:'« Mes colis sont toujours arrivés à temps et, quand j\'ai eu une question, on m\'a répondu très vite sur WhatsApp. »',
+  testiA1:'Cliente régulière', testiS1:'Avis Google',
+  testi2:'« Service client excellent : ils ont résolu ma question en quelques minutes et s\'impliquent toujours en cas de problème. »',
+  testiA2:'Client d\'Andorre', testiS2:'Avis Google',
+  testi3:'« Je reçois mes colis ici depuis un an. Accueil chaleureux et aucun problème jusqu\'à présent. »',
+  testiA3:'Client régulier', testiS3:'Avis Google',
   howLabel:'Le processus',
   howTitle:'Comment fonctionne le service ?',
   howSub:'L\'inscription ne vous prendra que deux minutes. Ensuite, il vous suffira d\'acheter comme d\'habitude. Nous nous occupons du reste.',
@@ -1582,6 +1754,7 @@ const translations = {
   pr3e:'chaque jour supplémentaire (à partir du jour 8)',
   expTitle:'Pickup Express <span class="express-price">+2,50€</span>',
   expDesc:'Nous priorisons le traitement de votre envoi pour que vous puissiez le récupérer le jour même de son arrivée.',
+  discTitle:'Facturation mensuelle par prélèvement <span class="discount-price">-0,50€</span>', discDesc:'Si vous optez pour le paiement par prélèvement bancaire mensuel, nous vous appliquons une remise de 0,50€ par envoi.',
   priceNote:'Les prix incluent la réception, la garde pendant la période indiquée et la remise au casier ou au comptoir. TVA applicable selon la réglementation en vigueur.',
   lockerBadge:'Nouveau',
   lockerLabel:'Nouveau service',
@@ -1607,9 +1780,9 @@ const translations = {
   billNote2:'Sans coordonnées bancaires. Accès au casier également inclus. Seule la remise de 0,50€ ne s\'applique pas.',
   trkLabel:'Pour les clients inscrits',
   trkTitle:'Suivez vos envois',
-  trkSub:'Indiquez votre e-mail et votre nom de famille pour voir les envois actuellement en attente à votre nom.',
+  trkSub:'Indiquez votre e-mail et votre nom complet pour voir les envois actuellement en attente à votre nom.',
   trkEmailLbl:'E-mail',
-  trkCognomLbl:'Nom de famille',
+  trkCognomLbl:'Nom complet',
   trkBtn:'Vérifier',
   trkGroupAgencia:'À l\'agence',
   trkGroupLocker:'Au casier',
@@ -1692,6 +1865,16 @@ const translations = {
   trustB1:'🚚 Официальное агентство GLS',
   trustB2:'📅 Более 40 лет',
   trustB3:'👥 Профессиональная команда',
+  statsLabel:'Наша деятельность', statsTitle:'Сервис, которому можно доверять',
+  statL1:'352 отзыва в Google', statL2:'лет как официальное агентство GLS', statL3:'сотрудников работают для вас каждый день', statL4:'из Андорры',
+  statsReviewLink:'Смотреть все отзывы в Google →',
+  testiLabel:'Настоящие отзывы', testiTitle:'Что говорят наши клиенты', testiSub:'Отзывы, опубликованные в Google людьми, которые уже пользуются нашим сервисом в Ла-Сеу-де-Уржель.',
+  testi1:'«Мои посылки всегда приходили вовремя, а когда у меня возникали вопросы, мне очень быстро отвечали в WhatsApp».',
+  testiA1:'Постоянная клиентка', testiS1:'Отзыв в Google',
+  testi2:'«Отличное обслуживание клиентов: мой вопрос решили за несколько минут, и они всегда вникают в любую проблему».',
+  testiA2:'Клиент из Андорры', testiS2:'Отзыв в Google',
+  testi3:'«Получаю здесь свои посылки уже год. Дружелюбное отношение и никаких проблем».',
+  testiA3:'Постоянный клиент', testiS3:'Отзыв в Google',
   howLabel:'Процесс',
   howTitle:'Как работает сервис?',
   howSub:'Регистрация займёт всего две минуты. После этого просто покупайте как обычно — обо всём остальном позаботимся мы.',
@@ -1748,6 +1931,7 @@ const translations = {
   pr3e:'за каждый доп. день (начиная с 8-го дня)',
   expTitle:'Pickup Express <span class="express-price">+2,50€</span>',
   expDesc:'Мы приоритизируем обработку вашей посылки, чтобы вы могли забрать её в день прибытия.',
+  discTitle:'Ежемесячный счёт по прямому дебету <span class="discount-price">-0,50€</span>', discDesc:'Если вы выберете оплату ежемесячным банковским прямым дебетом, мы применим скидку 0,50€ на каждую посылку.',
   priceNote:'Цены включают приём, хранение в течение указанного периода и выдачу через locker или на стойке. НДС применяется согласно действующему законодательству.',
   lockerBadge:'Новинка',
   lockerLabel:'Новая услуга',
@@ -1773,9 +1957,9 @@ const translations = {
   billNote2:'Без банковских данных. Доступ к locker-у также включён. Не применяется только скидка 0,50€.',
   trkLabel:'Для зарегистрированных клиентов',
   trkTitle:'Отследить ваши посылки',
-  trkSub:'Введите ваш email и фамилию, чтобы увидеть посылки, которые сейчас ожидают вас.',
+  trkSub:'Введите ваш email и полное имя, чтобы увидеть посылки, которые сейчас ожидают вас.',
   trkEmailLbl:'Email',
-  trkCognomLbl:'Фамилия',
+  trkCognomLbl:'Полное имя',
   trkGroupAgencia:'В агентстве',
   trkGroupLocker:'В locker-е',
   trkMida:'Размер',
@@ -1860,6 +2044,17 @@ function setLang(newLang) {
     a.textContent = a.dataset[lang] || a.dataset.ca;
   });
 }
+
+// Fade-in animation on scroll
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
 // Smooth anchor scrolling for nav links
 document.querySelectorAll('a[href^="#"]').forEach(a => {
