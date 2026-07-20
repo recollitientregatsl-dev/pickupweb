@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+<title>Control de Flota · Recollit i Entregat</title>
+<style>
+  :root {
+    --ink: #12181f;
+    --panel: #1a222c;
+    --panel-2: #212b37;
+    --line: #2c3846;
+    --paper: #f4f2ec;
+    --amber: #e8871e;
+    --amber-dk: #c76c0f;
+    --green: #3fa66a;
+    --red: #d84f4f;
+    --text: #eef1f4;
+    --muted: #93a1b0;
+    --font-display: 'Space Grotesk', 'Segoe UI', system-ui, sans-serif;
+    --font-body: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+  }
+  @font-face { font-family: 'Space Grotesk'; src: local('Space Grotesk'); }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: var(--font-body);
+    background: var(--ink);
+    color: var(--text);
+    min-height: 100vh;
+    -webkit-tap-highlight-color: transparent;
+  }
+  #app { min-height: 100vh; display: flex; flex-direction: column; }
+
+  /* Gauge stripe signature element */
+  .gauge-stripe {
+    height: 6px;
+    background: linear-gradient(90deg, var(--green) 0%, var(--green) 30%, var(--amber) 55%, var(--red) 100%);
+    flex-shrink: 0;
+  }
+
+  header.topbar {
+    padding: 18px 20px 14px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--line);
+  }
+  .brand { display: flex; align-items: baseline; gap: 8px; }
+  .brand-mark { font-family: var(--font-display); font-weight: 700; font-size: 1.15rem; letter-spacing: -0.02em; }
+  .brand-sub { font-size: 0.72rem; color: var(--muted); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; }
+  .home-link { font-size: 0.8rem; color: var(--muted); text-decoration: none; border: 1px solid var(--line); padding: 6px 12px; border-radius: 20px; }
+  .home-link:active { background: var(--panel-2); }
+
+  main { flex: 1; display: flex; flex-direction: column; padding: 24px 20px 40px; max-width: 560px; margin: 0 auto; width: 100%; }
+
+  .step-eyebrow { font-family: var(--font-mono); font-size: 0.72rem; color: var(--amber); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+  h1.screen-title { font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; letter-spacing: -0.01em; line-height: 1.15; margin-bottom: 6px; }
+  p.screen-sub { color: var(--muted); font-size: 0.92rem; margin-bottom: 24px; line-height: 1.5; }
+
+  .big-choice-grid { display: flex; flex-direction: column; gap: 10px; }
+  .big-choice {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 18px 20px;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text);
+    text-align: left;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: space-between;
+    transition: border-color .12s, background .12s;
+  }
+  .big-choice .meta { font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); font-weight: 400; margin-top: 3px; }
+  .big-choice:active { background: var(--panel-2); border-color: var(--amber); }
+  .big-choice .chev { color: var(--amber); font-size: 1.3rem; }
+
+  .field { margin-bottom: 18px; }
+  .field label { display: block; font-size: 0.82rem; color: var(--muted); margin-bottom: 7px; font-weight: 500; }
+  .field input, .field select, .field textarea {
+    width: 100%;
+    background: var(--panel);
+    border: 1.5px solid var(--line);
+    border-radius: 10px;
+    padding: 14px 14px;
+    font-size: 1.05rem;
+    color: var(--text);
+    font-family: var(--font-body);
+  }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    outline: none; border-color: var(--amber);
+  }
+  .field .hint { font-size: 0.76rem; color: var(--muted); margin-top: 6px; }
+  .field .unit-input { position: relative; }
+  .field .unit-input span { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 0.92rem; pointer-events: none; }
+
+  .banner { border-radius: 12px; padding: 14px 16px; font-size: 0.88rem; line-height: 1.5; margin-bottom: 18px; display: flex; gap: 10px; }
+  .banner.warn { background: rgba(232,135,30,0.12); border: 1px solid rgba(232,135,30,0.4); color: #f4c98a; }
+  .banner.error { background: rgba(216,79,79,0.12); border: 1px solid rgba(216,79,79,0.4); color: #f2a3a3; }
+  .banner.ok { background: rgba(63,166,106,0.12); border: 1px solid rgba(63,166,106,0.4); color: #a6dcbb; }
+  .banner .icon { flex-shrink: 0; }
+
+  .checkbox-row { display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; background: var(--panel); border: 1.5px solid var(--red); border-radius: 10px; margin-bottom: 18px; }
+  .checkbox-row input { margin-top: 3px; width: 18px; height: 18px; flex-shrink: 0; }
+  .checkbox-row label { font-size: 0.86rem; line-height: 1.4; color: var(--text); }
+
+  .btn-primary {
+    width: 100%;
+    background: var(--amber);
+    color: #1a1206;
+    border: none;
+    border-radius: 12px;
+    padding: 16px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.05rem;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background .12s, transform .08s;
+  }
+  .btn-primary:active { background: var(--amber-dk); transform: scale(0.99); }
+  .btn-primary:disabled { background: #3a4552; color: var(--muted); cursor: not-allowed; }
+
+  .btn-ghost {
+    width: 100%;
+    background: transparent;
+    border: 1.5px solid var(--line);
+    color: var(--muted);
+    border-radius: 12px;
+    padding: 13px;
+    font-size: 0.92rem;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  .btn-ghost:active { background: var(--panel); }
+
+  .back-link { color: var(--muted); font-size: 0.85rem; background: none; border: none; cursor: pointer; padding: 8px 0; margin-bottom: 10px; display: flex; align-items: center; gap: 4px; }
+
+  .confirm-wrap { text-align: center; padding: 40px 10px; }
+  .confirm-icon { width: 64px; height: 64px; border-radius: 50%; background: rgba(63,166,106,0.15); border: 2px solid var(--green); display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 22px; }
+  .confirm-stats { display: flex; gap: 10px; justify-content: center; margin: 24px 0; flex-wrap: wrap; }
+  .stat-chip { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 18px; min-width: 100px; }
+  .stat-chip .v { font-family: var(--font-mono); font-size: 1.3rem; font-weight: 700; color: var(--amber); }
+  .stat-chip .l { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+
+  footer.foot-link { text-align: center; padding: 16px; }
+  footer.foot-link a { color: var(--muted); font-size: 0.76rem; text-decoration: none; opacity: 0.6; }
+  footer.foot-link .link-btn { color: var(--muted); font-size: 0.76rem; text-decoration: none; opacity: 0.6; background: none; border: none; cursor: pointer; font-family: var(--font-body); }
+  footer.foot-link .link-btn:active { opacity: 1; }
+
+  /* Admin */
+  .pin-dots { display: flex; gap: 14px; justify-content: center; margin: 30px 0; }
+  .pin-dot { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--line); }
+  .pin-dot.filled { background: var(--amber); border-color: var(--amber); }
+  .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 280px; margin: 0 auto; }
+  .keypad button { background: var(--panel); border: 1px solid var(--line); color: var(--text); font-family: var(--font-mono); font-size: 1.3rem; padding: 18px 0; border-radius: 12px; }
+  .keypad button:active { background: var(--panel-2); }
+
+  .admin-shell { max-width: 900px; }
+  .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin-bottom: 20px; overflow-x: auto; }
+  .tab { padding: 10px 16px; font-size: 0.86rem; color: var(--muted); background: none; border: none; border-bottom: 2px solid transparent; white-space: nowrap; cursor: pointer; }
+  .tab.active { color: var(--amber); border-bottom-color: var(--amber); font-weight: 600; }
+
+  table.data-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+  table.data-table th { text-align: left; color: var(--muted); font-weight: 500; padding: 9px 10px; border-bottom: 1px solid var(--line); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; }
+  table.data-table td { padding: 10px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  table.data-table tr.flag-mismatch td:first-child { border-left: 3px solid var(--red); }
+  table.data-table tr.flag-anomaly td:first-child { border-left: 3px solid var(--amber); }
+  .tag { font-size: 0.68rem; padding: 2px 7px; border-radius: 20px; font-family: var(--font-mono); }
+  .tag.mismatch { background: rgba(216,79,79,0.18); color: #f2a3a3; }
+  .tag.anomaly { background: rgba(232,135,30,0.18); color: #f4c98a; }
+  .table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; padding: 4px; }
+
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); gap: 12px; margin-bottom: 24px; }
+  .summary-card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+  .summary-card .n { font-family: var(--font-mono); font-size: 1.5rem; font-weight: 700; }
+  .summary-card .l { font-size: 0.74rem; color: var(--muted); margin-top: 3px; }
+
+  .vehicle-card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-bottom: 10px; }
+  .vehicle-card .row1 { display: flex; justify-content: space-between; align-items: center; }
+  .vehicle-card .plate { font-family: var(--font-mono); font-weight: 700; font-size: 1rem; }
+  .vehicle-card .del { background: none; border: none; color: var(--red); font-size: 0.8rem; cursor: pointer; }
+  .vehicle-card .meta-row { display: flex; gap: 14px; margin-top: 8px; font-size: 0.8rem; color: var(--muted); flex-wrap: wrap; }
+  .qr-link { display: inline-block; font-size: 0.76rem; color: var(--amber); text-decoration: none; }
+  .qr-row { display: flex; gap: 14px; align-items: flex-start; margin-top: 12px; }
+  .qr-thumb-wrap { flex-shrink: 0; line-height: 0; }
+  .qr-missing { width: 96px; height: 96px; background: var(--panel-2); border: 1px dashed var(--line); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.66rem; color: var(--muted); text-align: center; padding: 6px; }
+  .qr-actions { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; min-width: 0; flex: 1; }
+  .qr-url-box { font-family: var(--font-mono); font-size: 0.68rem; color: var(--muted); background: var(--panel-2); border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .qr-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 999; display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .qr-modal { background: #fff; color: #111; border-radius: 16px; padding: 30px 26px; text-align: center; max-width: 340px; width: 100%; }
+  .qr-modal-plate { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; margin-bottom: 4px; }
+  .qr-modal-hint { font-size: 0.8rem; color: #666; margin-bottom: 18px; }
+  .qr-modal-hint2 { font-size: 0.74rem; color: #777; margin-top: 16px; line-height: 1.4; }
+
+  .toolbar { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
+  .toolbar select, .toolbar input { background: var(--panel); border: 1px solid var(--line); color: var(--text); border-radius: 8px; padding: 8px 10px; font-size: 0.82rem; }
+  .btn-sm { background: var(--panel-2); border: 1px solid var(--line); color: var(--text); border-radius: 8px; padding: 8px 14px; font-size: 0.82rem; cursor: pointer; }
+  .btn-sm:active { border-color: var(--amber); }
+
+  .empty-state { text-align: center; padding: 50px 20px; color: var(--muted); }
+  .empty-state .big { font-size: 2.4rem; margin-bottom: 10px; }
+
+  .add-form { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-bottom: 18px; }
+  .add-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+  .add-form-grid input, .add-form-grid select { width: 100%; background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 10px; color: var(--text); font-size: 0.88rem; }
+
+  @media (max-width: 420px) {
+    .add-form-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div id="app"><div class="gauge-stripe"></div><div style="padding:60px 20px;text-align:center;color:#93a1b0;">Carregant...</div></div>
+
+<script>
+/* ============ OFFLINE QR CODE GENERATOR (no network calls) ============ */
+/* Compact byte-mode QR encoder, versions 1-20, EC levels L/M/Q/H. */
+const QR = (function(){
+  const PAD0=0xEC, PAD1=0x11;
+  const G15=0x537, G15_MASK=0x5412, G18=0x1F25;
+  function glog(n){return LOG_TABLE[n];}
+  function gexp(n){while(n<0)n+=255; while(n>=255)n-=255; return EXP_TABLE[n];}
+  const EXP_TABLE=new Array(256), LOG_TABLE=new Array(256);
+  for(let i=0;i<8;i++) EXP_TABLE[i]=1<<i;
+  for(let i=8;i<256;i++) EXP_TABLE[i]=EXP_TABLE[i-4]^EXP_TABLE[i-5]^EXP_TABLE[i-6]^EXP_TABLE[i-8];
+  for(let i=0;i<255;i++) LOG_TABLE[EXP_TABLE[i]]=i;
+
+  function Poly(num, shift){
+    let offset=0; while(offset<num.length && num[offset]===0) offset++;
+    this.num=new Array(num.length-offset+(shift||0));
+    for(let i=0;i<num.length-offset;i++) this.num[i]=num[i+offset];
+  }
+  Poly.prototype.get=function(i){return this.num[i];};
+  Poly.prototype.getLength=function(){return this.num.length;};
+  Poly.prototype.multiply=function(e){
+    const num=new Array(this.getLength()+e.getLength()-1).fill(0);
+    for(let i=0;i<this.getLength();i++)
+      for(let j=0;j<e.getLength();j++)
+        num[i+j]^=gexp(glog(this.get(i))+glog(e.get(j)));
+    return new Poly(num,0);
+  };
+  Poly.prototype.mod=function(e){
+    if(this.getLength()-e.getLength()<0) return this;
+    const ratio=glog(this.get(0))-glog(e.get(0));
+    const num=this.num.slice();
+    for(let i=0;i<e.getLength();i++) num[i]^=gexp(glog(e.get(i))+ratio);
+    return new Poly(num,0).mod(e);
+  };
+
+  const RS_BLOCK_TABLE=[]; // unused, kept for reference removed
+  const RSB={
+    1:{L:[[1,26,19]],M:[[1,26,16]],Q:[[1,26,13]],H:[[1,26,9]]},
+    2:{L:[[1,44,34]],M:[[1,44,28]],Q:[[1,44,22]],H:[[1,44,16]]},
+    3:{L:[[1,70,55]],M:[[1,70,44]],Q:[[2,35,17]],H:[[2,35,13]]},
+    4:{L:[[1,100,80]],M:[[2,50,32]],Q:[[2,50,24]],H:[[4,25,9]]},
+    5:{L:[[1,134,108]],M:[[2,67,43]],Q:[[2,33,15],[2,34,16]],H:[[2,33,11],[2,34,12]]},
+    6:{L:[[2,86,68]],M:[[4,43,27]],Q:[[4,43,19]],H:[[4,43,15]]},
+    7:{L:[[2,98,78]],M:[[4,49,31]],Q:[[2,32,14],[4,33,15]],H:[[4,39,13],[1,40,14]]},
+    8:{L:[[2,121,97]],M:[[2,60,38],[2,61,39]],Q:[[4,40,18],[2,41,19]],H:[[4,40,14],[2,41,15]]},
+    9:{L:[[2,146,116]],M:[[3,58,36],[2,59,37]],Q:[[4,36,16],[4,37,17]],H:[[4,36,12],[4,37,13]]},
+    10:{L:[[2,86,68],[2,87,69]],M:[[4,69,43],[1,70,44]],Q:[[6,43,19],[2,44,20]],H:[[6,43,15],[2,44,16]]},
+    11:{L:[[4,101,81]],M:[[1,80,50],[4,81,51]],Q:[[4,50,22],[4,51,23]],H:[[3,36,12],[8,37,13]]},
+    12:{L:[[2,116,92],[2,117,93]],M:[[6,58,36],[2,59,37]],Q:[[4,46,20],[6,47,21]],H:[[7,42,14],[4,43,15]]},
+    13:{L:[[4,133,107]],M:[[8,59,37],[1,60,38]],Q:[[8,44,20],[4,45,21]],H:[[12,33,11],[4,34,12]]},
+    14:{L:[[3,145,115],[1,146,116]],M:[[4,64,40],[5,65,41]],Q:[[11,36,16],[5,37,17]],H:[[11,36,12],[5,37,13]]},
+    15:{L:[[5,109,87],[1,110,88]],M:[[5,65,41],[5,66,42]],Q:[[5,54,24],[7,55,25]],H:[[11,36,12],[7,37,13]]},
+    16:{L:[[5,122,98],[1,123,99]],M:[[7,73,45],[3,74,46]],Q:[[15,43,19],[2,44,20]],H:[[3,45,15],[13,46,16]]},
+    17:{L:[[1,135,107],[5,136,108]],M:[[10,74,46],[1,75,47]],Q:[[1,50,22],[15,51,23]],H:[[2,42,14],[17,43,15]]},
+    18:{L:[[5,150,120],[1,151,121]],M:[[9,69,43],[4,70,44]],Q:[[17,50,22],[1,51,23]],H:[[2,42,14],[19,43,15]]},
+    19:{L:[[3,141,113],[4,142,114]],M:[[3,70,44],[11,71,45]],Q:[[17,47,21],[4,48,22]],H:[[9,39,13],[16,40,14]]},
+    20:{L:[[3,135,107],[5,136,108]],M:[[3,67,41],[13,68,42]],Q:[[15,54,24],[5,55,25]],H:[[15,43,15],[10,44,16]]},
+  };
+
+  function getRSBlocks(version, level){
+    const list=RSB[version][level]; const blocks=[];
+    list.forEach(([count,total,data])=>{ for(let i=0;i<count;i++) blocks.push({total,data}); });
+    return blocks;
+  }
+
+  const G_POLY_CACHE={};
+  function errorCorrectPoly(ecLen){
+    if(G_POLY_CACHE[ecLen]) return G_POLY_CACHE[ecLen];
+    let a=new Poly([1],0);
+    for(let i=0;i<ecLen;i++) a=a.multiply(new Poly([1,gexp(i)],0));
+    G_POLY_CACHE[ecLen]=a; return a;
+  }
+
+  function createBytes(dataArr, rsBlocks){
+    let offset=0; const maxDc=[], maxEc=[], dcdata=[], ecdata=[];
+    for(let r=0;r<rsBlocks.length;r++){
+      const dc=rsBlocks[r].data, ec=rsBlocks[r].total-dc;
+      maxDc.push(dc); maxEc.push(ec);
+      const d=new Array(dc);
+      for(let i=0;i<dc;i++) d[i]=0xff & dataArr[i+offset];
+      offset+=dc; dcdata.push(d);
+      const rsPoly=errorCorrectPoly(ec);
+      const rawPoly=new Poly(d, rsPoly.getLength()-1);
+      const modPoly=rawPoly.mod(rsPoly);
+      const e=new Array(rsPoly.getLength()-1);
+      for(let i=0;i<e.length;i++){ const idx=i+modPoly.getLength()-e.length; e[i]=idx>=0?modPoly.get(idx):0; }
+      ecdata.push(e);
+    }
+    let totalDc=0,totalCodew=0;
+    for(let i=0;i<rsBlocks.length;i++){totalDc+=maxDc[i]; totalCodew+=rsBlocks[i].total;}
+    const data=new Array(totalCodew); let idx2=0;
+    const maxDcLen=Math.max(...maxDc);
+    for(let i=0;i<maxDcLen;i++) for(let r=0;r<rsBlocks.length;r++) if(i<dcdata[r].length) data[idx2++]=dcdata[r][i];
+    const maxEcLen=Math.max(...maxEc);
+    for(let i=0;i<maxEcLen;i++) for(let r=0;r<rsBlocks.length;r++) if(i<ecdata[r].length) data[idx2++]=ecdata[r][i];
+    return data;
+  }
+
+  function BitBuffer(){ this.buffer=[]; this.length=0; }
+  BitBuffer.prototype.get=function(i){ return ((this.buffer[Math.floor(i/8)]>>>(7-i%8))&1)===1; };
+  BitBuffer.prototype.put=function(num,length){ for(let i=0;i<length;i++) this.putBit(((num>>>(length-i-1))&1)===1); };
+  BitBuffer.prototype.putBit=function(bit){
+    const bufIndex=Math.floor(this.length/8);
+    if(this.buffer.length<=bufIndex) this.buffer.push(0);
+    if(bit) this.buffer[bufIndex]|=(0x80>>>(this.length%8));
+    this.length++;
+  };
+
+  function charCountBits(version){ return version<=9?8:16; }
+
+  function build(text, version, ecLevel){
+    const utf8=unescape(encodeURIComponent(text));
+    const bytes=[]; for(let i=0;i<utf8.length;i++) bytes.push(utf8.charCodeAt(i));
+    const rsBlocks=getRSBlocks(version, ecLevel);
+    let totalDataBytes=0; rsBlocks.forEach(b=>totalDataBytes+=b.data);
+
+    const buf=new BitBuffer();
+    buf.put(4,4); // byte mode
+    buf.put(bytes.length, charCountBits(version));
+    bytes.forEach(b=>buf.put(b,8));
+
+    const maxBits=totalDataBytes*8;
+    if(buf.length>maxBits) return null; // doesn't fit this version
+    if(buf.length+4<=maxBits) buf.put(0,4);
+    while(buf.length%8!==0) buf.putBit(false);
+    while(true){
+      if(buf.length>=maxBits) break;
+      buf.put(PAD0,8);
+      if(buf.length>=maxBits) break;
+      buf.put(PAD1,8);
+    }
+    const dataArr=buf.buffer.slice(0, totalDataBytes);
+    while(dataArr.length<totalDataBytes) dataArr.push(0);
+    const finalData=createBytes(dataArr, rsBlocks);
+    return finalData;
+  }
+
+  function pickVersion(text, ecLevel){
+    for(let v=1; v<=20; v++){
+      const res=build(text, v, ecLevel);
+      if(res) return {version:v, data:res};
+    }
+    return null;
+  }
+
+  // Module placement
+  function Matrix(moduleCount){
+    this.count=moduleCount;
+    this.modules=[]; this.isDark2=[];
+    for(let r=0;r<moduleCount;r++){ this.modules.push(new Array(moduleCount).fill(null)); }
+  }
+
+  const PATTERN_POSITION_TABLE=[
+    [],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50],
+    [6,30,54],[6,32,58],[6,34,62],[6,26,46,66],[6,26,48,70],[6,26,50,74],[6,30,54,78],
+    [6,30,56,82],[6,30,58,86],[6,34,62,90]
+  ];
+
+  function setupPositionProbePattern(mat, row, col){
+    for(let r=-1;r<=7;r++){
+      if(row+r<=-1||mat.count<=row+r) continue;
+      for(let c=-1;c<=7;c++){
+        if(col+c<=-1||mat.count<=col+c) continue;
+        let dark=(0<=r&&r<=6&&(c===0||c===6))||(0<=c&&c<=6&&(r===0||r===6))||(2<=r&&r<=4&&2<=c&&c<=4);
+        mat.modules[row+r][col+c]=dark;
+      }
+    }
+  }
+  function setupPositionAdjustPattern(mat, version){
+    const pos=PATTERN_POSITION_TABLE[version-1];
+    for(let i=0;i<pos.length;i++) for(let j=0;j<pos.length;j++){
+      const row=pos[i], col=pos[j];
+      if(mat.modules[row][col]!==null) continue;
+      for(let r=-2;r<=2;r++) for(let c=-2;c<=2;c++){
+        mat.modules[row+r][col+c] = (r===-2||r===2||c===-2||c===2||(r===0&&c===0));
+      }
+    }
+  }
+  function setupTimingPattern(mat){
+    for(let r=8;r<mat.count-8;r++){ if(mat.modules[r][6]!==null) continue; mat.modules[r][6]=(r%2===0); }
+    for(let c=8;c<mat.count-8;c++){ if(mat.modules[6][c]!==null) continue; mat.modules[6][c]=(c%2===0); }
+  }
+  function getBCHDigit(data){ let d=0; while(data!==0){ d++; data>>==1; } return d; }
+  function getBCHTypeInfo(data){
+    let d=data<<10;
+    while(getBCHDigit(d)-getBCHDigit(G15)>=0) d^=(G15<<(getBCHDigit(d)-getBCHDigit(G15)));
+    return ((data<<10)|d)^G15_MASK;
+  }
+  function getBCHTypeNumber(data){
+    let d=data<<12;
+    while(getBCHDigit(d)-getBCHDigit(G18)>=0) d^=(G18<<(getBCHDigit(d)-getBCHDigit(G18)));
+    return (data<<12)|d;
+  }
+  function setupTypeNumber(mat, version, test){
+    if(version<7) return;
+    const bits=getBCHTypeNumber(version);
+    for(let i=0;i<18;i++){
+      const mod=(!test && ((bits>>i)&1)===1);
+      mat.modules[Math.floor(i/3)][i%3+mat.count-8-3]=mod;
+      mat.modules[i%3+mat.count-8-3][Math.floor(i/3)]=mod;
+    }
+  }
+  const EC_INDEX={L:1,M:0,Q:3,H:2};
+  function setupTypeInfo(mat, ecLevel, maskPattern, test){
+    const data=(EC_INDEX[ecLevel]<<3)|maskPattern;
+    const bits=getBCHTypeInfo(data);
+    for(let i=0;i<15;i++){
+      const mod=(!test && ((bits>>i)&1)===1);
+      if(i<6) mat.modules[i][8]=mod;
+      else if(i<8) mat.modules[i+1][8]=mod;
+      else mat.modules[mat.count-15+i][8]=mod;
+    }
+    for(let i=0;i<15;i++){
+      const mod=(!test && ((bits>>i)&1)===1);
+      if(i<8) mat.modules[8][mat.count-i-1]=mod;
+      else if(i<9) mat.modules[8][15-i-1+1]=mod;
+      else mat.modules[8][15-i-1]=mod;
+    }
+    mat.modules[mat.count-8][8]=!test;
+  }
+  function maskFunc(pattern,r,c){
+    switch(pattern){
+      case 0: return (r+c)%2===0;
+      case 1: return r%2===0;
+      case 2: return c%3===0;
+      case 3: return (r+c)%3===0;
+      case 4: return (Math.floor(r/2)+Math.floor(c/3))%2===0;
+      case 5: return (r*c)%2+(r*c)%3===0;
+      case 6: return ((r*c)%2+(r*c)%3)%2===0;
+      case 7: return ((r*c)%3+(r+c)%2)%2===0;
+    }
+  }
+  function mapData(mat, data, maskPattern){
+    let inc=-1, row=mat.count-1, bitIndex=7, byteIndex=0;
+    for(let col=mat.count-1; col>0; col-=2){
+      if(col===6) col--;
+      while(true){
+        for(let c=0;c<2;c++){
+          if(mat.modules[row][col-c]===null){
+            let dark=false;
+            if(byteIndex<data.length) dark=(((data[byteIndex]>>>bitIndex)&1)===1);
+            const mask=maskFunc(maskPattern,row,col-c);
+            if(mask) dark=!dark;
+            mat.modules[row][col-c]=dark;
+            bitIndex--;
+            if(bitIndex===-1){ byteIndex++; bitIndex=7; }
+          }
+        }
+        row+=inc;
+        if(row<0||mat.count<=row){ row-=inc; inc=-inc; break; }
+      }
+    }
+  }
+  function lostPoint(mat){
+    const n=mat.count; let lost=0;
+    for(let r=0;r<n;r++) for(let c=0;c<n;c++){
+      let sameCount=0; const dark=mat.modules[r][c];
+      for(let rr=-1;rr<=1;rr++) for(let cc=-1;cc<=1;cc++){
+        if(rr===0&&cc===0) continue;
+        const rrr=r+rr, ccc=c+cc;
+        if(rrr<0||n<=rrr||ccc<0||n<=ccc) continue;
+        if(mat.modules[rrr][ccc]===dark) sameCount++;
+      }
+      if(sameCount>5) lost+=(3+sameCount-5);
+    }
+    for(let r=0;r<n-1;r++) for(let c=0;c<n-1;c++){
+      let count=0;
+      [[0,0],[0,1],[1,0],[1,1]].forEach(([dr,dc])=>{ if(mat.modules[r+dr][c+dc]) count++; });
+      if(count===0||count===4) lost+=3;
+    }
+    for(let r=0;r<n;r++) for(let c=0;c<n-6;c++){
+      if(mat.modules[r][c]&&!mat.modules[r][c+1]&&mat.modules[r][c+2]&&mat.modules[r][c+3]&&mat.modules[r][c+4]&&!mat.modules[r][c+5]&&mat.modules[r][c+6]) lost+=40;
+    }
+    for(let c=0;c<n;c++) for(let r=0;r<n-6;r++){
+      if(mat.modules[r][c]&&!mat.modules[r+1][c]&&mat.modules[r+2][c]&&mat.modules[r+3][c]&&mat.modules[r+4][c]&&!mat.modules[r+5][c]&&mat.modules[r+6][c]) lost+=40;
+    }
+    let darkCount=0; for(let r=0;r<n;r++) for(let c=0;c<n;c++) if(mat.modules[r][c]) darkCount++;
+    lost += Math.abs(100*darkCount/(n*n)-50)/5*10;
+    return lost;
+  }
+
+  function generate(text, ecLevel){
+    ecLevel = ecLevel || 'M';
+    const picked = pickVersion(text, ecLevel);
+    if(!picked) return null;
+    const version=picked.version, data=picked.data;
+    const moduleCount=version*4+17;
+    const mat=new Matrix(moduleCount);
+    setupPositionProbePattern(mat,0,0);
+    setupPositionProbePattern(mat,moduleCount-7,0);
+    setupPositionProbePattern(mat,0,moduleCount-7);
+    setupPositionAdjustPattern(mat,version);
+    setupTimingPattern(mat);
+    setupTypeNumber(mat,version,false);
+    let best=null, bestLost=Infinity;
+    for(let mp=0; mp<8; mp++){
+      const test=new Matrix(moduleCount);
+      test.modules = mat.modules.map(row=>row.slice());
+      setupTypeInfo(test, ecLevel, mp, false);
+      mapData(test, data, mp);
+      const lost=lostPoint(test);
+      if(lost<bestLost){ bestLost=lost; best=test; }
+    }
+    return best;
+  }
+
+  return { generate };
+})();
+
+function renderQrSvg(text, size){
+  size = size || 180;
+  try {
+    const mat = QR.generate(text, 'M');
+    if (!mat) return '<div style="color:#93a1b0;font-size:0.7rem;">QR no disponible</div>';
+    const n = mat.count;
+    const quiet = 4; // modules of quiet zone required by spec, each side
+    const totalModules = n + quiet*2;
+    const cell = size / totalModules;
+    // Build one path per row using rects merged into horizontal runs (crisp edges, no seams)
+    let pathD = '';
+    for (let r = 0; r < n; r++) {
+      let c = 0;
+      while (c < n) {
+        if (mat.modules[r][c]) {
+          let runStart = c;
+          while (c < n && mat.modules[r][c]) c++;
+          const runLen = c - runStart;
+          const x = (quiet + runStart) * cell;
+          const y = (quiet + r) * cell;
+          const w = runLen * cell;
+          const h = cell;
+          pathD += `M${x.toFixed(3)},${y.toFixed(3)}h${w.toFixed(3)}v${h.toFixed(3)}h${(-w).toFixed(3)}z`;
+        } else {
+          c++;
+        }
+      }
+    }
+    return `<svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" shape-rendering="crispEdges" style="background:#fff;border-radius:8px;display:block;" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0" width="${size}" height="${size}" fill="#fff"/><path d="${pathD}" fill="#000"/></svg>`;
+  } catch(e) {
+    console.error('QR generation failed', e);
+    return '<div style="color:#93a1b0;font-size:0.7rem;">QR no disponible</div>';
+  }
+}
+</script>
+
+<script>
+/* ============ BACKEND API (Google Apps Script + Sheets) ============ */
+const API_URL = "https://script.google.com/macros/s/AKfycbxTgwhbBLEeU3pgjrKy9L3zu8WJUNTqE7LbEOek83wrwdTMYqkagzR4lN0zyKmUIME/exec";
+const DEFAULT_PIN = "0909";
+const DEFAULT_DRIVERS = ["R1 Jhon","R2 Sebas","R3 Maxi","R4 Ruben","R5 Leo"];
+
+function pad4(v) {
+  if (v === null || v === undefined || v === '') return '';
+  return String(v).padStart(4, '0');
+}
+
+async function apiGet() {
+  try {
+    const res = await fetch(API_URL + '?action=getAll');
+    const data = await res.json();
+    // normalize numeric-string fields Sheets may have coerced to numbers
+    (data.vehicles || []).forEach(v => { v.cardLast4 = pad4(v.cardLast4); });
+    (data.refuels || []).forEach(r => { r.cardLast4Used = pad4(r.cardLast4Used); });
+    if (data.settings) data.settings.pin = pad4(data.settings.pin) || DEFAULT_PIN;
+    return data;
+  } catch(e) {
+    console.error('apiGet failed', e);
+    return { vehicles: [], drivers: DEFAULT_DRIVERS, refuels: [], settings: { pin: DEFAULT_PIN } };
+  }
+}
+
+async function apiPost(action, payload) {
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(Object.assign({ action }, payload))
+    });
+    return await res.json();
+  } catch(e) {
+    console.error('apiPost failed', action, e);
+    return { ok: false, error: String(e) };
+  }
+}
+
+let cachedData = null;
+async function fetchAll(force) {
+  if (!cachedData || force) cachedData = await apiGet();
+  return cachedData;
+}
+
+async function getVehicles() { return (await fetchAll()).vehicles; }
+async function getDrivers() { const d = (await fetchAll()).drivers; return (d && d.length) ? d : DEFAULT_DRIVERS; }
+async function getPin() { return (await fetchAll()).settings.pin || DEFAULT_PIN; }
+async function getAllRefuels() {
+  const refuels = (await fetchAll()).refuels.slice();
+  refuels.sort((a,b) => new Date(b.dateTime) - new Date(a.dateTime));
+  return refuels;
+}
+
+function fmtDate(iso) {
+  const d = new Date(iso);
+  return d.toLocaleDateString('ca-ES', {day:'2-digit',month:'2-digit',year:'2-digit'}) + ' ' + d.toLocaleTimeString('ca-ES',{hour:'2-digit',minute:'2-digit'});
+}
+function euro(n) { return (Math.round(n*100)/100).toFixed(2) + ' €'; }
+
+/* ============ ROUTER / STATE ============ */
+let state = { screen: 'home', driverForm: {} };
+const app = document.getElementById('app');
+const urlParams = new URLSearchParams(location.search);
+const preselectVehicle = urlParams.get('vehicle');
+const goAdmin = urlParams.get('admin') === '1';
+
+function render() {
+  app.innerHTML = '';
+  const stripe = document.createElement('div');
+  stripe.className = 'gauge-stripe';
+  app.appendChild(stripe);
+
+  const header = document.createElement('header');
+  header.className = 'topbar';
+  header.innerHTML = `
+    <div class="brand">
+      <span class="brand-mark">⛽ Control Flota</span>
+    </div>
+    <div class="brand-sub">Recollit i Entregat</div>
+  `;
+  app.appendChild(header);
+
+  const main = document.createElement('main');
+  main.id = 'main';
+  app.appendChild(main);
+
+  const routes = {
+    home: renderHome,
+    pickDriver: renderPickDriver,
+    pickVehicle: renderPickVehicle,
+    fuelForm: renderFuelForm,
+    confirm: renderConfirm,
+    adminPin: renderAdminPin,
+    admin: renderAdmin,
+  };
+  (routes[state.screen] || renderHome)(main);
+}
+
+function go(screen) { state.screen = screen; render(); window.scrollTo(0,0); }
+
+/* ============ HOME ============ */
+function renderHome(main) {
+  main.innerHTML = `
+    <div class="step-eyebrow">Registre de repostatge</div>
+    <h1 class="screen-title">Bon dia. Qui reposta avui?</h1>
+    <p class="screen-sub">Omple les dades del repostatge abans de continuar. Triga menys d'un minut.</p>
+    <div class="big-choice-grid" id="driverGoBtn"></div>
+    <footer class="foot-link"><button class="link-btn" id="adminLink">Accés d'administració</button></footer>
+  `;
+  const box = main.querySelector('#driverGoBtn');
+  const btn = document.createElement('button');
+  btn.className = 'big-choice';
+  btn.innerHTML = `<div><div>Registrar repostatge</div><div class="meta">Selecciona el teu nom per començar</div></div><span class="chev">→</span>`;
+  btn.onclick = () => go('pickDriver');
+  box.appendChild(btn);
+  main.querySelector('#adminLink').onclick = () => go('adminPin');
+}
+
+/* ============ PICK DRIVER ============ */
+async function renderPickDriver(main) {
+  const drivers = await getDrivers();
+  let vehicle = null;
+  if (state.lockedVehicle) {
+    const vehicles = await getVehicles();
+    vehicle = vehicles.find(v => v.id === state.driverForm.vehicleId);
+  }
+  main.innerHTML = `
+    ${state.lockedVehicle ? '' : '<button class="back-link" id="back">← Enrere</button>'}
+    <div class="step-eyebrow">${state.lockedVehicle ? 'Pas 1 de 2' : 'Pas 1 de 3'}</div>
+    ${vehicle ? `<div class="banner ok"><span class="icon">🚐</span><div><strong>${vehicle.plate}</strong>${vehicle.label ? ' · '+vehicle.label : ''} — targeta habitual ····${vehicle.cardLast4}</div></div>` : ''}
+    <h1 class="screen-title">Qui condueix avui?</h1>
+    <p class="screen-sub">Selecciona el teu nom per continuar.</p>
+    <div class="big-choice-grid" id="list"></div>
+    ${state.lockedVehicle ? '<footer class="foot-link"><button class="link-btn" id="notMe">Aquest no és el vehicle que porto avui</button></footer>' : ''}
+  `;
+  if (!state.lockedVehicle) main.querySelector('#back').onclick = () => go('home');
+  else main.querySelector('#notMe').onclick = () => { state.lockedVehicle=false; state.driverForm={}; go('home'); };
+  const list = main.querySelector('#list');
+  drivers.forEach(d => {
+    const b = document.createElement('button');
+    b.className = 'big-choice';
+    b.innerHTML = `<div>${d}</div><span class="chev">→</span>`;
+    b.onclick = () => { state.driverForm.driver = d; go(state.lockedVehicle ? 'fuelForm' : 'pickVehicle'); };
+    list.appendChild(b);
+  });
+}
+
+/* ============ PICK VEHICLE (manual flow only) ============ */
+async function renderPickVehicle(main) {
+  const vehicles = await getVehicles();
+  main.innerHTML = `
+    <button class="back-link" id="back">← Enrere</button>
+    <div class="step-eyebrow">Pas 2 de 3</div>
+    <h1 class="screen-title">Quin vehicle reposta?</h1>
+    <p class="screen-sub">${state.driverForm.driver}, selecciona el vehicle.</p>
+    <div class="big-choice-grid" id="list"></div>
+  `;
+  main.querySelector('#back').onclick = () => go('pickDriver');
+  const list = main.querySelector('#list');
+  if (vehicles.length === 0) {
+    list.innerHTML = `<div class="banner warn"><span class="icon">⚠️</span><div>Encara no hi ha cap vehicle donat d'alta. Demana a l'administrador que n'afegeixi des de la pestanya Vehicles.</div></div>`;
+    return;
+  }
+  vehicles.forEach(v => {
+    const b = document.createElement('button');
+    b.className = 'big-choice';
+    b.innerHTML = `<div><div>${v.plate}</div><div class="meta">Targeta habitual ····${v.cardLast4}${v.label ? ' · '+v.label : ''}</div></div><span class="chev">→</span>`;
+    b.onclick = () => { state.driverForm.vehicleId = v.id; go('fuelForm'); };
+    list.appendChild(b);
+  });
+}
+
+/* ============ FUEL FORM ============ */
+async function renderFuelForm(main) {
+  const vehicles = await getVehicles();
+  const vehicle = vehicles.find(v => v.id === state.driverForm.vehicleId);
+  if (!vehicle) { go('pickVehicle'); return; }
+  const allRefuels = await getAllRefuels();
+  const vehicleRefuels = allRefuels.filter(r => r.vehicleId === vehicle.id);
+  const lastRefuel = vehicleRefuels[0];
+
+  main.innerHTML = `
+    <button class="back-link" id="back">← Enrere</button>
+    <div class="step-eyebrow">${state.lockedVehicle ? 'Pas 2 de 2' : 'Pas 3 de 3'}</div>
+    <h1 class="screen-title">${vehicle.plate}</h1>
+    <p class="screen-sub">${state.driverForm.driver} · targeta habitual d'aquest vehicle: ····${vehicle.cardLast4}</p>
+
+    <div class="field">
+      <label>Últims 4 dígits de la targeta que has fet servir</label>
+      <input type="text" inputmode="numeric" maxlength="4" id="cardLast4" placeholder="0000" />
+    </div>
+    <div id="mismatchBanner"></div>
+    <div id="mismatchCheck"></div>
+
+    <div class="field">
+      <label>Litres repostats</label>
+      <div class="unit-input"><input type="number" step="0.01" min="0" id="liters" placeholder="0.00" /><span>L</span></div>
+    </div>
+
+    <div class="field">
+      <label>Import total pagat</label>
+      <div class="unit-input"><input type="number" step="0.01" min="0" id="cost" placeholder="0.00" /><span>€</span></div>
+    </div>
+
+    <div class="field">
+      <label>Quilometratge actual del comptador</label>
+      <div class="unit-input"><input type="number" step="1" min="0" id="odometer" placeholder="0" /><span>km</span></div>
+      <div class="hint">${lastRefuel ? 'Últim registrat: ' + Number(lastRefuel.odometerKm).toLocaleString('ca-ES') + ' km (' + fmtDate(lastRefuel.dateTime) + ')' : 'Encara no hi ha cap registre previ per aquest vehicle.'}</div>
+    </div>
+    <div id="odoBanner"></div>
+
+    <div class="field">
+      <label>Observacions (opcional)</label>
+      <textarea id="notes" rows="2" placeholder="Alguna incidència a comentar..."></textarea>
+    </div>
+
+    <button class="btn-primary" id="submitBtn" disabled>Registrar repostatge</button>
+  `;
+
+  main.querySelector('#back').onclick = () => go(state.lockedVehicle ? 'pickDriver' : 'pickVehicle');
+
+  const cardInput = main.querySelector('#cardLast4');
+  const litersInput = main.querySelector('#liters');
+  const costInput = main.querySelector('#cost');
+  const odoInput = main.querySelector('#odometer');
+  const mismatchBanner = main.querySelector('#mismatchBanner');
+  const mismatchCheck = main.querySelector('#mismatchCheck');
+  const odoBanner = main.querySelector('#odoBanner');
+  const submitBtn = main.querySelector('#submitBtn');
+
+  let mismatchConfirmed = false;
+  let odoBlocking = false;
+
+  function checkMismatch() {
+    const val = cardInput.value.trim();
+    if (val.length === 4 && val !== vehicle.cardLast4) {
+      mismatchBanner.innerHTML = `<div class="banner error"><span class="icon">🚨</span><div><strong>Aquesta targeta no és la que correspon a ${vehicle.plate}.</strong> La targeta habitual d'aquest vehicle acaba en ····${vehicle.cardLast4}. Si és correcte que has fet servir una altra targeta, marca la casella de sota per continuar — quedarà registrat per a revisió.</div></div>`;
+      mismatchCheck.innerHTML = `<div class="checkbox-row"><input type="checkbox" id="confirmMismatch" /><label for="confirmMismatch">Confirmo que he fet servir la targeta ····${val} per a aquest vehicle, i no és un error.</label></div>`;
+      mismatchCheck.querySelector('#confirmMismatch').onchange = (e) => { mismatchConfirmed = e.target.checked; validate(); };
+      mismatchConfirmed = false;
+    } else {
+      mismatchBanner.innerHTML = '';
+      mismatchCheck.innerHTML = '';
+      mismatchConfirmed = true;
+    }
+    validate();
+  }
+
+  function checkOdo() {
+    const val = parseFloat(odoInput.value);
+    if (lastRefuel && !isNaN(val) && val < Number(lastRefuel.odometerKm)) {
+      odoBanner.innerHTML = `<div class="banner error"><span class="icon">⚠️</span><div>Aquest quilometratge és inferior a l'últim registrat (${Number(lastRefuel.odometerKm).toLocaleString('ca-ES')} km). Revisa el número abans de continuar.</div></div>`;
+      odoBlocking = true;
+    } else {
+      odoBanner.innerHTML = '';
+      odoBlocking = false;
+    }
+    validate();
+  }
+
+  function validate() {
+    const cardOk = cardInput.value.trim().length === 4;
+    const litersOk = parseFloat(litersInput.value) > 0;
+    const costOk = parseFloat(costInput.value) > 0;
+    const odoOk = odoInput.value !== '' && parseFloat(odoInput.value) >= 0 && !odoBlocking;
+    submitBtn.disabled = !(cardOk && litersOk && costOk && odoOk && mismatchConfirmed);
+  }
+
+  cardInput.addEventListener('input', () => { cardInput.value = cardInput.value.replace(/\D/g,'').slice(0,4); checkMismatch(); });
+  litersInput.addEventListener('input', validate);
+  costInput.addEventListener('input', validate);
+  odoInput.addEventListener('input', checkOdo);
+
+  submitBtn.onclick = async () => {
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Desant...';
+    const cardVal = cardInput.value.trim();
+    const litersVal = parseFloat(litersInput.value);
+    const costVal = parseFloat(costInput.value);
+    const odoVal = parseFloat(odoInput.value);
+    const isMismatch = cardVal !== vehicle.cardLast4;
+
+    let consumption = null;
+    let anomaly = false;
+    if (lastRefuel) {
+      const kmDiff = odoVal - Number(lastRefuel.odometerKm);
+      if (kmDiff > 0) {
+        consumption = (litersVal / kmDiff) * 100;
+        const priorConsumptions = vehicleRefuels.filter(r => r.consumptionL100km).map(r => r.consumptionL100km);
+        if (priorConsumptions.length >= 2) {
+          const avg = priorConsumptions.reduce((a,b)=>a+b,0) / priorConsumptions.length;
+          if (Math.abs(consumption - avg) / avg > 0.25) anomaly = true;
+        }
+      }
+    }
+
+    const record = {
+      vehicleId: vehicle.id,
+      vehiclePlate: vehicle.plate,
+      driver: state.driverForm.driver,
+      cardLast4Used: cardVal,
+      cardMismatch: isMismatch,
+      liters: litersVal,
+      cost: costVal,
+      odometerKm: odoVal,
+      dateTime: new Date().toISOString(),
+      notes: main.querySelector('#notes').value.trim(),
+      consumptionL100km: consumption,
+      anomaly: anomaly,
+    };
+    await apiPost('addRefuel', record);
+    await fetchAll(true);
+    state.lastRecord = record;
+    go('confirm');
+  };
+
+  validate();
+}
+
+/* ============ CONFIRM ============ */
+function renderConfirm(main) {
+  const r = state.lastRecord;
+  main.innerHTML = `
+    <div class="confirm-wrap">
+      <div class="confirm-icon">✅</div>
+      <h1 class="screen-title">Registrat correctament</h1>
+      <p class="screen-sub">${r.vehiclePlate} · ${r.driver}</p>
+      <div class="confirm-stats">
+        <div class="stat-chip"><div class="v">${r.liters.toFixed(2)} L</div><div class="l">Litres</div></div>
+        <div class="stat-chip"><div class="v">${euro(r.cost)}</div><div class="l">Import</div></div>
+        ${r.consumptionL100km ? `<div class="stat-chip"><div class="v">${r.consumptionL100km.toFixed(1)}</div><div class="l">L/100km</div></div>` : ''}
+      </div>
+      ${r.cardMismatch ? `<div class="banner warn" style="text-align:left"><span class="icon">🚩</span><div>Registrat amb una targeta diferent de l'habitual. Queda marcat per a l'administrador.</div></div>` : ''}
+      ${r.anomaly ? `<div class="banner warn" style="text-align:left"><span class="icon">📊</span><div>El consum d'aquest dipòsit s'allunya del que és habitual per aquest vehicle. També queda marcat per revisar-ho.</div></div>` : ''}
+      <button class="btn-primary" id="doneBtn">Fet</button>
+    </div>
+  `;
+  main.querySelector('#doneBtn').onclick = () => { state.driverForm = {}; state.lockedVehicle = false; go('home'); };
+}
+
+/* ============ ADMIN PIN ============ */
+function renderAdminPin(main) {
+  let entered = '';
+  main.innerHTML = `
+    <button class="back-link" id="back">← Enrere</button>
+    <h1 class="screen-title" style="text-align:center">Accés d'administració</h1>
+    <div class="pin-dots" id="dots"></div>
+    <div id="err" style="text-align:center;color:#f2a3a3;font-size:0.82rem;height:20px;margin-bottom:10px;"></div>
+    <div class="keypad" id="keypad"></div>
+  `;
+  main.querySelector('#back').onclick = () => go('home');
+  const dots = main.querySelector('#dots');
+  const err = main.querySelector('#err');
+  const keypad = main.querySelector('#keypad');
+
+  function renderDots() {
+    dots.innerHTML = '';
+    for (let i=0;i<4;i++) {
+      const d = document.createElement('div');
+      d.className = 'pin-dot' + (i < entered.length ? ' filled' : '');
+      dots.appendChild(d);
+    }
+  }
+  const keys = ['1','2','3','4','5','6','7','8','9','','0','⌫'];
+  keys.forEach(k => {
+    const b = document.createElement('button');
+    b.textContent = k;
+    if (!k) { b.style.visibility = 'hidden'; }
+    b.onclick = async () => {
+      if (k === '⌫') { entered = entered.slice(0,-1); }
+      else if (k && entered.length < 4) { entered += k; }
+      renderDots();
+      if (entered.length === 4) {
+        const pin = await getPin();
+        if (entered === pin) { go('admin'); }
+        else { err.textContent = 'PIN incorrecte'; entered=''; setTimeout(renderDots,150); }
+      }
+    };
+    keypad.appendChild(b);
+  });
+  renderDots();
+}
+
+/* ============ ADMIN DASHBOARD ============ */
+let adminTab = 'refuels';
+async function renderAdmin(main) {
+  main.className = 'admin-shell';
+  main.innerHTML = `
+    <button class="back-link" id="back">← Sortir</button>
+    <h1 class="screen-title">Administració</h1>
+    <div class="tabs" id="tabs">
+      <button class="tab" data-t="refuels">Repostatges</button>
+      <button class="tab" data-t="vehicles">Vehicles</button>
+      <button class="tab" data-t="summary">Resum</button>
+      <button class="tab" data-t="drivers">Conductors</button>
+      <button class="tab" data-t="settings">Configuració</button>
+    </div>
+    <div id="tabBody"></div>
+  `;
+  main.querySelector('#back').onclick = () => go('home');
+  main.querySelectorAll('.tab').forEach(t => {
+    if (t.dataset.t === adminTab) t.classList.add('active');
+    t.onclick = () => { adminTab = t.dataset.t; renderAdmin(document.getElementById('main')); };
+  });
+  const body = main.querySelector('#tabBody');
+  if (adminTab === 'refuels') await renderRefuelsTab(body);
+  else if (adminTab === 'vehicles') await renderVehiclesTab(body);
+  else if (adminTab === 'summary') await renderSummaryTab(body);
+  else if (adminTab === 'drivers') await renderDriversTab(body);
+  else if (adminTab === 'settings') await renderSettingsTab(body);
+}
+
+async function renderRefuelsTab(body) {
+  const refuels = await getAllRefuels();
+  const vehicles = await getVehicles();
+  body.innerHTML = `
+    <div class="toolbar">
+      <select id="fVehicle"><option value="">Tots els vehicles</option>${vehicles.map(v=>`<option value="${v.id}">${v.plate}</option>`).join('')}</select>
+      <button class="btn-sm" id="exportBtn">⬇ Exporta CSV</button>
+      <button class="btn-sm" id="refreshBtn">↻ Actualitza</button>
+    </div>
+    <div class="table-scroll"><div id="tableWrap"></div></div>
+  `;
+  function draw() {
+    const filterV = body.querySelector('#fVehicle').value;
+    const rows = refuels.filter(r => !filterV || r.vehicleId === filterV);
+    const wrap = body.querySelector('#tableWrap');
+    if (rows.length === 0) {
+      wrap.innerHTML = `<div class="empty-state"><div class="big">⛽</div>Encara no hi ha cap repostatge registrat.</div>`;
+      return;
+    }
+    wrap.innerHTML = `<table class="data-table">
+      <thead><tr><th>Data</th><th>Vehicle</th><th>Conductor</th><th>Targeta</th><th>Litres</th><th>Import</th><th>Km</th><th>L/100km</th><th></th></tr></thead>
+      <tbody>${rows.map(r => `
+        <tr class="${r.cardMismatch ? 'flag-mismatch' : ''} ${r.anomaly ? 'flag-anomaly' : ''}">
+          <td>${fmtDate(r.dateTime)}</td>
+          <td>${r.vehiclePlate}</td>
+          <td>${r.driver}</td>
+          <td>····${r.cardLast4Used}</td>
+          <td>${r.liters.toFixed(2)}</td>
+          <td>${euro(r.cost)}</td>
+          <td>${Number(r.odometerKm).toLocaleString('ca-ES')}</td>
+          <td>${r.consumptionL100km ? r.consumptionL100km.toFixed(1) : '—'}</td>
+          <td>${r.cardMismatch ? '<span class="tag mismatch">targeta</span>' : ''}${r.anomaly ? '<span class="tag anomaly">consum</span>' : ''}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>`;
+  }
+  body.querySelector('#fVehicle').onchange = draw;
+  body.querySelector('#refreshBtn').onclick = async () => { await fetchAll(true); await renderAdmin(document.getElementById('main')); };
+  body.querySelector('#exportBtn').onclick = () => {
+    const filterV = body.querySelector('#fVehicle').value;
+    const rows = refuels.filter(r => !filterV || r.vehicleId === filterV);
+    let csv = 'Data,Vehicle,Conductor,Targeta,Litres,Import,Km,L100km,TargetaIncorrecta,ConsumAnomal,Notes\n';
+    rows.forEach(r => {
+      csv += `"${fmtDate(r.dateTime)}","${r.vehiclePlate}","${r.driver}","${r.cardLast4Used}",${r.liters},${r.cost},${r.odometerKm},"${r.consumptionL100km?r.consumptionL100km.toFixed(1):''}","${r.cardMismatch?'SI':'NO'}","${r.anomaly?'SI':'NO'}","${(r.notes||'').replace(/"/g,"'")}"\n`;
+    });
+    const blob = new Blob([csv], {type:'text/csv'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'repostatges.csv';
+    a.click();
+  };
+  draw();
+}
+
+function renderQrOrFallback(url, size) {
+  if (!url) return '<div class="qr-missing">URL no disponible</div>';
+  return renderQrSvg(url, size);
+}
+
+function showQrModal(plate, url) {
+  const overlay = document.createElement('div');
+  overlay.className = 'qr-modal-overlay';
+  overlay.innerHTML = `
+    <div class="qr-modal">
+      <div class="qr-modal-plate">${plate}</div>
+      <div class="qr-modal-hint">Escaneja abans de repostar</div>
+      <div class="qr-modal-big">${renderQrSvg(url, 280)}</div>
+      <div class="qr-modal-hint2">Fes una captura d'aquest requadre (o prem Ctrl+P / Cmd+P per imprimir) i enganxa-la al vehicle.</div>
+      <button class="btn-primary" id="qrModalClose" style="max-width:220px;margin:20px auto 0;">Tanca</button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  overlay.querySelector('#qrModalClose').onclick = () => overlay.remove();
+  overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
+}
+
+async function renderVehiclesTab(body) {
+  const vehicles = await getVehicles();
+  const baseUrl = (location.origin + location.pathname).replace(/\/?$/, '');
+  body.innerHTML = `
+    <div class="add-form">
+      <div class="add-form-grid">
+        <input id="nPlate" placeholder="Matrícula" />
+        <input id="nCard" placeholder="Últims 4 dígits targeta" maxlength="4" inputmode="numeric" />
+        <input id="nLabel" placeholder="Etiqueta (opcional, ex: furgo R1)" />
+      </div>
+      <button class="btn-sm" id="addVehicle">+ Afegeix vehicle</button>
+    </div>
+    <div id="vList"></div>
+  `;
+  const vList = body.querySelector('#vList');
+  function draw() {
+    if (vehicles.length === 0) { vList.innerHTML = `<div class="empty-state"><div class="big">🚐</div>Encara no hi ha vehicles donats d'alta.</div>`; return; }
+    vList.innerHTML = vehicles.map(v => {
+      const directUrl = baseUrl + '/?vehicle=' + v.id;
+      return `
+      <div class="vehicle-card">
+        <div class="row1"><span class="plate">${v.plate}</span><button class="del" data-id="${v.id}">Elimina</button></div>
+        <div class="meta-row"><span>Targeta ····${v.cardLast4}</span>${v.label ? `<span>${v.label}</span>` : ''}</div>
+        <div class="qr-row">
+          <div class="qr-thumb-wrap">${renderQrOrFallback(directUrl, 96)}</div>
+          <div class="qr-actions">
+            <div class="qr-url-box" title="${directUrl}">${directUrl}</div>
+            <button class="btn-sm qr-print" data-id="${v.id}">🔍 Mostra etiqueta gran (per imprimir)</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+    vList.querySelectorAll('.del').forEach(btn => {
+      btn.onclick = async () => {
+        const v = vehicles.find(v => v.id === btn.dataset.id);
+        if (v && confirm('Segur que vols eliminar aquest vehicle?')) {
+          await apiPost('deleteVehicle', { id: v.id });
+          await fetchAll(true);
+          await renderVehiclesTab(body);
+        }
+      };
+    });
+    vList.querySelectorAll('.qr-print').forEach(btn => {
+      btn.onclick = () => {
+        const v = vehicles.find(v => v.id === btn.dataset.id);
+        showQrModal(v.plate, baseUrl + '/?vehicle=' + v.id);
+      };
+    });
+  }
+  body.querySelector('#addVehicle').onclick = async () => {
+    const plate = body.querySelector('#nPlate').value.trim();
+    const card = body.querySelector('#nCard').value.trim();
+    const label = body.querySelector('#nLabel').value.trim();
+    if (!plate || card.length !== 4) { alert('Cal matrícula i 4 dígits de targeta.'); return; }
+    await apiPost('addVehicle', { plate, cardLast4: card, label });
+    await fetchAll(true);
+    await renderVehiclesTab(body);
+  };
+  draw();
+}
+
+async function renderSummaryTab(body) {
+  const refuels = await getAllRefuels();
+  const vehicles = await getVehicles();
+  const totalLiters = refuels.reduce((a,r)=>a+r.liters,0);
+  const totalCost = refuels.reduce((a,r)=>a+r.cost,0);
+  const mismatches = refuels.filter(r=>r.cardMismatch).length;
+  const anomalies = refuels.filter(r=>r.anomaly).length;
+
+  body.innerHTML = `
+    <div class="summary-grid">
+      <div class="summary-card"><div class="n">${refuels.length}</div><div class="l">Repostatges totals</div></div>
+      <div class="summary-card"><div class="n">${totalLiters.toFixed(0)} L</div><div class="l">Litres totals</div></div>
+      <div class="summary-card"><div class="n">${euro(totalCost)}</div><div class="l">Despesa total</div></div>
+      <div class="summary-card" style="${mismatches>0?'border-color:var(--red)':''}"><div class="n" style="${mismatches>0?'color:var(--red)':''}">${mismatches}</div><div class="l">Targetes incorrectes</div></div>
+      <div class="summary-card" style="${anomalies>0?'border-color:var(--amber)':''}"><div class="n" style="${anomalies>0?'color:var(--amber)':''}">${anomalies}</div><div class="l">Consums anòmals</div></div>
+    </div>
+    <h2 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:12px;">Per vehicle</h2>
+    <div class="table-scroll"><div id="perVehicle"></div></div>
+  `;
+  const perVehicleWrap = body.querySelector('#perVehicle');
+  if (vehicles.length === 0) { perVehicleWrap.innerHTML = `<div class="empty-state">Sense vehicles donats d'alta.</div>`; return; }
+  const rows = vehicles.map(v => {
+    const vr = refuels.filter(r=>r.vehicleId===v.id);
+    const liters = vr.reduce((a,r)=>a+r.liters,0);
+    const cost = vr.reduce((a,r)=>a+r.cost,0);
+    const consumptions = vr.filter(r=>r.consumptionL100km).map(r=>r.consumptionL100km);
+    const avgCons = consumptions.length ? consumptions.reduce((a,b)=>a+b,0)/consumptions.length : null;
+    const vMismatches = vr.filter(r=>r.cardMismatch).length;
+    return `<tr class="${vMismatches>0?'flag-mismatch':''}">
+      <td>${v.plate}</td><td>${vr.length}</td><td>${liters.toFixed(1)} L</td><td>${euro(cost)}</td>
+      <td>${avgCons ? avgCons.toFixed(1)+' L/100km' : '—'}</td>
+      <td>${vMismatches>0 ? '<span class="tag mismatch">'+vMismatches+'</span>' : '—'}</td>
+    </tr>`;
+  }).join('');
+  perVehicleWrap.innerHTML = `<table class="data-table">
+    <thead><tr><th>Vehicle</th><th>Repostatges</th><th>Litres</th><th>Despesa</th><th>Consum mitjà</th><th>Targetes err.</th></tr></thead>
+    <tbody>${rows}</tbody></table>`;
+}
+
+async function renderDriversTab(body) {
+  const drivers = await getDrivers();
+  body.innerHTML = `
+    <div class="add-form">
+      <div class="add-form-grid"><input id="nDriver" placeholder="Nom del conductor" /></div>
+      <button class="btn-sm" id="addDriver">+ Afegeix conductor</button>
+    </div>
+    <div id="dList"></div>
+  `;
+  const dList = body.querySelector('#dList');
+  function draw() {
+    dList.innerHTML = drivers.map((d) => `
+      <div class="vehicle-card"><div class="row1"><span class="plate">${d}</span><button class="del" data-name="${d}">Elimina</button></div></div>
+    `).join('');
+    dList.querySelectorAll('.del').forEach(btn => {
+      btn.onclick = async () => {
+        await apiPost('deleteDriver', { name: btn.dataset.name });
+        await fetchAll(true);
+        await renderDriversTab(body);
+      };
+    });
+  }
+  body.querySelector('#addDriver').onclick = async () => {
+    const val = body.querySelector('#nDriver').value.trim();
+    if (!val) return;
+    await apiPost('addDriver', { name: val });
+    await fetchAll(true);
+    await renderDriversTab(body);
+  };
+  draw();
+}
+
+async function renderSettingsTab(body) {
+  body.innerHTML = `
+    <div class="add-form">
+      <label style="display:block;font-size:0.82rem;color:var(--muted);margin-bottom:8px;">Canviar el PIN d'administració (4 xifres)</label>
+      <div class="add-form-grid">
+        <input id="newPin" maxlength="4" inputmode="numeric" placeholder="Nou PIN" />
+      </div>
+      <button class="btn-sm" id="savePin">Desa el PIN</button>
+      <div id="pinMsg" style="margin-top:10px;font-size:0.82rem;color:var(--green);"></div>
+    </div>
+    <div class="banner warn"><span class="icon">ℹ️</span><div>Les dades es guarden en un Google Sheet propi (<a href="https://docs.google.com/spreadsheets/d/1Kpjy58wStyWl58v2WIACei7Iaji69DwtolAx3I41R6c/edit" target="_blank" style="color:var(--amber)">obre el full de càlcul</a>), no hi ha cap dependència de comptes de Claude ni de Google per part dels repartidors. No hi ha xifres de facturació reals connectades — és un registre manual per detectar incoherències entre targeta i vehicle, i consums fora de l'habitual.</div></div>
+  `;
+  body.querySelector('#savePin').onclick = async () => {
+    const val = body.querySelector('#newPin').value.trim();
+    if (val.length !== 4) { alert('El PIN ha de tenir 4 xifres.'); return; }
+    await apiPost('setPin', { pin: val });
+    await fetchAll(true);
+    body.querySelector('#pinMsg').textContent = 'PIN actualitzat correctament.';
+  };
+}
+
+/* ============ INIT ============ */
+(async function init() {
+  if (goAdmin) { state.screen = 'adminPin'; render(); return; }
+  if (preselectVehicle) {
+    const vehicles = await getVehicles();
+    const v = vehicles.find(v => v.id === preselectVehicle);
+    if (v) {
+      state.driverForm.vehicleId = v.id;
+      state.lockedVehicle = true;
+      state.screen = 'pickDriver';
+      render();
+      return;
+    }
+  }
+  render();
+})();
+</script>
+</body>
+</html>
