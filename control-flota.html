@@ -397,7 +397,7 @@ const QR = (function(){
     for(let r=8;r<mat.count-8;r++){ if(mat.modules[r][6]!==null) continue; mat.modules[r][6]=(r%2===0); }
     for(let c=8;c<mat.count-8;c++){ if(mat.modules[6][c]!==null) continue; mat.modules[6][c]=(c%2===0); }
   }
-  function getBCHDigit(data){ let d=0; while(data!==0){ d++; data>>==1; } return d; }
+  function getBCHDigit(data){ let d=0; while(data!==0){ d++; data>>>=1; } return d; }
   function getBCHTypeInfo(data){
     let d=data<<10;
     while(getBCHDigit(d)-getBCHDigit(G15)>=0) d^=(G15<<(getBCHDigit(d)-getBCHDigit(G15)));
