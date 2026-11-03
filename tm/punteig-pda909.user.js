@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Punteig PDA 909
 // @namespace    recollit-entregat-909
-// @version      1.5
-// @description  v1.5: Grapats (C/ Mont) sempre Blau. v1.4: zones Blau v4 (Jueus, Muralla, Pou, Estret, Hèrcules, Graell, Europa, Portal d'Andorra, Garriga i Massó, Mont, Roda, Partida Sant Ermengol, Poble Sec, Alt Pirineu, Baixos de Calbinyà). v1.3: Av. Valls d'Andorra sencera a Blau (18-20 continua REA). v1.2: correccions verd (Llorenç Tomàs i Costa 52-83, Comtat d'Urgell 57-59, Setúria, Circumval·lació 71-77 i 82). v1.1: tot Castellciutat va a Organyà (excepte el polígon). Punteig de llegada amb la PDA a Atlas (agencia 909): a cada lectura mostra la zona, la prioritat FPE, els Premium i els derivats a ParcelShop, amb veu i pitets. Carrega sol el llistat del dia des d'Atlas (Miraenvios), sense Excel. No modifica res del que fa Atlas.
+// @version      1.6
+// @description  v1.6: derivats al PS Recollit i Entregat = punt Blau. v1.5: Grapats (C/ Mont) sempre Blau. v1.4: zones Blau v4 (Jueus, Muralla, Pou, Estret, Hèrcules, Graell, Europa, Portal d'Andorra, Garriga i Massó, Mont, Roda, Partida Sant Ermengol, Poble Sec, Alt Pirineu, Baixos de Calbinyà). v1.3: Av. Valls d'Andorra sencera a Blau (18-20 continua REA). v1.2: correccions verd (Llorenç Tomàs i Costa 52-83, Comtat d'Urgell 57-59, Setúria, Circumval·lació 71-77 i 82). v1.1: tot Castellciutat va a Organyà (excepte el polígon). Punteig de llegada amb la PDA a Atlas (agencia 909): a cada lectura mostra la zona, la prioritat FPE, els Premium i els derivats a ParcelShop, amb veu i pitets. Carrega sol el llistat del dia des d'Atlas (Miraenvios), sense Excel. No modifica res del que fa Atlas.
 // @match        https://atlas.gls-spain.es/pick/*
 // @match        https://atlas.gls-spain.es/Pick/*
 // @grant        none
@@ -149,7 +149,7 @@ function zoneOf(addr,loc,cp,ps){
   const num=()=>{const a=ztoks(addr);for(const w of a)if(/^\d{1,4}$/.test(w))return +w;return null};
   const has=w=>at.has(w),n=num();
   if(/AGENCIA COLABORADORA/.test(P)||(has('LLETERIES')&&(has('NAU')||has('NAVE'))&&(/\b(NAU|NAVE)\s*6\b/.test(raw))))return {z:'REA',pt:'Lleteries nau 6'};
-  if(/RECOLLIT/.test(P))return {z:'PS RECOLLIT',pt:'ParcelShop Recollit i Entregat'};
+  if(/RECOLLIT/.test(P))return {z:'BLAU',pt:'PS Recollit i Entregat'};
   if(/B42877704|MADAHE|RAPIDAND/.test(raw)||(/^\s*(CALLE|CARRER|CL|C)\s*[\/.]?\s*E\b/.test(raw)&&/CASTELLCIUTAT|SEU|URGELL|MONTFERRER|^\s*$/.test(String(loc??'').toUpperCase()))||/MADAHE/.test(P)||(has('E')&&(has('POLIGON')||has('ZI')||has('SECTOR')||has('NAVE'))))return {z:'POLÍGON',pt:'Madahe / Rapidand'};
   const base=baseZone(addr,loc,cp);
   let pt='';

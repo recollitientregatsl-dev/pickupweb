@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Registre Punteig 909
 // @namespace    recollit-entregat-909
-// @version      2.3
-// @description  v2.3: Grapats (C/ Mont) sempre Blau. v2.2: zones Blau v4 (Jueus, Muralla, Pou, Estret, Hèrcules, Graell, Europa, Portal d'Andorra, Garriga i Massó, Mont, Roda, Partida Sant Ermengol, Poble Sec, Alt Pirineu, Baixos de Calbinyà). v2.1: Av. Valls d'Andorra sencera a Blau (18-20 continua REA). v2.0: correccions verd (Llorenç Tomàs i Costa 52-83, Comtat d'Urgell 57-59, Setúria, Circumval·lació 71-77 i 82). v1.9: tot Castellciutat va a Organyà (excepte el polígon). v1.8: Aravell va a Organyà (no Arcavell/La Farga); carrer E del polígon = Madahe encara que l'adreça vingui tallada. v1.7: el requadre s'ajusta a l'alçada de la pantalla (mida 3 amb text al 125%). v1.6: correccions del 03/11 (Sant Climent, Pg. Parc 49, Dr. Robert, Andorra REA, N-145 km 9 amb 'KM: 9'). v1.5: correccions de zona del 02/11 (Sostres, Codina, Lleteries, Costa Carreu, Tomàs i Costa, Cantacorbs, Pallerols, N-145 km 9, Seur). v1.4: zona proposada als que no són al llistat, zones de l'Escàner FPE, avís ParcelShop, codis internacionals i requadre més gran. Registre de totes les lectures del punteig d'Atlas (agencia 909): consultar errors, corregir zones i exportar. Completa les zones que el Punteig 909 no sap ubicar amb les regles de carrers noves. No modifica res del que fa Atlas.
+// @version      2.4
+// @description  v2.4: derivats al PS Recollit i Entregat = punt Blau. v2.3: Grapats (C/ Mont) sempre Blau. v2.2: zones Blau v4 (Jueus, Muralla, Pou, Estret, Hèrcules, Graell, Europa, Portal d'Andorra, Garriga i Massó, Mont, Roda, Partida Sant Ermengol, Poble Sec, Alt Pirineu, Baixos de Calbinyà). v2.1: Av. Valls d'Andorra sencera a Blau (18-20 continua REA). v2.0: correccions verd (Llorenç Tomàs i Costa 52-83, Comtat d'Urgell 57-59, Setúria, Circumval·lació 71-77 i 82). v1.9: tot Castellciutat va a Organyà (excepte el polígon). v1.8: Aravell va a Organyà (no Arcavell/La Farga); carrer E del polígon = Madahe encara que l'adreça vingui tallada. v1.7: el requadre s'ajusta a l'alçada de la pantalla (mida 3 amb text al 125%). v1.6: correccions del 03/11 (Sant Climent, Pg. Parc 49, Dr. Robert, Andorra REA, N-145 km 9 amb 'KM: 9'). v1.5: correccions de zona del 02/11 (Sostres, Codina, Lleteries, Costa Carreu, Tomàs i Costa, Cantacorbs, Pallerols, N-145 km 9, Seur). v1.4: zona proposada als que no són al llistat, zones de l'Escàner FPE, avís ParcelShop, codis internacionals i requadre més gran. Registre de totes les lectures del punteig d'Atlas (agencia 909): consultar errors, corregir zones i exportar. Completa les zones que el Punteig 909 no sap ubicar amb les regles de carrers noves. No modifica res del que fa Atlas.
 // @match        https://atlas.gls-spain.es/pick/*
 // @match        https://atlas.gls-spain.es/Pick/*
 // @grant        none
@@ -198,7 +198,7 @@ function zoneOf(addr,loc,cp,ps){
   const num=()=>{const a=ztoks(addr);for(const w of a)if(/^\d{1,4}$/.test(w))return +w;return null};
   const has=w=>at.has(w),n=num();
   if(/AGENCIA COLABORADORA/.test(P)||(has('LLETERIES')&&(has('NAU')||has('NAVE'))&&(/\b(NAU|NAVE)\s*6\b/.test(raw))))return {z:'REA',pt:'Lleteries nau 6'};
-  if(/RECOLLIT/.test(P))return {z:'PS RECOLLIT',pt:'ParcelShop Recollit i Entregat'};
+  if(/RECOLLIT/.test(P))return {z:'BLAU',pt:'PS Recollit i Entregat'};
   if(/B42877704|MADAHE|RAPIDAND/.test(raw)||(/^\s*(CALLE|CARRER|CL|C)\s*[\/.]?\s*E\b/.test(raw)&&/CASTELLCIUTAT|SEU|URGELL|MONTFERRER|^\s*$/.test(String(loc??'').toUpperCase()))||/MADAHE/.test(P)||(has('E')&&(has('POLIGON')||has('ZI')||has('SECTOR')||has('NAVE'))))return {z:'POLÍGON',pt:'Madahe / Rapidand'};
   const base=baseZone(addr,loc,cp);
   let pt='';
