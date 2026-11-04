@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Punteig PDA 909
 // @namespace    recollit-entregat-909
-// @version      1.7
-// @description  v1.7: correccions de zona del 04/11 (Salòria 64 i 83, Boixadera, Comtat d'Urgell 42, Camí Ral de Cerdanya, Coll del Pendís, Guils, Anserall, Pla de Sant Tirs). v1.6: derivats al PS Recollit i Entregat = punt Blau. v1.5: Grapats (C/ Mont) sempre Blau. v1.4: zones Blau v4 (Jueus, Muralla, Pou, Estret, Hèrcules, Graell, Europa, Portal d'Andorra, Garriga i Massó, Mont, Roda, Partida Sant Ermengol, Poble Sec, Alt Pirineu, Baixos de Calbinyà). v1.3: Av. Valls d'Andorra sencera a Blau (18-20 continua REA). v1.2: correccions verd (Llorenç Tomàs i Costa 52-83, Comtat d'Urgell 57-59, Setúria, Circumval·lació 71-77 i 82). v1.1: tot Castellciutat va a Organyà (excepte el polígon). Punteig de llegada amb la PDA a Atlas (agencia 909): a cada lectura mostra la zona, la prioritat FPE, els Premium i els derivats a ParcelShop, amb veu i pitets. Carrega sol el llistat del dia des d'Atlas (Miraenvios), sense Excel. No modifica res del que fa Atlas.
+// @version      1.8
+// @description  v1.8: avisa «Surt avui · a prop» dels no FPE que són a prop d'un FPE d'avui o endarrerit (La Seu: mateix carrer ±5 números; pobles: mateix poble i ruta). v1.7: correccions de zona del 04/11 (Salòria 64 i 83, Boixadera, Comtat d'Urgell 42, Camí Ral de Cerdanya, Coll del Pendís, Guils, Anserall, Pla de Sant Tirs). v1.6: derivats al PS Recollit i Entregat = punt Blau. v1.5: Grapats (C/ Mont) sempre Blau. v1.4: zones Blau v4 (Jueus, Muralla, Pou, Estret, Hèrcules, Graell, Europa, Portal d'Andorra, Garriga i Massó, Mont, Roda, Partida Sant Ermengol, Poble Sec, Alt Pirineu, Baixos de Calbinyà). v1.3: Av. Valls d'Andorra sencera a Blau (18-20 continua REA). v1.2: correccions verd (Llorenç Tomàs i Costa 52-83, Comtat d'Urgell 57-59, Setúria, Circumval·lació 71-77 i 82). v1.1: tot Castellciutat va a Organyà (excepte el polígon). Punteig de llegada amb la PDA a Atlas (agencia 909): a cada lectura mostra la zona, la prioritat FPE, els Premium i els derivats a ParcelShop, amb veu i pitets. Carrega sol el llistat del dia des d'Atlas (Miraenvios), sense Excel. No modifica res del que fa Atlas.
 // @match        https://atlas.gls-spain.es/pick/*
 // @match        https://atlas.gls-spain.es/Pick/*
 // @grant        none
@@ -284,7 +284,8 @@ return zoneOf;
   const SO = {
     ok: [[1046, 0, .15]],                                   // FPE avui: un pitet agut
     late: [[1318, 0, .1], [1318, .15, .1], [1318, .3, .1]],  // endarrerit: tres pitets aguts
-    fut: [[392, 0, .35]],                                    // futur: un pitet greu llarg
+    fut: [[392, 0, .35]],
+    prop: [[659, 0, .12], [988, .16, .2]],                  // a prop d'un FPE: dos pitets que pugen                                    // futur: un pitet greu llarg
     miss: [[262, 0, .2], [196, .25, .35]],                   // no és al llistat: greu-greu
     prem: [[880, 0, .12], [660, .14, .12], [880, .28, .12], [660, .42, .12]]
   };
@@ -301,7 +302,7 @@ return zoneOf;
   #pda909 .zn b{display:block;font-size:min(17vw,96px)}
   #pda909 .zn i{display:block;font-style:normal;font-size:min(6vw,30px);margin-top:4px}
   #pda909 .pr{text-align:center;font-weight:800;font-size:min(8vw,40px);padding:6px;text-transform:uppercase}
-  #pda909 .pr.ok{background:#e3f5ea;color:#0f8a4b}#pda909 .pr.late{background:#fbe5e3;color:#c8261d}#pda909 .pr.fut{background:#e9edf3;color:#55627a}#pda909 .pr.miss{background:#fdf0d8;color:#a86400}
+  #pda909 .pr.ok{background:#e3f5ea;color:#0f8a4b}#pda909 .pr.late{background:#fbe5e3;color:#c8261d}#pda909 .pr.fut{background:#e9edf3;color:#55627a}#pda909 .pr.prop{background:#e3effd;color:#0b4fb3}#pda909 .sb.prop{color:#0b4fb3;font-weight:700}#pda909 .pr.miss{background:#fdf0d8;color:#a86400}
   #pda909 .pm{background:#c8261d;color:#fff;text-align:center;font-weight:800;font-size:min(7vw,32px);padding:6px}
   #pda909 .ps{background:#c2185b;color:#fff;text-align:center;font-weight:800;font-size:min(6vw,26px);padding:6px}
   #pda909 .sb{padding:6px 10px 10px;font-size:14px;color:#3a4558;overflow:auto}
@@ -346,11 +347,52 @@ return zoneOf;
 
   // ---------- cada lectura ----------
   let darrer = '', darrerT = 0;
+  // ---------- a prop d'un FPE d'avui ----------
+  const NRM = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().replace(/[´`'’.,;:()\/\\-]/g, ' ').replace(/\s+/g, ' ').trim().replace(/\bSTA\b/g, 'SANTA').replace(/\bST\b/g, 'SANT').replace(/\bMAYOR\b/g, 'MAJOR');
+  const TIPUS = /^(C|CL|CALLE|CARRER|CARRE|CR|CRA|CTRA|CARRETERA|AV|AVD|AVDA|AVENIDA|AVINGUDA|AVGDA|PG|PS|PASSEIG|PASEO|PGE|PSG|PASSATGE|PASAJE|PL|PZA|PLAZA|PLACA|RAMBLA|RBLA|TRAV|TRAVESSIA|URB|URBANITZACIO|URBANIZACION|BARRI|BARRIO|CAMI|CAMINO|PARTIDA|PDA)$/;
+  const BUIDES = /^(DE|DEL|DELS|LA|LES|EL|ELS|LOS|LAS|D|L|I|Y|NUM|NUMERO|N|NO)$/;
+  function parseAdreca(a) {
+    const t = NRM(a).replace(/\bN[º°O]?\s*(?=\d)/g, ' ');
+    const m = t.match(/^(.*?)(\d+)/);
+    const np = (m ? m[1] : t).split(' ').filter(Boolean);
+    while (np.length && TIPUS.test(np[0])) np.shift();
+    return { carrer: np.filter(w => !BUIDES.test(w) && !TIPUS.test(w)).join(' '), num: m ? parseInt(m[2], 10) : null };
+  }
+  function semblaCarrer(a, b) {
+    if (!a || !b) return false; if (a === b) return true;
+    const ta = a.split(' '), tb = b.split(' '), ll = w => w.length >= 4;
+    return ta.filter(ll).some(w => tb.includes(w)) && (a.includes(b) || b.includes(a) || ta.filter(ll).every(w => tb.includes(w)) || tb.filter(ll).every(w => ta.includes(w)));
+  }
+  const ZSEU = z => /^(VERMELL|VERD|GROC|BLAU|POL.GON)$/.test(String(z || ''));
+  const MARGE_NUM = 5;
+  let PROP = null;
+  function llistaProp() {
+    const d = llista(); if (!d || !d.recs) return [];
+    if (PROP && PROP.at === d.at && PROP.dia === avui()) return PROP.L;
+    const a = avui();
+    const L = d.recs.filter(x => x.d && x.d <= a && !x.ps && x.z !== 'REA' && x.z !== '?')
+      .map(x => ({ x, seu: ZSEU(x.z), loc: NRM(x.l), p: parseAdreca(x.ad) }));
+    PROP = { at: d.at, dia: a, L }; return L;
+  }
+  function aprop(r) {
+    if (r.ps || r.z === 'REA' || r.z === '?') return null;
+    const seu = ZSEU(r.z), loc = NRM(r.l), p = parseAdreca(r.ad);
+    if (seu && (!p.carrer || p.num == null)) return null;
+    if (!seu && (!loc || /^(LLEIDA|LERIDA)$/.test(loc))) return null;
+    for (const o of llistaProp()) {
+      if (o.x === r) continue;
+      if (seu) { if (o.seu && o.p.num != null && Math.abs(p.num - o.p.num) <= MARGE_NUM && semblaCarrer(p.carrer, o.p.carrer)) return o.x; }
+      else if (!o.seu && o.loc === loc && o.x.z === r.z) return o.x;
+    }
+    return null;
+  }
   function classe(r) {
     const a = avui();
-    if (!r.d) return ['fut', 'Sense FPE'];
     if (r.d === a) return ['ok', 'Repartir avui'];
-    if (r.d < a) return ['late', 'Endarrerit'];
+    if (r.d && r.d < a) return ['late', 'Endarrerit'];
+    const o = aprop(r);
+    if (o) return ['prop', 'Surt avui · a prop' + (r.d ? ' (FPE ' + dm(r.d) + ')' : ''), o];
+    if (!r.d) return ['fut', 'Sense FPE'];
     return ['fut', 'Deixar · FPE ' + dm(r.d)];
   }
   function mostra(code) {
@@ -365,12 +407,12 @@ return zoneOf;
       B.innerHTML = `<div class="pr miss">No és al llistat</div><div class="sb">Codi ${esc(code)} · esperant Atlas…</div>`;
       to(SO.miss); B.dataset.code = code; return;
     }
-    const [k, txt] = classe(r);
+    const [k, txt, o] = classe(r);
     const col = COL()[r.z] || { bg: '#8a94a6', fg: '#fff' };
     const pm = r.p ? `<div class="pm">⚠ PREMIUM ${r.p === 'BP' ? 'INTERNACIONAL' : 'EXPRESS ' + r.p}</div>` : '';
     const ps = r.ps ? `<div class="ps">📦 Derivat a ParcelShop · ${esc(r.ps)}</div>` : '';
     B.innerHTML = pm + ps + `<div class="zn" style="background:${col.bg};color:${col.fg}"><b>${esc(r.z === '?' ? 'Sense zona' : r.z)}</b>${r.pt ? `<i>${esc(r.pt)}</i>` : (r.a ? `<i>${esc(r.a)}</i>` : '')}</div>` +
-      `<div class="pr ${k}">${esc(txt)}</div><div class="sb">${esc(r.c[0])} · ${esc(r.l)} · ${esc(r.ad)}${r.cod ? ' · <b>Reemborsament ' + r.cod.toFixed(2) + ' €</b>' : ''}</div>`;
+      `<div class="pr ${k}">${esc(txt)}</div>${o ? `<div class="sb prop">Al costat de: ${esc(o.ad)} · ${esc(o.l)} · FPE ${esc(dm(o.d))}</div>` : ''}<div class="sb">${esc(r.c[0])} · ${esc(r.l)} · ${esc(r.ad)}${r.cod ? ' · <b>Reemborsament ' + r.cod.toFixed(2) + ' €</b>' : ''}</div>`;
     delete B.dataset.code;
     to(SO[k]);
     let veu = r.ps ? 'Parcel shop' : (SAY[r.z] || 'Sense zona');
