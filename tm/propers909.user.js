@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Propers 909
 // @namespace    recollit-entregat-909
-// @version      1.4
+// @version      1.5
 // @description  Botó "Revisar propers" a Control de Entregas: amb la fulla d'un repartidor oberta, mostra els enviaments sense assignar (Sin asignar, 999 i 1000) que són a prop de les seves parades i permet assignar-los a la fulla. Agència 909.
 // @match        https://atlas.gls-spain.es/delivery/*
 // @match        https://atlas.gls-spain.es/Delivery/*
@@ -62,7 +62,8 @@
     const m = String(s || '').match(/(\d{2})\/(\d{2})\/(\d{4})/); if (!m) return { txt: '?', dif: 99 };
     const d = new Date(+m[3], +m[2] - 1, +m[1]);
     const dif = Math.round((d - avui0()) / 864e5);
-    const txt = dif < 0 ? 'Vençut ' + m[1] + '/' + m[2] : dif === 0 ? 'Avui' : dif === 1 ? 'Demà' : dif === 2 ? 'Passat demà' : 'FPE ' + m[1] + '/' + m[2];
+    const dd = m[1] + '/' + m[2];
+    const txt = 'FPE ' + dd + (dif < 0 ? ' (vençut)' : dif === 0 ? ' (avui)' : dif === 1 ? ' (demà)' : dif === 2 ? ' (passat demà)' : '');
     return { txt, dif };
   }
 
@@ -219,7 +220,7 @@
     for (const t of ['parada', 'carrer', 'poble']) {
       const g = it.filter(x => x.tipus === t); if (!g.length) continue;
       h += `<h4>${NOMS[t]} · ${g.length}</h4>`;
-      h += g.map(x => `<div class="it ${t}"><div><b>${esc(x.exp)}</b> · <span class="fp ${x.dif < 0 ? 'v' : ''}">${esc(x.fpe)}</span> <small>(${esc(x.orig)})</small><br>${esc(x.adr)}${x.seu === false ? '' : ''} · ${esc(x.loc)}<br><small>${esc(x.dest)}${x.inc ? ' · ' + esc(x.inc) : ''}</small>${x.refExp ? '<br><small class="rf">\u21b3 a prop de <b>' + esc(x.refExp) + '</b> \u00b7 ' + esc(x.refAdr) + ' \u00b7 <span class="fp ' + (x.refDif <= 0 ? 'av' : '') + '">' + (x.refDif === 0 ? 'FPE avui' : esc(x.refFpe)) + '</span></small>' : ''}</div>
+      h += g.map(x => `<div class="it ${t}"><div><b>${esc(x.exp)}</b> · <span class="fp ${x.dif < 0 ? 'v' : ''}">${esc(x.fpe)}</span> <small>(${esc(x.orig)})</small><br>${esc(x.adr)}${x.seu === false ? '' : ''} · ${esc(x.loc)}<br><small>${esc(x.dest)}${x.inc ? ' · ' + esc(x.inc) : ''}</small>${x.refExp ? '<br><small class="rf">\u21b3 a prop de <b>' + esc(x.refExp) + '</b> \u00b7 ' + esc(x.refAdr) + ' \u00b7 <span class="fp ' + (x.refDif <= 0 ? 'av' : '') + '">' + esc(x.refFpe) + '</span></small>' : ''}</div>
         <div>${x.estat ? `<span class="${esc(x.estat)}">${esc(x.estat)}</span>${x.text && x.estat === 'ERROR' ? '<br><small>' + esc(x.text) + '</small>' : ''}` : `<button class="p" data-e="${esc(x.exp)}" ${enMarxa ? 'disabled' : ''}>Assignar</button>`}</div></div>`).join('');
     }
     w.querySelector('.cos').innerHTML = h || '<div class="res">Obre la fulla del repartidor i prem «Revisar propers».</div>';
