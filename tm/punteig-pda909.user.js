@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Punteig PDA 909
 // @namespace    recollit-entregat-909
-// @version      1.8
-// @description  v1.8: avisa «Surt avui · a prop» dels no FPE que són a prop d'un FPE d'avui o endarrerit (La Seu: mateix carrer ±5 números; pobles: mateix poble i ruta). v1.7: correccions de zona del 04/11 (Salòria 64 i 83, Boixadera, Comtat d'Urgell 42, Camí Ral de Cerdanya, Coll del Pendís, Guils, Anserall, Pla de Sant Tirs). v1.6: derivats al PS Recollit i Entregat = punt Blau. v1.5: Grapats (C/ Mont) sempre Blau. v1.4: zones Blau v4 (Jueus, Muralla, Pou, Estret, Hèrcules, Graell, Europa, Portal d'Andorra, Garriga i Massó, Mont, Roda, Partida Sant Ermengol, Poble Sec, Alt Pirineu, Baixos de Calbinyà). v1.3: Av. Valls d'Andorra sencera a Blau (18-20 continua REA). v1.2: correccions verd (Llorenç Tomàs i Costa 52-83, Comtat d'Urgell 57-59, Setúria, Circumval·lació 71-77 i 82). v1.1: tot Castellciutat va a Organyà (excepte el polígon). Punteig de llegada amb la PDA a Atlas (agencia 909): a cada lectura mostra la zona, la prioritat FPE, els Premium i els derivats a ParcelShop, amb veu i pitets. Carrega sol el llistat del dia des d'Atlas (Miraenvios), sense Excel. No modifica res del que fa Atlas.
+// @version      1.9
+// @description  v1.9: serveis 97/98 = BUSINESS PARCEL (són nacionals); avís INTERNACIONAL (importació, compta per a l'SPC) amb pitet de Premium i veu. v1.8: avisa «Surt avui · a prop» dels no FPE que són a prop d'un FPE d'avui o endarrerit (La Seu: mateix carrer ±5 números; pobles: mateix poble i ruta). v1.7: correccions de zona del 04/11 (Salòria 64 i 83, Boixadera, Comtat d'Urgell 42, Camí Ral de Cerdanya, Coll del Pendís, Guils, Anserall, Pla de Sant Tirs). v1.6: derivats al PS Recollit i Entregat = punt Blau. v1.5: Grapats (C/ Mont) sempre Blau. v1.4: zones Blau v4 (Jueus, Muralla, Pou, Estret, Hèrcules, Graell, Europa, Portal d'Andorra, Garriga i Massó, Mont, Roda, Partida Sant Ermengol, Poble Sec, Alt Pirineu, Baixos de Calbinyà). v1.3: Av. Valls d'Andorra sencera a Blau (18-20 continua REA). v1.2: correccions verd (Llorenç Tomàs i Costa 52-83, Comtat d'Urgell 57-59, Setúria, Circumval·lació 71-77 i 82). v1.1: tot Castellciutat va a Organyà (excepte el polígon). Punteig de llegada amb la PDA a Atlas (agencia 909): a cada lectura mostra la zona, la prioritat FPE, els Premium i els derivats a ParcelShop, amb veu i pitets. Carrega sol el llistat del dia des d'Atlas (Miraenvios), sense Excel. No modifica res del que fa Atlas.
 // @match        https://atlas.gls-spain.es/pick/*
 // @match        https://atlas.gls-spain.es/Pick/*
 // @grant        none
@@ -206,6 +206,10 @@ return zoneOf;
     if (h === 18 && (s === 97 || s === 98)) return 'BP';
     return '';
   }
+  // internacionals (importació SPC): servei 85, plaça d'origen internacional (N90-N98, K90) o CP d'origen no espanyol
+  const intl = x => { const z = String(x.SourceZipCode || '').trim();
+    const nm = String(x.SourceNemonic || '').trim().toUpperCase();
+    return +x.ServiceId === 85 || /^N9/.test(nm) || nm === 'K90' || (!!z && !/^\d{3,5}$/.test(z)); };
   const ddmmyyyy = d => String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0') + '/' + d.getFullYear();
   const CRIT = ['fltCode', '', 'fltDateFrom', '', 'fltDateTo', '', 'fltOrigin', '', 'fltPosting', '909', 'fltPay', '', 'fltHighlighted', 'false', 'fltService', '', 'fltSchedule', '', 'fltCustomerPlace', '', 'fltCustomerId', '', 'fltCustomerIdMultiple', '', 'fltNetworkCustomer', '',
     'fltExpectedDeliveryDateFrom', '', 'fltExpectedDeliveryDateTo', '', 'fltRed', '-1', 'fltTsp', '-1', 'fltDigitized', '', 'fltRCS', '', 'fltInsured', '', 'fltOptionalReturn', '', 'fltMandatoryReturn', '', 'fltHotlineCustomer', '', 'fltOnDelivery', '', 'fltMinOnDelivery', '', 'fltDue', '',
@@ -255,7 +259,7 @@ return zoneOf;
           const c = [e]; [x.Barcode, x.Reference, x.REFN].forEach(v => { v = String(v == null ? '' : v).replace(/\s/g, ''); if (/^\d{9,20}$/.test(v) && !c.includes(v)) c.push(v); });
           const ad = String(x.PostingAddress || ''), l = String(x.PostingCity || ''), cp = String(x.PostingSourceCode || ''), ps = psNom(x.nombrePSDestino);
           let z = {}; try { z = zonaNova(ad, l, cp, x.nombrePSDestino || '') || {}; } catch (er) { }
-          recs.push({ c, d: fpe, z: z.z || '?', a: z.alt || '', pt: z.pt || '', p: premium(x.Schedule, x.ServiceId), l, ad, n: String(x.PostingName || ''), ps, cod: +x.CashOnDelivery || 0 });
+          recs.push({ c, d: fpe, z: z.z || '?', a: z.alt || '', pt: z.pt || '', p: premium(x.Schedule, x.ServiceId), l, ad, n: String(x.PostingName || ''), ps, cod: +x.CashOnDelivery || 0, i: intl(x) ? 1 : 0 });
         });
       }
       if (!recs.length) throw new Error('Atlas no ha tornat cap enviament');
@@ -304,7 +308,7 @@ return zoneOf;
   #pda909 .pr{text-align:center;font-weight:800;font-size:min(8vw,40px);padding:6px;text-transform:uppercase}
   #pda909 .pr.ok{background:#e3f5ea;color:#0f8a4b}#pda909 .pr.late{background:#fbe5e3;color:#c8261d}#pda909 .pr.fut{background:#e9edf3;color:#55627a}#pda909 .pr.prop{background:#e3effd;color:#0b4fb3}#pda909 .sb.prop{color:#0b4fb3;font-weight:700}#pda909 .pr.miss{background:#fdf0d8;color:#a86400}
   #pda909 .pm{background:#c8261d;color:#fff;text-align:center;font-weight:800;font-size:min(7vw,32px);padding:6px}
-  #pda909 .ps{background:#c2185b;color:#fff;text-align:center;font-weight:800;font-size:min(6vw,26px);padding:6px}
+  #pda909 .in{background:#e65100;color:#fff;text-align:center;font-weight:800;font-size:min(6vw,26px);padding:5px}#pda909 .ps{background:#c2185b;color:#fff;text-align:center;font-weight:800;font-size:min(6vw,26px);padding:6px}
   #pda909 .sb{padding:6px 10px 10px;font-size:14px;color:#3a4558;overflow:auto}
   #pda909 .st{padding:8px 10px;font-size:14px;background:#fff3cd;color:#7a5b00}
   #pda909 .st.err{background:#fbe5e3;color:#c8261d}
@@ -409,14 +413,16 @@ return zoneOf;
     }
     const [k, txt, o] = classe(r);
     const col = COL()[r.z] || { bg: '#8a94a6', fg: '#fff' };
-    const pm = r.p ? `<div class="pm">⚠ PREMIUM ${r.p === 'BP' ? 'INTERNACIONAL' : 'EXPRESS ' + r.p}</div>` : '';
+    const pm = r.p ? `<div class="pm">⚠ PREMIUM ${r.p === 'BP' ? 'BUSINESS PARCEL' : 'EXPRESS ' + r.p}</div>` : '';
+    const inl = r.i ? '<div class="in">🌍 INTERNACIONAL · compta per a l\'SPC</div>' : '';
     const ps = r.ps ? `<div class="ps">📦 Derivat a ParcelShop · ${esc(r.ps)}</div>` : '';
-    B.innerHTML = pm + ps + `<div class="zn" style="background:${col.bg};color:${col.fg}"><b>${esc(r.z === '?' ? 'Sense zona' : r.z)}</b>${r.pt ? `<i>${esc(r.pt)}</i>` : (r.a ? `<i>${esc(r.a)}</i>` : '')}</div>` +
+    B.innerHTML = pm + inl + ps + `<div class="zn" style="background:${col.bg};color:${col.fg}"><b>${esc(r.z === '?' ? 'Sense zona' : r.z)}</b>${r.pt ? `<i>${esc(r.pt)}</i>` : (r.a ? `<i>${esc(r.a)}</i>` : '')}</div>` +
       `<div class="pr ${k}">${esc(txt)}</div>${o ? `<div class="sb prop">Al costat de: ${esc(o.ad)} · ${esc(o.l)} · FPE ${esc(dm(o.d))}</div>` : ''}<div class="sb">${esc(r.c[0])} · ${esc(r.l)} · ${esc(r.ad)}${r.cod ? ' · <b>Reemborsament ' + r.cod.toFixed(2) + ' €</b>' : ''}</div>`;
     delete B.dataset.code;
     to(SO[k]);
     let veu = r.ps ? 'Parcel shop' : (SAY[r.z] || 'Sense zona');
     if (r.p) { setTimeout(() => to(SO.prem), 350); veu = 'Premium. ' + veu; }
+    if (r.i) { if (!r.p) setTimeout(() => to(SO.prem), 350); veu = 'Internacional. ' + veu; }
     parla(veu, 300);
   }
   // no és al llistat: Atlas torna l'expedició, el CP i l'adreça → la busquem o proposem zona
