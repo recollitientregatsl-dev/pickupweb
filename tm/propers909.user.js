@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Propers 909
 // @namespace    recollit-entregat-909
-// @version      1.1
+// @version      1.2
 // @description  Botó "Revisar propers" a Control de Entregas: amb la fulla d'un repartidor oberta, mostra els enviaments sense assignar (Sin asignar, 999 i 1000) que són a prop de les seves parades i permet assignar-los a la fulla. Agència 909.
 // @match        https://atlas.gls-spain.es/delivery/*
 // @match        https://atlas.gls-spain.es/Delivery/*
@@ -187,8 +187,8 @@
   // ---------- interfície ----------
   let estat = {}, enMarxa = false, obert = false;
   const CSS = `
-  #p909b{position:fixed;right:24px;top:86px;z-index:2147483000;background:#0b3d91;color:#fff;border:0;border-radius:8px;padding:8px 12px;font:700 13px system-ui,Arial;box-shadow:0 2px 8px rgba(0,0,0,.3);cursor:pointer}
-  #p909{position:fixed;right:24px;top:124px;z-index:2147483000;width:420px;max-width:calc(100vw - 20px);max-height:70vh;display:flex;flex-direction:column;background:#fff;color:#14213a;border:1px solid #c9d2e0;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.25);font:12px/1.35 system-ui,Arial;text-align:left}
+  #p909b{position:fixed;right:24px;top:50px;z-index:2147483000;background:#0b3d91;color:#fff;border:0;border-radius:8px;padding:8px 12px;font:700 13px system-ui,Arial;box-shadow:0 2px 8px rgba(0,0,0,.3);cursor:pointer}
+  #p909{position:fixed;right:24px;top:88px;z-index:2147483000;width:420px;max-width:calc(100vw - 20px);max-height:70vh;display:flex;flex-direction:column;background:#fff;color:#14213a;border:1px solid #c9d2e0;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.25);font:12px/1.35 system-ui,Arial;text-align:left}
   #p909 *{box-sizing:border-box;font-family:inherit}
   #p909 .hd{display:flex;gap:6px;align-items:center;padding:5px 8px;background:#0b3d91;color:#fff;border-radius:8px 8px 0 0}
   #p909 .hd b{flex:1}
