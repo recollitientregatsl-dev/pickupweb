@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Propers 909
 // @namespace    recollit-entregat-909
-// @version      1.3
+// @version      1.4
 // @description  Botó "Revisar propers" a Control de Entregas: amb la fulla d'un repartidor oberta, mostra els enviaments sense assignar (Sin asignar, 999 i 1000) que són a prop de les seves parades i permet assignar-los a la fulla. Agència 909.
 // @match        https://atlas.gls-spain.es/delivery/*
 // @match        https://atlas.gls-spain.es/Delivery/*
@@ -98,7 +98,8 @@
     try {
       const meus = await detall(f.codi, f.place);
       if (!meus.length) { estat = { msg: 'La fulla ' + f.codi + ' no té enviaments.', fulla: f }; pinta(); return; }
-      const parades = meus.filter(e => !esREA(e)).map(e => Object.assign(clau(e), { exp: String(e.CodExp), adr: String(e.DestStreet || '').trim(), F: fpe(e.FPDelivery) }));
+      const parades = meus.filter(e => !esREA(e)).map(e => Object.assign(clau(e), { exp: String(e.CodExp), adr: String(e.DestStreet || '').trim(), F: fpe(e.FPDelivery) })).filter(p => p.F.dif <= 0);   // només parades on SÍ ha d'anar avui (FPE avui o vençut)
+      if (!parades.length) { estat = { msg: 'La fulla ' + f.codi + ' no té cap enviament amb FPE avui o vençut: no hi ha parades de referència.', fulla: f }; pinta(); return; }
       const jaHi = new Set(meus.map(e => String(e.CodExp)));
       const origens = fullesOrigen();
       if (!origens.some(o => o.codi)) { estat = { msg: 'Prem «Actualizar» d\'Atlas perquè es vegin les fulles 999 i 1000, i torna-ho a provar.', fulla: f }; pinta(); return; }
