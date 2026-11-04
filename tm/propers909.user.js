@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Propers 909
 // @namespace    recollit-entregat-909
-// @version      1.2
+// @version      1.3
 // @description  Botó "Revisar propers" a Control de Entregas: amb la fulla d'un repartidor oberta, mostra els enviaments sense assignar (Sin asignar, 999 i 1000) que són a prop de les seves parades i permet assignar-los a la fulla. Agència 909.
 // @match        https://atlas.gls-spain.es/delivery/*
 // @match        https://atlas.gls-spain.es/Delivery/*
@@ -26,7 +26,7 @@
 
   const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const dorm = ms => new Promise(r => setTimeout(r, ms));
-  const NRM = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase().replace(/[´`'’.,;:()\/\\-]/g, ' ').replace(/\s+/g, ' ').trim().replace(/\bSTA\b/g, 'SANTA').replace(/\bST\b/g, 'SANT').replace(/\bMAYOR\b/g, 'MAJOR');
+  const NRM = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().replace(/[´`'’.,;:()\/\\-]/g, ' ').replace(/\s+/g, ' ').trim().replace(/\bSTA\b/g, 'SANTA').replace(/\bST\b/g, 'SANT').replace(/\bMAYOR\b/g, 'MAJOR');
   const TIPUS = /^(C|CL|CALLE|CARRER|CARRE|CR|CRA|CTRA|CARRETERA|AV|AVD|AVDA|AVDA|AVENIDA|AVINGUDA|AVGDA|PG|PS|PASSEIG|PASEO|PGE|PSG|PASSATGE|PASAJE|PL|PZA|PLAZA|PLACA|RAMBLA|RBLA|TRAV|TRAVESSIA|URB|URBANITZACIO|URBANIZACION|BARRI|BARRIO|CAMI|CAMINO|PARTIDA|PDA)$/;
   const BUIDES = /^(DE|DEL|DELS|LA|LES|EL|ELS|LOS|LAS|D|L|I|Y|NUM|NUMERO|N|NO|NO|Nº)$/;
 
@@ -98,7 +98,7 @@
     try {
       const meus = await detall(f.codi, f.place);
       if (!meus.length) { estat = { msg: 'La fulla ' + f.codi + ' no té enviaments.', fulla: f }; pinta(); return; }
-      const parades = meus.filter(e => !esREA(e)).map(e => clau(e));
+      const parades = meus.filter(e => !esREA(e)).map(e => Object.assign(clau(e), { exp: String(e.CodExp), adr: String(e.DestStreet || '').trim(), F: fpe(e.FPDelivery) }));
       const jaHi = new Set(meus.map(e => String(e.CodExp)));
       const origens = fullesOrigen();
       if (!origens.some(o => o.codi)) { estat = { msg: 'Prem «Actualizar» d\'Atlas perquè es vegin les fulles 999 i 1000, i torna-ho a provar.', fulla: f }; pinta(); return; }
@@ -112,18 +112,18 @@
       for (const e of cand) {
         if (vistos.has(String(e.CodExp)) || esREA(e)) continue;
         const k = clau(e);
-        let tipus = null, ref = null;
+        let tipus = null, ref = null, millor = 1e9; const RANG = { parada: 0, carrer: 1, poble: 2 }; const cnd = (t, p, dist) => { const s = RANG[t] * 1000 + (p.F.dif <= 0 ? 0 : 100) + dist; if (s < millor) { millor = s; tipus = t; ref = p; } };
         for (const p of parades) {
           if (k.seu !== p.seu) continue;
-          if (!k.seu) { if (k.poble && k.poble === p.poble) { tipus = 'poble'; ref = p; break; } continue; }
+          if (!k.seu) { if (k.poble && k.poble === p.poble) cnd('poble', p, 0); continue; }
           if (!semblaCarrer(k.carrer, p.carrer)) continue;
-          if (k.num != null && p.num != null && k.num === p.num) { tipus = 'parada'; ref = p; break; }
-          if (k.num != null && p.num != null && Math.abs(k.num - p.num) <= MARGE_NUM) { if (tipus !== 'parada') { tipus = 'carrer'; ref = p; } }
+          if (k.num != null && p.num != null && k.num === p.num) { cnd('parada', p, 0); continue; }
+          if (k.num != null && p.num != null && Math.abs(k.num - p.num) <= MARGE_NUM) cnd('carrer', p, Math.abs(k.num - p.num));
         }
         if (!tipus) continue;
         vistos.add(String(e.CodExp));
         const F = fpe(e.FPDelivery);
-        res.push({ exp: String(e.CodExp), orig: e.__o, adr: String(e.DestStreet || '').trim(), loc: String(e.DestLocation || '').trim(), dest: String(e.DestName || '').trim(), fpe: F.txt, dif: F.dif, tipus, inc: String(e.DeliveryDate || '').trim() && !/^\d/.test(String(e.DeliveryDate)) ? String(e.DeliveryDate).trim() : '' });
+        res.push({ exp: String(e.CodExp), orig: e.__o, adr: String(e.DestStreet || '').trim(), loc: String(e.DestLocation || '').trim(), dest: String(e.DestName || '').trim(), fpe: F.txt, dif: F.dif, tipus, refExp: ref.exp, refAdr: ref.adr, refFpe: ref.F.txt, refDif: ref.F.dif, inc: String(e.DeliveryDate || '').trim() && !/^\d/.test(String(e.DeliveryDate)) ? String(e.DeliveryDate).trim() : '' });
       }
       const ordre = { parada: 0, carrer: 1, poble: 2 };
       res.sort((a, b) => (ordre[a.tipus] - ordre[b.tipus]) || (a.dif - b.dif) || a.adr.localeCompare(b.adr));
@@ -200,7 +200,7 @@
   #p909 .it{display:grid;grid-template-columns:1fr auto;gap:2px 6px;align-items:center;border:1px solid #d8dee8;border-left-width:5px;border-radius:5px;padding:4px 6px}
   #p909 .it.parada{border-left-color:#c8261d} #p909 .it.carrer{border-left-color:#e0a100} #p909 .it.poble{border-left-color:#0d8a8a}
   #p909 .it small{color:#5b6780;grid-column:1/2}
-  #p909 .fp{font-weight:700} #p909 .fp.v{color:#c8261d}
+  #p909 .fp{font-weight:700} #p909 .fp.v{color:#c8261d} #p909 .fp.av{color:#7a3d00;background:#ffe08a;padding:0 3px;border-radius:3px} #p909 .rf{color:#14213a}
   #p909 button.p{background:#0b3d91;color:#fff;border:0;border-radius:5px;padding:3px 8px;font-size:12px;font-weight:600;cursor:pointer}
   #p909 button.p:disabled{opacity:.5;cursor:default}
   #p909 .FET{color:#1b7f3b;font-weight:700} #p909 .ERROR{color:#c0392b;font-weight:700}`;
@@ -218,7 +218,7 @@
     for (const t of ['parada', 'carrer', 'poble']) {
       const g = it.filter(x => x.tipus === t); if (!g.length) continue;
       h += `<h4>${NOMS[t]} · ${g.length}</h4>`;
-      h += g.map(x => `<div class="it ${t}"><div><b>${esc(x.exp)}</b> · <span class="fp ${x.dif < 0 ? 'v' : ''}">${esc(x.fpe)}</span> <small>(${esc(x.orig)})</small><br>${esc(x.adr)}${x.seu === false ? '' : ''} · ${esc(x.loc)}<br><small>${esc(x.dest)}${x.inc ? ' · ' + esc(x.inc) : ''}</small></div>
+      h += g.map(x => `<div class="it ${t}"><div><b>${esc(x.exp)}</b> · <span class="fp ${x.dif < 0 ? 'v' : ''}">${esc(x.fpe)}</span> <small>(${esc(x.orig)})</small><br>${esc(x.adr)}${x.seu === false ? '' : ''} · ${esc(x.loc)}<br><small>${esc(x.dest)}${x.inc ? ' · ' + esc(x.inc) : ''}</small>${x.refExp ? '<br><small class="rf">\u21b3 a prop de <b>' + esc(x.refExp) + '</b> \u00b7 ' + esc(x.refAdr) + ' \u00b7 <span class="fp ' + (x.refDif <= 0 ? 'av' : '') + '">' + (x.refDif === 0 ? 'FPE avui' : esc(x.refFpe)) + '</span></small>' : ''}</div>
         <div>${x.estat ? `<span class="${esc(x.estat)}">${esc(x.estat)}</span>${x.text && x.estat === 'ERROR' ? '<br><small>' + esc(x.text) + '</small>' : ''}` : `<button class="p" data-e="${esc(x.exp)}" ${enMarxa ? 'disabled' : ''}>Assignar</button>`}</div></div>`).join('');
     }
     w.querySelector('.cos').innerHTML = h || '<div class="res">Obre la fulla del repartidor i prem «Revisar propers».</div>';
