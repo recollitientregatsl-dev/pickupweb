@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Tancament 909 (boto Atlas)
 // @namespace    recollit-entregat-909
-// @version      1.21
+// @version      1.22
 // @description  Tancament diari Atlas agencia 909: boto Executar/Simular
 // @match        https://atlas.gls-spain.es/*
 // @grant        none
@@ -11,7 +11,7 @@
 // ==/UserScript==
 
 const TANC909=function(){
-const S=window.TANC={v:'1.21',res:null,step:'',running:false,done:new Set()};
+const S=window.TANC={v:'1.22',res:null,step:'',running:false,done:new Set()};
 const sl=ms=>new Promise(r=>setTimeout(r,ms));
 const z=n=>String(n).padStart(2,'0');
 const avui=()=>{const d=new Date();return z(d.getDate())+'/'+z(d.getMonth()+1)+'/'+d.getFullYear();};
@@ -133,7 +133,95 @@ for(const g of (o.groups||['Z1000','ARR','R','NAU','Z2000','ALT','REA']))for(con
 S.step=g+' '+K.n;if(!l){add('err','fulla no trobada '+K.n);continue;}try{if(await openLi(l))await F[g](l,o);else add('err','no carrega '+K.n);}catch(err){add('err',g+' '+nm(l)+' '+err.message);}}}catch(err){add('err','FATAL '+err.message);}
 R.t1=new Date().toLocaleTimeString();clearInterval(S.vw);document.title='TANC FET';
 S.running=false;
-S.step='FET';try{localStorage.setItem('CL_TANC_RES',JSON.stringify({data:T,dry:S.dry,res:R}));if(!S.dry){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify({data:T,res:R},null,1)],{type:'application/json'}));a.download='TANCAMENT_'+TT.slice(6)+TT.slice(4,6)+TT.slice(2,4)+'.json';document.body.appendChild(a);a.click();a.remove();}}catch(e){}return S.n();};
+S.step='FET';try{localStorage.setItem('CL_TANC_RES',JSON.stringify({data:T,dry:S.dry,res:R}));if(!S.dry){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify({data:T,res:R},null,1)],{type:'application/json'}));a.download='TANCAMENT_'+TT.slice(6)+TT.slice(4,6)+TT.slice(2,4)+'.json';document.body.appendChild(a);a.click();a.remove();}}catch(e){}if(!S.dry&&o.q!==false){S.step='descarrega Q';document.title='TANC descarrega Q';try{window.__QDATA=T;R.q=await S.q();}catch(e){R.q='ERR '+e.message;}S.step='FET';document.title='TANC FET';}return S.n();};
+S.q=async () => {
+  const pad = n => String(n).padStart(2, '0');
+  const avui = new Date();
+  const D = window.__QDATA || `${pad(avui.getDate())}/${pad(avui.getMonth() + 1)}/${avui.getFullYear()}`;
+  const [dd, mm, yyyy] = D.split('/');
+  const d6 = dd + mm + yyyy.slice(2), d8 = yyyy + mm + dd;
+  const hms = pad(avui.getHours()) + pad(avui.getMinutes()) + pad(avui.getSeconds());
+  if (typeof XLSX === 'undefined') return 'ERROR: obre Atlas > Gestion (managementZz) i torna-ho a executar';
+  const tokEl = document.querySelector('input[name=__RequestVerificationToken]');
+  if (!tokEl) return 'ERROR: no hi ha sessio d Atlas (torna a entrar)';
+  const tok = tokEl.value;
+  const espera = ms => new Promise(r => setTimeout(r, ms));
+  const desa = async (blob, nom) => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = nom;
+    document.body.appendChild(a); a.click(); a.remove();
+    await espera(700);
+  };
+  const res = { data: D, fitxers: [], avisos: [] };
+
+  // 1. Trazabilitat (resum + detall)
+  const mz = async (resumen) => {
+    const p = new URLSearchParams({
+      entOrdinaria: true, fhasta: '', fdesde: '', fpedesde: D, fpehasta: D, entDomiciliaria: true,
+      entCampanas: true, entGrandesSuperficies: true, Cliente: '', destino: '909', Repartidor: '',
+      prodPropio: '', resumen: resumen, detalle: !resumen, agrupar: 3, informe: 5, Zona0: true, Zona1: true,
+      Zona2: true, SinAtributos: '', fechavista: '', codred: '', itemsResultManagementZzDetalle: '',
+      itemsResultManagementZzResumen: '', PSEnVuelo: true, __RequestVerificationToken: tok
+    });
+    const r = await fetch('/ManagementZz/GetInformesManagementZ', {
+      method: 'POST', body: p.toString(),
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest' }
+    });
+    if (!r.ok) throw new Error('trazabilitat ' + r.status);
+    return r.json();
+  };
+  const COLS = [['Centro', 'Agrupa'], ['Salidas', 'TotalSalidas'], ['Cruce', 'TotalCruce'], ['Plataforma', 'TotalPlataforma'],
+    ['Llegadas', 'TotalLlegadas'], ['%', 'PorcentajeLlegadas'], ['Reparto', 'TotalRepartos'], ['% ', 'PorcentajeReparto'],
+    ['Entregas', 'TotalEntregadas'], ['%  ', 'PorcentajeEntregadas'], ['Faltas', 'TotalLFaltas'], ['%   ', 'PorcentajeFaltas'],
+    ['Mal can', 'TotalLMalCan'], ['%    ', 'PorcentajeMalCans'], ['clNoEnlaza', 'TotalNoEnlaza'], ['%     ', 'PorcentajeNoEnlaza'],
+    ['Mal doc.', 'TotalMalDoc'], ['%      ', 'PorcentajeMalDoc'], ['No acepta', 'TotalNoAceptas'], ['%       ', 'PorcentajeNoAcepta'],
+    ['Con inc.', 'TotalConInc'], ['%        ', 'PorcentajeConInc'], ['En reparto', 'TotalEnReparto'], ['Sin inf.', 'TotalSinInf'],
+    ['%         ', 'PorcentajeSinInf'], ['Cal. total', 'TotalCalTot'], ['Cerradas', 'TotalCerradas'], ['%          ', 'PorcentajeCerradas'],
+    ['R. nave', 'TotalLRnave'], ['%           ', 'PorcentajeRnave'], ['Festivos', 'TotalFestivos'], ['%            ', 'PorcentajeFestivos'],
+    ['TOTAL', 'Total_Total'], ['Sin traza', 'TotalSinTraza'], ['Env. Z0', 'TotalEnvZ0'], ['Ent Z0', 'TotalEntZ0'],
+    ['%             ', 'PorcentajeEntZ0'], ['Env. Z1', 'TotalEnvZ1'], ['Ent Z1', 'TotalEntZ1'], ['%              ', 'PorcentajeEntZ1'],
+    ['Env. Z2', 'TotalEnvZ2'], ['Ent Z2', 'TotalEntZ2'], ['%               ', 'PorcentajeEntZ2'], ['Cod', 'ValorAgrupa']];
+  const jr = await mz(true);
+  const files = jr.IlistmanagmentZzTrazabilidadEstandarResumen || [];
+  if (!files.length) res.avisos.push('Trazabilitat sense dades');
+  else {
+    const aoa = [COLS.map(c => c[0])].concat(files.map(f => COLS.map(c => f[c[1]] ?? '')));
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(aoa), 'Hoja Resumen trazabilidad');
+    const out = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    await desa(new Blob([out], { type: 'application/octet-stream' }), `InformeResumenTrazabilidad_${d6}.xlsx`);
+    res.fitxers.push('trazabilitat');
+    const tot = files.find(f => String(f.Agrupa).trim().toUpperCase() === 'TOTALES');
+    if (tot) { res.entregues = tot.TotalEntregadas; res.cal = tot.TotalCalTot; res.sininf = tot.TotalSinInf; }
+  }
+  const jd = await mz(false);
+  const det = (jd.ManagmentZzDetalle || []).map(x => ({ exp: String(x.codexp), estat: String(x.codestado), fecha: x.fecha, horario: x.horario, servei: x.codservicio, org: x.codplaza_org }));
+  await desa(new Blob([JSON.stringify({ data: D, expedicions: det })], { type: 'application/json' }), `FPE_DETALL_${d6}.json`);
+  res.fitxers.push('detall FPE (' + det.length + ')');
+
+  // 2. Recollides
+  const pb = $.param({ searchCriteria: { Request: false, DateFrom: D, DateTo: D, ClientOnly: false, Tab: 1 }, __RequestVerificationToken: tok });
+  const rp = await fetch('/PickUp/ExcelDownload', { method: 'POST', body: pb, headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' } });
+  if (rp.ok && /sheet/.test(rp.headers.get('content-type') || '')) {
+    await desa(await rp.blob(), `HojaExcel_${d8}-${hms}.xlsx`);
+    res.fitxers.push('recollides');
+  } else res.avisos.push('Recollides no descarregades (' + rp.status + ')');
+
+  // 3. Marklist per repartidor (el dia es passa tal qual: no cal posar la data de dema)
+  const reps = [];
+  for (const n of [1, 2, 3, 4, 5, 6, 7, 10]) {
+    const u = '/Maps/ExportRuta?' + new URLSearchParams({ codplaza: '909', codrepartidor: String(n), fecha: D });
+    const r = await fetch(u);
+    const t = await r.text();
+    if (!r.ok || t.length < 200 || !/<tr/i.test(t)) continue;
+    await desa(new Blob([t], { type: 'application/vnd.ms-excel' }), `Marklist - ${n === 10 ? 'NAU' : 'R' + n} - ${d6}.xls`);
+    reps.push(n === 10 ? 'NAU' : 'R' + n);
+  }
+  res.fitxers.push('marklist ' + (reps.join(' ') || 'cap'));
+  window.__QRES = res;
+  return 'OK ' + D + ' | ' + res.fitxers.join(' | ') + ' | entregues FPE ' + res.entregues + ' de ' + res.cal +
+    ' | sense info ' + res.sininf + (res.avisos.length ? ' | AVISOS ' + res.avisos.join(' ; ') : '');
+};
 S.n=()=>S.res&&Object.fromEntries(Object.entries(S.res).map(([k,v])=>[k,Array.isArray(v)?v.length:v]));
 S.seg=async(o={})=>{const d=o.data||avui();
 const [a,b,c]=d.split('/').map(Number);
@@ -165,7 +253,7 @@ document.getElementById('tancCl').onclick=()=>d.remove();document.getElementById
 S.panel=()=>{if(!/\/delivery/i.test(location.pathname))return;document.getElementById('tanc909p')?.remove();
 const p=document.createElement('div');p.id='tanc909p';p.style.cssText='position:fixed;right:14px;bottom:14px;z-index:99999;background:#061ab1;color:#fff;padding:12px 14px;border-radius:10px;font:14px/1.45 Arial,sans-serif;box-shadow:0 3px 12px #0006;width:270px';
 const bs='font:bold 15px Arial,sans-serif;padding:8px 0;border:0;border-radius:6px;cursor:pointer;width:48%;opacity:1;';p.innerHTML='<div style="font-weight:bold;font-size:16px;margin-bottom:8px;display:flex;justify-content:space-between"><span>Tancament 909 v'+S.v+'</span><span id=tancMin style="cursor:pointer;padding:0 6px" title="Amagar / mostrar">&#8211;</span></div><div id=tancBody><div style="display:flex;justify-content:space-between"><button id=tancGo style="'+bs+'background:#18a34a;color:#fff">EXECUTAR</button><button id=tancSim style="'+bs+'background:#ffd400;color:#061ab1">SIMULAR</button></div><button id=tancLl style="font:bold 13px Arial,sans-serif;padding:6px 0;border:0;border-radius:6px;cursor:pointer;width:100%;margin-top:6px;background:#fff;color:#061ab1">VEURE LLISTA</button><div id=tancSt style="margin-top:10px;white-space:pre-line;font-size:13px"></div></div>';document.body.appendChild(p);
-const st=()=>{const n=S.n(),el=document.getElementById('tancSt');if(!el)return;let t=S.running?(S.dry?'SIMULANT... ':'EXECUTANT... ')+S.step:(S.step==='FET'?(S.dry?'SIMULACIO FETA':'TANCAMENT FET'):'Preparat');if(n)t+='\n\nA la 1000: '+n.a1000+'\nA la 2000: '+n.a2000+'\nI-93 posades: '+n.i93+'\nS-51 (agotados intentos): '+n.s51+'\nREA (I-96 Recogeran en agencia): '+n.rea+'\nParcelShop (I-96): '+n.ps+'\nDeteriorats: '+n.det+'\nParcials / falten bultos (a 1000): '+n.parc+'\nFALTA DE TIEMPO -> F. MAYOR: '+n.ft+'\nFPE futura (sense incidencia): '+n.fut+'\nFPE passada sense dades noves: '+n.pas+'\nSol.licitud devolucio (AVIS): '+n.dsol+'\nEliminats de reparto: '+n.elim+'\nQUEDEN A FULLES R: '+n.resR+'\nSospitosos entregats: '+n.sos+'\nEconomy S-51: '+n.eco+'\nPickups (no tocats): '+n.pick+'\nMal classificats (reexpedir): '+n.malc+'\nA revisar: '+n.exc+'\nERRORS: '+n.err;el.innerText=t;};setInterval(st,2000);st();
+const st=()=>{const n=S.n(),el=document.getElementById('tancSt');if(!el)return;let t=S.running?(S.dry?'SIMULANT... ':'EXECUTANT... ')+S.step:(S.step==='FET'?(S.dry?'SIMULACIO FETA':'TANCAMENT FET'):'Preparat');if(n)t+='\n\nA la 1000: '+n.a1000+'\nA la 2000: '+n.a2000+'\nI-93 posades: '+n.i93+'\nS-51 (agotados intentos): '+n.s51+'\nREA (I-96 Recogeran en agencia): '+n.rea+'\nParcelShop (I-96): '+n.ps+'\nDeteriorats: '+n.det+'\nParcials / falten bultos (a 1000): '+n.parc+'\nFALTA DE TIEMPO -> F. MAYOR: '+n.ft+'\nFPE futura (sense incidencia): '+n.fut+'\nFPE passada sense dades noves: '+n.pas+'\nSol.licitud devolucio (AVIS): '+n.dsol+'\nEliminats de reparto: '+n.elim+'\nQUEDEN A FULLES R: '+n.resR+'\nSospitosos entregats: '+n.sos+'\nEconomy S-51: '+n.eco+'\nPickups (no tocats): '+n.pick+'\nMal classificats (reexpedir): '+n.malc+'\nA revisar: '+n.exc+'\nERRORS: '+n.err+(n.q?'\nDescarrega Q: '+(/^OK/.test(n.q)?'feta (informe Q en uns minuts)':String(n.q).slice(0,60)):'');el.innerText=t;};setInterval(st,2000);st();
 const go=d=>{if(S.running)return;
 const m=prompt((d?'SIMULAR':'EXECUTAR')+' el tancament de '+avui()+'.\nObservacio per a les I-93 (pots canviar-la):','EXCESO DE MERCANCIA');if(m===null)return;
 const t=(m||'EXCESO DE MERCANCIA').trim().toUpperCase();S.run({dry:d,motiuR:t,motiuZ:t});};document.getElementById('tancMin').onclick=()=>{const b=document.getElementById('tancBody'),h=b.style.display!=='none';b.style.display=h?'none':'';p.style.width=h?'auto':'270px';try{localStorage.setItem('TANC_MIN',h?'1':'');}catch(e){}};try{if(localStorage.getItem('TANC_MIN')){document.getElementById('tancBody').style.display='none';p.style.width='auto';}}catch(e){}document.getElementById('tancGo').onclick=()=>go(false);document.getElementById('tancSim').onclick=()=>go(true);document.getElementById('tancLl').onclick=()=>S.llista();};S.panel();
