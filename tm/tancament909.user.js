@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Tancament 909 (boto Atlas)
 // @namespace    recollit-entregat-909
-// @version      1.22
+// @version      1.23
 // @description  Tancament diari Atlas agencia 909: boto Executar/Simular
 // @match        https://atlas.gls-spain.es/*
 // @grant        none
@@ -11,7 +11,7 @@
 // ==/UserScript==
 
 const TANC909=function(){
-const S=window.TANC={v:'1.22',res:null,step:'',running:false,done:new Set()};
+const S=window.TANC={v:'1.23',res:null,step:'',running:false,done:new Set()};
 const sl=ms=>new Promise(r=>setTimeout(r,ms));
 const z=n=>String(n).padStart(2,'0');
 const avui=()=>{const d=new Date();return z(d.getDate())+'/'+z(d.getMonth()+1)+'/'+d.getFullYear();};
@@ -72,7 +72,7 @@ async function trk(e){const r=await rw(e);if(!r)return null;
 const b0=tt();jQuery(r.cells[3]).trigger('click');let x='';for(let k=0;k<25;k++){await sl(300);x=tt();if(x&&x!==b0&&/Tracking/.test(x)&&/\d\d\/\d\d\/\d{4}/.test(x))break;if(k===6&&!x){[...document.querySelectorAll('button,a')].find(b=>/Ver Tracking/.test(b.innerText))?.click();await sl(1500);jQuery(r.cells[3]).trigger('click');}}if(!x||x===b0){add('exc',e+' sense tracking');return null;}await sl(250);
 const raw=tt();if(/SOLICITUD DE DEVOLUCI/i.test(raw)&&!R.dsol.includes(e))add('dsol',e);
 const pe=parse(raw);S.ev[e]=pe;return pe;}
-const stt=ev=>{const is=ev.filter(x=>x.t==='I'||x.t==='S'),l=is[is.length-1];return {incT:ev.some(x=>x.t==='I'&&x.d.startsWith(T)),last:l,del:ev.some(x=>x.t==='E'&&!/DEVUELTA/.test(x.x)),dev:ev.some(x=>x.t==='D'||/DEVUELTA AL CLIENTE/.test(x.x)),s51:ev.some(x=>x.t==='S'&&/PASARAN A RECOGER|RECOGERAN EN AGENCIA/.test(x.x))};};
+const stt=ev=>{const is=ev.filter(x=>x.t==='I'||x.t==='S'),l=is[is.length-1],kp=ev.filter(x=>x.t==='P').map(x=>tk(x.d)).sort().pop()||'';return {incT:ev.some(x=>x.t==='I'&&x.d.startsWith(T)&&tk(x.d)>=kp),last:l,del:ev.some(x=>x.t==='E'&&!/DEVUELTA/.test(x.x)),dev:ev.some(x=>x.t==='D'||/DEVUELTA AL CLIENTE/.test(x.x)),s51:ev.some(x=>x.t==='S'&&/PASARAN A RECOGER|RECOGERAN EN AGENCIA/.test(x.x))};};
 const add=(k,v)=>R[k].push(v);
 const EDS=/ENTREGA DIA SIGUIENTE|EN RUTA|ENTREGAR HOY/i,tk=d=>ymd(d)+String(d).slice(11,19);
 const sosp=ev=>{const s0=ev.find(v=>v.t==='S'&&EDS.test(v.x));if(!s0)return null;const k0=tk(s0.d);if(ev.some(v=>v.t==='P'&&tk(v.d)>=k0))return null;const ds=new Set(ev.filter(v=>v.t==='I'&&tk(v.d)>=k0).map(v=>ymd(v.d)));return ds.size>=2?{n:ds.size,d0:s0.d.slice(0,5)}:null;};
@@ -81,14 +81,14 @@ const R1000=/^(AUSENTE|CAUSA DE FUERZA MAYOR|PUNTO ENTREGA NO DISPONIBLE|FACILIT
 const PARC=/FALTA[N]? BULTOS|ENTREGA PARCIAL/i,DET=/DETERIORAD/,NOTOUCH=/(^|\D)(707070|808080|818181|828282|838383|848484|858585)(\D|$)/,PS=/PARCEL ?SHOP/i;
 const nd=s=>!!(s.last&&s.last.t==='S'&&!/PASARAN A RECOGER|RECOGERAN EN AGENCIA/.test(s.last.x));
 const OBS2='AGOTADOS INTENTOS. DESTINATARIO TIENE 10 DIAS PARA RECOGER EL ENVIO';
-const FT=/FALTA DE TIEMPO/i;
+const FT=/FALTA DE TIEMPO/i,TRANS=/RETRASO EN RUTA/i;
 const lastFT=ev=>{const i=ev.filter(v=>v.t==='I').pop();return !!i&&FT.test(i.x);};
 async function to(e,rep,sh){const a=await assign(e,rep);if(a==='OK'){add(rep==='1000'?'a1000':'a2000',e);dn(e);}else add('err',e+' ->'+rep+' '+a+' '+sh);}
 const pc=(g,e,sh)=>{if(g!=='PARCIAL')return false;add('parc',e+' '+sh);dn(e);return true;};
 const isParc=(x,ev)=>PARC.test(x.inc||'')||(ev||[]).some(v=>PARC.test(v.x));
 async function elimDel(x,sh){const ev=await trk(x.e);if(!ev)return;if(isParc(x,ev)){add('parc',x.e+' parcial '+sh);return to(x.e,'1000',sh);}const r=await elim(x.e);if(r==='OK'){add('elim',x.e+' '+sh);dn(x.e);}else add('err',x.e+' eliminar '+r+' '+sh);}
 async function i93(e,obs,sh,rep){const g=await grab(e,'I - 93 -',obs,true);if(pc(g,e,sh))return false;if(g!=='OK'){add(g==='NO PERMES'?'exc':'err',e+' I93 '+(g==='NO PERMES'?'no permesa (entregat?)':g)+' '+sh);return false;}add('i93',e);dn(e);if(rep)await to(e,'1000',sh);return true;}
-async function s51(e,obs,sh){const g=await grab(e,'S - 51 -',obs,false);if(g==='OK'){add('s51',e);dn(e);}else add(g==='NO PERMES'?'exc':'err',e+' S51 '+(g==='NO PERMES'?'no permesa':g)+' '+sh);}
+async function s51(e,obs,sh){const g=await grab(e,'S - 51 -',obs,false);if(g==='NO PERMES'){const ev=S.ev[e]||await trk(e);if(ev&&stt(ev).s51){add('s51',e+' (ja tenia REA)');dn(e);return;}}if(g==='OK'){add('s51',e);dn(e);}else add(g==='NO PERMES'?'exc':'err',e+' S51 '+(g==='NO PERMES'?'no permesa':g)+' '+sh);}
 async function aus2(x,sh){if(EXPR(x)){const ev=await trk(x.e);if(!ev)return;const a=ev.filter(v=>v.t==='I'&&/^AUSENTE/.test(v.x));if(a.length>=2&&a[a.length-1].d.slice(0,10)===a[a.length-2].d.slice(0,10)){add('exp2',x.e+' '+(x.hr==='0'?'10:30':'14h')+' 2 ausentes el '+a[a.length-1].d.slice(0,5)+': sense S-51, a 1000 '+sh);return to(x.e,'1000',sh);}}return s51(x.e,OBS2,sh);}
 async function eco(x,sh,mv){let g=await grab(x.e,'S - 51 -',OBSE,false);if(g==='NO PERMES'){const a=await grab(x.e,'I - 96 -',OBSE,true,51);g=a==='OK'?'OK':'I96 '+a;}if(g==='OK'){add('eco',x.e+' '+sh);dn(x.e);if(mv)await to(x.e,'1000',sh);}else add(g==='NO PERMES'?'exc':'err',x.e+' Economy S51 '+g+' '+sh);}
 async function inc93(x,obs,sh,rep){const y=ymd(x.f);if(!y||y>TT){add('fut',x.e+' '+sh);return false;}if(y<TT){const ev=await trk(x.e);if(!ev)return false;
@@ -99,7 +99,7 @@ async function fxt(e,obs,sh,rep){const g=await grab(e,'I - 93 -',obs,true);if(pc
 async function incR(x,obs,sh){const y=ymd(x.f);if(y&&y<TT){const ev=await trk(x.e);if(!ev){add('exc',x.e+' FPE passada sense tracking, no tocat '+sh);return;}const s=stt(ev);if(s.del){add('exc',x.e+' entregat i encara a '+sh);return;}if(s.incT)return to(x.e,'1000',sh);}return i93(x.e,obs,sh,true);}
 const F={
 R:async(l,o)=>{const sh=shn(l);for(const x of rI(sh)){if(x.del||S.done.has(x.e))continue;
-S.step=sh+' '+x.e;if(FT.test(x.inc)){await fxt(x.e,o.motiuR,sh,true);continue;}if(DET.test(x.inc)){await det(x,sh);continue;}if(R2000.test(x.inc)){await to(x.e,'2000',sh);continue;}if(PARC.test(x.inc)){add('parc',x.e+' '+sh);await to(x.e,'1000',sh);continue;}if(!x.inc){await incR(x,o.motiuR,sh);continue;}if(ECO(x)&&ATT.test(x.inc)){await eco(x,sh,true);continue;}if(R1000.test(x.inc)){await to(x.e,'1000',sh);continue;}if(x.inc==='AUSENTE SEGUNDA VEZ'){await aus2(x,sh);continue;}add('exc',x.e+' '+x.inc+' '+sh);}await sl(1500);for(const x of rows().map(info))if(!x.del&&!S.done.has(x.e)&&!R.exc.some(s=>s.startsWith(x.e)))add('resR',x.e+' '+(x.inc||'sense incidencia')+' '+sh);},
+S.step=sh+' '+x.e;if(FT.test(x.inc)){await fxt(x.e,o.motiuR,sh,true);continue;}if(DET.test(x.inc)){await det(x,sh);continue;}if(R2000.test(x.inc)){await to(x.e,'2000',sh);continue;}if(PARC.test(x.inc)){add('parc',x.e+' '+sh);await to(x.e,'1000',sh);continue;}if(!x.inc||TRANS.test(x.inc)){await incR(x,o.motiuR,sh);continue;}if(ECO(x)&&ATT.test(x.inc)){await eco(x,sh,true);continue;}if(R1000.test(x.inc)){await to(x.e,'1000',sh);continue;}if(x.inc==='AUSENTE SEGUNDA VEZ'){await aus2(x,sh);continue;}add('exc',x.e+' '+x.inc+' '+sh);}await sl(1500);for(const x of rows().map(info))if(!x.del&&!S.done.has(x.e)&&!R.exc.some(s=>s.startsWith(x.e)))add('resR',x.e+' '+(x.inc||'sense incidencia')+' '+sh);},
 ARR:async(l,o)=>{const sh=shn(l);for(const x of rI(sh)){if(S.done.has(x.e))continue;
 S.step=sh+' '+x.e;
 const y=ymd(x.f),le=!!y&&y<=TT;if(x.del){if(/^Z999\[/.test(sh))await elimDel(x,sh);else if(le)add('exc',x.e+' entregat i encara a '+sh);continue;}if(PARC.test(x.inc)){add('parc',x.e+' '+sh);await to(x.e,'1000',sh);continue;}if(FT.test(x.inc)){await fxt(x.e,o.motiuZ,sh,true);continue;}if(DET.test(x.inc)){await det(x,sh);continue;}if(!x.inc){if(le)await inc93(x,o.motiuZ,sh,true);continue;}if(ECO(x)&&ATT.test(x.inc))await eco(x,sh,true);else if(R2000.test(x.inc))await to(x.e,'2000',sh);else if(x.inc==='AUSENTE SEGUNDA VEZ')await aus2(x,sh);else if(R1000.test(x.inc)){if(le){const ev=await trk(x.e);if(!ev)continue;
