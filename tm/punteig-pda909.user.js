@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Punteig PDA 909
 // @namespace    recollit-entregat-909
-// @version      1.9
-// @description  v1.9: serveis 97/98 = BUSINESS PARCEL (són nacionals); avís INTERNACIONAL (importació, compta per a l'SPC) amb pitet de Premium i veu. v1.8: avisa «Surt avui · a prop» dels no FPE que són a prop d'un FPE d'avui o endarrerit (La Seu: mateix carrer ±5 números; pobles: mateix poble i ruta). v1.7: correccions de zona del 04/11 (Salòria 64 i 83, Boixadera, Comtat d'Urgell 42, Camí Ral de Cerdanya, Coll del Pendís, Guils, Anserall, Pla de Sant Tirs). v1.6: derivats al PS Recollit i Entregat = punt Blau. v1.5: Grapats (C/ Mont) sempre Blau. v1.4: zones Blau v4 (Jueus, Muralla, Pou, Estret, Hèrcules, Graell, Europa, Portal d'Andorra, Garriga i Massó, Mont, Roda, Partida Sant Ermengol, Poble Sec, Alt Pirineu, Baixos de Calbinyà). v1.3: Av. Valls d'Andorra sencera a Blau (18-20 continua REA). v1.2: correccions verd (Llorenç Tomàs i Costa 52-83, Comtat d'Urgell 57-59, Setúria, Circumval·lació 71-77 i 82). v1.1: tot Castellciutat va a Organyà (excepte el polígon). Punteig de llegada amb la PDA a Atlas (agencia 909): a cada lectura mostra la zona, la prioritat FPE, els Premium i els derivats a ParcelShop, amb veu i pitets. Carrega sol el llistat del dia des d'Atlas (Miraenvios), sense Excel. No modifica res del que fa Atlas.
+// @version      2.0
+// @description  v2.0: pantalla completa plegable (per triar la fulla a Atlas) amb el resultat real del punteig d'Atlas: ✓ puntejat (verd), ✗ no llegit (vermell), ↺ ja llegit (taronja), ⚠ sense confirmar; veu del color només quan Atlas confirma; sense teclat de pantalla; comptadors i pendents FPE per zona. v1.9: serveis 97/98 = BUSINESS PARCEL (són nacionals); avís INTERNACIONAL (importació, compta per a l'SPC) amb pitet de Premium i veu. v1.8: avisa «Surt avui · a prop» dels no FPE que són a prop d'un FPE d'avui o endarrerit (La Seu: mateix carrer ±5 números; pobles: mateix poble i ruta). v1.7: correccions de zona del 04/11 (Salòria 64 i 83, Boixadera, Comtat d'Urgell 42, Camí Ral de Cerdanya, Coll del Pendís, Guils, Anserall, Pla de Sant Tirs). v1.6: derivats al PS Recollit i Entregat = punt Blau. v1.5: Grapats (C/ Mont) sempre Blau. v1.4: zones Blau v4 (Jueus, Muralla, Pou, Estret, Hèrcules, Graell, Europa, Portal d'Andorra, Garriga i Massó, Mont, Roda, Partida Sant Ermengol, Poble Sec, Alt Pirineu, Baixos de Calbinyà). v1.3: Av. Valls d'Andorra sencera a Blau (18-20 continua REA). v1.2: correccions verd (Llorenç Tomàs i Costa 52-83, Comtat d'Urgell 57-59, Setúria, Circumval·lació 71-77 i 82). v1.1: tot Castellciutat va a Organyà (excepte el polígon). Punteig de llegada amb la PDA a Atlas (agencia 909): a cada lectura mostra la zona, la prioritat FPE, els Premium i els derivats a ParcelShop, amb veu i pitets. Carrega sol el llistat del dia des d'Atlas (Miraenvios), sense Excel. No modifica res del que fa Atlas.
 // @match        https://atlas.gls-spain.es/pick/*
 // @match        https://atlas.gls-spain.es/Pick/*
 // @grant        none
@@ -294,65 +294,131 @@ return zoneOf;
     prem: [[880, 0, .12], [660, .14, .12], [880, .28, .12], [660, .42, .12]]
   };
 
-  // ---------- pantalla ----------
+  // ---------- pantalla v2.0: pantalla completa plegable + resultat real d'Atlas ----------
+  const W = (typeof unsafeWindow !== 'undefined' && unsafeWindow) || window;
   const COL = () => zonaNova.COL || {};
+  const ZORD = ['VERMELL', 'VERD', 'GROC', 'BLAU', 'POLÍGON', 'ORGANYÀ', 'CERDANYA', 'LA FARGA', 'PS RECOLLIT', 'REA', '?'];
+  const K_SCAN = 'pda909:scan';
   const CSS = `
-  #pda909{position:fixed;left:0;right:0;bottom:0;z-index:2147483000;font-family:system-ui,Arial,sans-serif;box-shadow:0 -4px 16px rgba(0,0,0,.35);background:#fff;color:#14213a;display:flex;flex-direction:column;max-height:62vh;transition:max-height .15s}
-  #pda909.min{max-height:46px}
-  #pda909 .hd{display:flex;align-items:center;gap:6px;padding:6px 8px;background:#061ab1;color:#fff;font-size:13px;min-height:34px}
-  #pda909 .hd .t{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  #pda909 .hd button{background:rgba(255,255,255,.15);color:#fff;border:0;border-radius:6px;font:600 15px system-ui;padding:6px 10px;min-width:38px}
-  #pda909 .zn{text-align:center;padding:8px 6px 6px;font-weight:800;text-transform:uppercase;line-height:1}
-  #pda909 .zn b{display:block;font-size:min(17vw,96px)}
-  #pda909 .zn i{display:block;font-style:normal;font-size:min(6vw,30px);margin-top:4px}
-  #pda909 .pr{text-align:center;font-weight:800;font-size:min(8vw,40px);padding:6px;text-transform:uppercase}
-  #pda909 .pr.ok{background:#e3f5ea;color:#0f8a4b}#pda909 .pr.late{background:#fbe5e3;color:#c8261d}#pda909 .pr.fut{background:#e9edf3;color:#55627a}#pda909 .pr.prop{background:#e3effd;color:#0b4fb3}#pda909 .sb.prop{color:#0b4fb3;font-weight:700}#pda909 .pr.miss{background:#fdf0d8;color:#a86400}
-  #pda909 .pm{background:#c8261d;color:#fff;text-align:center;font-weight:800;font-size:min(7vw,32px);padding:6px}
-  #pda909 .in{background:#e65100;color:#fff;text-align:center;font-weight:800;font-size:min(6vw,26px);padding:5px}#pda909 .ps{background:#c2185b;color:#fff;text-align:center;font-weight:800;font-size:min(6vw,26px);padding:6px}
-  #pda909 .sb{padding:6px 10px 10px;font-size:14px;color:#3a4558;overflow:auto}
-  #pda909 .st{padding:8px 10px;font-size:14px;background:#fff3cd;color:#7a5b00}
-  #pda909 .st.err{background:#fbe5e3;color:#c8261d}
-  #pda909 .idle{padding:14px;text-align:center;font-size:18px;color:#55627a}`;
-  let caixa = null;
+#pda909{position:fixed;left:0;right:0;top:0;bottom:0;z-index:2147483000;font-family:system-ui,Arial,sans-serif;background:#eef1f6;color:#14213a;display:flex;flex-direction:column;overflow:hidden}
+#pda909.min{top:auto;height:50px;box-shadow:0 -4px 16px rgba(0,0,0,.35)}
+#pda909.min .cos{display:none}
+#pda909 .hd{display:flex;align-items:center;gap:5px;padding:6px 8px;background:#061ab1;color:#fff;min-height:38px;flex:none}
+#pda909 .hd .t{flex:1;min-width:0;line-height:1.15}
+#pda909 .hd .t b{display:block;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#pda909 .hd .t b.nf{color:#ffd54f}
+#pda909 .hd .t span{display:block;font-size:11px;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#pda909 .hd button{background:rgba(255,255,255,.15);color:#fff;border:0;border-radius:6px;font:600 16px system-ui;padding:7px 9px;min-width:38px}
+#pda909 .hd button.on{background:#ffd54f;color:#14213a}
+#pda909 .cos{flex:1;overflow:auto;padding:8px;display:flex;flex-direction:column;gap:8px}
+#pda909 .at{border-radius:10px;padding:10px 8px;text-align:center;font-weight:800;font-size:min(8vw,34px);line-height:1.1}
+#pda909 .at small{display:block;font-size:min(4.2vw,17px);font-weight:600;margin-top:4px}
+#pda909 .at.wait{background:#dfe4ec;color:#55627a}
+#pda909 .at.ok{background:#0f8a4b;color:#fff}
+#pda909 .at.dup{background:#ef6c00;color:#fff}
+#pda909 .at.ko{background:#c8261d;color:#fff;font-size:min(12vw,54px);padding:26px 8px}
+#pda909 .at.none{background:#7a1010;color:#fff;font-size:min(9vw,40px);padding:20px 8px}
+@keyframes pda909p{50%{opacity:.35}}
+#pda909 .at.ko,#pda909 .at.none{animation:pda909p .5s 5}
+#pda909 .cd{background:#fff;border:3px solid #14213a;border-radius:12px;overflow:hidden}
+#pda909 .zn{text-align:center;padding:10px 6px 8px;font-weight:800;text-transform:uppercase;line-height:1}
+#pda909 .zn b{display:block;font-size:min(17vw,84px)}
+#pda909 .zn i{display:block;font-style:normal;font-size:min(5.5vw,24px);margin-top:4px}
+#pda909 .cd.petit .zn b{font-size:min(10vw,44px)}
+#pda909 .cd.petit .zn i{font-size:min(4.5vw,18px)}
+#pda909 .pr{text-align:center;font-weight:800;font-size:min(7.5vw,34px);padding:6px;text-transform:uppercase}
+#pda909 .pr.ok{background:#e3f5ea;color:#0f8a4b}#pda909 .pr.late{background:#fbe5e3;color:#c8261d}#pda909 .pr.fut{background:#e9edf3;color:#55627a}#pda909 .pr.prop{background:#e3effd;color:#0b4fb3}#pda909 .pr.miss{background:#fdf0d8;color:#a86400}
+#pda909 .pm{background:#c8261d;color:#fff;text-align:center;font-weight:800;font-size:min(6.5vw,30px);padding:6px}
+#pda909 .in{background:#e65100;color:#fff;text-align:center;font-weight:800;font-size:min(5.5vw,24px);padding:5px}
+#pda909 .ps{background:#c2185b;color:#fff;text-align:center;font-weight:800;font-size:min(5.5vw,24px);padding:6px}
+#pda909 .sb{padding:6px 10px 8px;font-size:13px;color:#3a4558}
+#pda909 .sb.prop{color:#0b4fb3;font-weight:700}
+#pda909 .sb code{font-family:monospace;font-size:13px}
+#pda909 .er{background:#fbe5e3;color:#c8261d;border:2px solid #c8261d;border-radius:10px;padding:8px 10px;font-weight:700;font-size:14px;display:flex;gap:8px;align-items:center}
+#pda909 .er div{flex:1}
+#pda909 .er button{background:#c8261d;color:#fff;border:0;border-radius:6px;font:700 14px system-ui;padding:6px 10px}
+#pda909 .kp{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+#pda909 .kp div{background:#fff;border-radius:8px;padding:6px;font-size:11px;color:#55627a;line-height:1.15}
+#pda909 .kp b{display:block;font-size:22px;color:#14213a}
+#pda909 .kp .g b{color:#0f8a4b}#pda909 .kp .r b{color:#c8261d}#pda909 .kp .o b{color:#ef6c00}
+#pda909 .pd{background:#fff;border-radius:10px;padding:8px}
+#pda909 .pd h4{margin:0 0 4px;font-size:12px;letter-spacing:.5px;color:#55627a;text-transform:uppercase}
+#pda909 .pd .xp{font-size:13px;margin-bottom:6px}
+#pda909 .pd .ch{display:flex;flex-wrap:wrap;gap:5px}
+#pda909 .pd .ch span{border-radius:6px;padding:4px 8px;font-weight:800;font-size:13px}
+#pda909 .st{padding:8px 10px;font-size:14px;background:#fff3cd;color:#7a5b00;border-radius:8px}
+#pda909 .st.err{background:#fbe5e3;color:#c8261d}
+#pda909 .nf{background:#fff3cd;color:#7a5b00;border-radius:10px;padding:12px;font-size:16px;font-weight:700;text-align:center}
+#pda909 .idle{padding:18px 12px;text-align:center;font-size:18px;color:#55627a;background:#fff;border-radius:12px}`;
+
+  let caixa = null, darrerFulla = '', ultim = '';
+  const codiInput = () => document.getElementById('pnt-codigoV2');
+  const visible = e => !!(e && e.offsetParent !== null);
+  const scans = () => { const s = get(K_SCAN, null); return s && s.dia === avui() && s.m && s.n ? s : { dia: avui(), m: {}, n: { ok: 0, dup: 0, ko: 0, none: 0 } }; };
+  function guardaScan(key, st, k) {
+    const s = scans(); s.n[st] = (s.n[st] || 0) + 1;
+    if (key && (st === 'ok' || st === 'dup')) s.m[key] = k || 'miss';
+    set(K_SCAN, s);
+  }
+
   function munta() {
     if (caixa || !document.body) return;
-    const st = document.createElement('style'); st.textContent = CSS; document.head.appendChild(st);
+    const st = document.createElement('style'); st.textContent = CSS; (document.head || document.body).appendChild(st);
     caixa = document.createElement('div'); caixa.id = 'pda909';
-    caixa.innerHTML = `<div class="hd"><span class="t" id="pda909t"></span><button data-a="re" title="Tornar a carregar el llistat">↻</button><button data-a="veu" title="Veu"></button><button data-a="min" title="Amagar">▾</button></div>
-      <div class="st" id="pda909s" hidden></div><div id="pda909b"><div class="idle">Punteja com sempre. Aquí sortirà la zona i la prioritat de cada paquet.</div></div>`;
+    caixa.innerHTML = `<div class="hd"><div class="t"><b id="pda909f"></b><span id="pda909t"></span></div><button data-a="kb" title="Teclat">⌨</button><button data-a="re" title="Tornar a carregar el llistat">↻</button><button data-a="veu" title="Veu"></button><button data-a="min" title="Amagar / mostrar">▾</button></div>
+<div class="cos"><div class="st" id="pda909s" hidden></div><div id="pda909x"></div><div id="pda909e"></div><div id="pda909b"><div class="idle">Escaneja. Aquí sortirà si Atlas l'ha puntejat, la zona i la prioritat FPE.</div></div><div class="kp" id="pda909k"></div><div class="pd" id="pda909p"></div></div>`;
     document.body.appendChild(caixa);
     // els botons no han de treure el cursor del camp on escriu la pistola
     caixa.addEventListener('mousedown', e => e.preventDefault(), true);
     caixa.addEventListener('touchstart', () => { to([]); }, { passive: true });
     caixa.addEventListener('click', e => {
-      const b = e.target.closest('button'); if (!b) return;
-      const a = b.dataset.a, c = cfg();
-      if (a === 're') carregaLlista();
-      if (a === 'veu') { c.veu = !c.veu; set(K_CFG, c); capcalera(); }
-      if (a === 'min') { caixa.classList.toggle('min'); b.textContent = caixa.classList.contains('min') ? '▴' : '▾'; }
+      const b = e.target.closest('button');
+      if (b) {
+        const a = b.dataset.a, c = cfg();
+        if (a === 're') carregaLlista();
+        if (a === 'veu') { c.veu = !c.veu; set(K_CFG, c); }
+        if (a === 'kb') { c.kbd = !c.kbd; set(K_CFG, c); teclat(); }
+        if (a === 'min') { if (caixa.classList.contains('min')) obre(); else plega(); }
+        if (a === 'ne') { errs.length = 0; pintaErrors(); }
+        capcalera();
+      }
+      if (!caixa.classList.contains('min')) enfoca();
     });
-    capcalera();
+    if (!visible(codiInput())) plega();
+    capcalera(); comptadors(); teclat();
     const d = llista();
     if (!d || d.dia !== avui()) carregaLlista();
   }
+  function obre() { if (!caixa) return; caixa.classList.remove('min'); caixa.querySelector('[data-a="min"]').textContent = '▾'; enfoca(); }
+  function plega() { if (!caixa) return; caixa.classList.add('min'); caixa.querySelector('[data-a="min"]').textContent = '▴'; }
+  function enfoca() { const ci = codiInput(); if (visible(ci) && document.activeElement !== ci) { try { ci.focus({ preventScroll: true }); } catch (e) { } } }
+  function teclat() { const ci = codiInput(); if (!ci) return; if (cfg().kbd) ci.removeAttribute('inputmode'); else ci.setAttribute('inputmode', 'none'); }
+
+  function fullaActual() {
+    if (darrerFulla) return darrerFulla;
+    try { const v = W.codeDeliveryMan; if (v) return String(v).replace(/^@@/, ''); } catch (e) { }
+    const e = document.getElementById('pnt-repartidorV2'); if (e && e.value) return String(e.value).replace(/^@@/, '');
+    try { const d = W.my && W.my.vm && W.my.vm.dataDeliveryMan && W.my.vm.dataDeliveryMan(); const c = d && (typeof d.Code === 'function' ? d.Code() : d.Code); if (c) return String(c); } catch (e) { }
+    return '';
+  }
   function capcalera() {
     if (!caixa) return;
-    const d = llista(), n = d && d.recs ? d.recs.length : 0;
-    const lg = get(K_LOG, { dia: '', n: 0 }), nl = lg.dia === avui() ? lg.n : 0;
-    caixa.querySelector('#pda909t').textContent = d && d.dia === avui()
-      ? `Punteig PDA 909 · ${n} env. · ${new Date(d.at).toLocaleTimeString('ca-ES', { hour: '2-digit', minute: '2-digit' })} · ${nl} llegits`
-      : 'Punteig PDA 909 · sense llistat d\'avui';
+    const d = llista(), n = d && d.recs ? d.recs.length : 0, f = fullaActual(), fb = caixa.querySelector('#pda909f');
+    fb.textContent = f ? 'Fulla ' + f : '⚠ Tria la fulla a Atlas';
+    fb.className = f ? '' : 'nf';
+    caixa.querySelector('#pda909t').textContent = (d && d.dia === avui()
+      ? `${n} env. · llistat ${new Date(d.at).toLocaleTimeString('ca-ES', { hour: '2-digit', minute: '2-digit' })}`
+      : 'Sense llistat d\'avui') + (ultim ? ' · últim: ' + ultim : '');
     caixa.querySelector('[data-a="veu"]').textContent = cfg().veu ? '🔊' : '🔇';
+    caixa.querySelector('[data-a="kb"]').className = cfg().kbd ? 'on' : '';
   }
   function estat(t, err) {
     const s = caixa && caixa.querySelector('#pda909s'); if (!s) return;
     s.hidden = !t; s.textContent = t || ''; s.className = 'st' + (err ? ' err' : '');
   }
 
-  // ---------- cada lectura ----------
-  let darrer = '', darrerT = 0;
   // ---------- a prop d'un FPE d'avui ----------
-  const NRM = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().replace(/[´`'’.,;:()\/\\-]/g, ' ').replace(/\s+/g, ' ').trim().replace(/\bSTA\b/g, 'SANTA').replace(/\bST\b/g, 'SANT').replace(/\bMAYOR\b/g, 'MAJOR');
+  const NRM = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase().replace(/[´`'’.,;:()\/\\-]/g, ' ').replace(/\s+/g, ' ').trim().replace(/\bSTA\b/g, 'SANTA').replace(/\bST\b/g, 'SANT').replace(/\bMAYOR\b/g, 'MAJOR');
   const TIPUS = /^(C|CL|CALLE|CARRER|CARRE|CR|CRA|CTRA|CARRETERA|AV|AVD|AVDA|AVENIDA|AVINGUDA|AVGDA|PG|PS|PASSEIG|PASEO|PGE|PSG|PASSATGE|PASAJE|PL|PZA|PLAZA|PLACA|RAMBLA|RBLA|TRAV|TRAVESSIA|URB|URBANITZACIO|URBANIZACION|BARRI|BARRIO|CAMI|CAMINO|PARTIDA|PDA)$/;
   const BUIDES = /^(DE|DEL|DELS|LA|LES|EL|ELS|LOS|LAS|D|L|I|Y|NUM|NUMERO|N|NO)$/;
   function parseAdreca(a) {
@@ -399,75 +465,180 @@ return zoneOf;
     if (!r.d) return ['fut', 'Sense FPE'];
     return ['fut', 'Deixar · FPE ' + dm(r.d)];
   }
-  function mostra(code) {
-    if (!caixa) munta(); if (!caixa) return;
+
+  // ---------- cada lectura: primer la pantalla, després la confirmació d'Atlas ----------
+  let darrer = '', darrerT = 0, actual = '';
+  const PEND = new Map();
+  const errs = [];
+  function nou(code) {
     code = String(code || '').trim(); if (!code) return;
+    if (!caixa) munta(); if (!caixa) return;
     if (code === darrer && Date.now() - darrerT < 1500) return;
     darrer = code; darrerT = Date.now();
-    const lg = get(K_LOG, { dia: '', n: 0 }); if (lg.dia !== avui()) { lg.dia = avui(); lg.n = 0; } lg.n++; set(K_LOG, lg); capcalera();
-    caixa.classList.remove('min'); caixa.querySelector('[data-a="min"]').textContent = '▾';
-    const r = busca(code), B = caixa.querySelector('#pda909b');
-    if (!r) {
-      B.innerHTML = `<div class="pr miss">No és al llistat</div><div class="sb">Codi ${esc(code)} · esperant Atlas…</div>`;
-      to(SO.miss); B.dataset.code = code; return;
+    obre();
+    const r = busca(code);
+    const p = { code, r, t: Date.now(), st: 'wait', enviat: false, fet: false };
+    if (r) { const [k, txt, o] = classe(r); Object.assign(p, { k, txt, o }); }
+    PEND.set(code, p); actual = code;
+    pinta(p);
+    p.t1 = setTimeout(() => { if (!p.fet && !p.enviat) resol(p, 'none', 'No s\'ha enviat a Atlas'); }, 2000);
+    p.t2 = setTimeout(() => { if (!p.fet) resol(p, 'none', 'Atlas no respon'); }, 7000);
+  }
+  function troba(code) {
+    code = String(code || '').trim();
+    if (code && PEND.has(code)) return PEND.get(code);
+    let best = null; for (const p of PEND.values()) if (!p.fet && (!best || p.t < best.t)) best = p;
+    return best;
+  }
+  const tx = v => v == null ? '' : String(v).trim();
+  function resol(p, st, msg, it) {
+    if (!p || p.fet) return;
+    p.fet = true; clearTimeout(p.t1); clearTimeout(p.t2); PEND.delete(p.code);
+    p.st = st; p.msg = msg || ''; p.it = it || null;
+    if (it && tx(it.codrepatidor)) darrerFulla = tx(it.codrepatidor);
+    if (!p.r && it && st !== 'ko') {
+      const exp = tx(it.codexp), ref = tx(it.referencia);
+      const r = (exp && busca(exp)) || (/^\d{9,12}$/.test(ref) ? busca(ref) : null);
+      if (r) { p.r = r; const [k, txt, o] = classe(r); Object.assign(p, { k, txt, o }); } else proposta(p, it);
     }
-    const [k, txt, o] = classe(r);
+    guardaScan(p.r ? p.r.c[0] : p.code, st, p.r ? p.k : 'miss');
+    const zt = p.r ? (p.r.z === '?' ? 'sense zona' : p.r.z) : (p.pz && p.pz.z ? p.pz.z : '');
+    ultim = { ok: '✓ ', dup: '↺ ', ko: '✗ ', none: '⚠ ' }[st] + ({ ok: zt || 'puntejat', dup: 'ja llegit', ko: 'no llegit', none: 'sense resposta' }[st]);
+    if (p.code === actual) pinta(p);
+    if ((st === 'ko' || st === 'none') && p.code !== actual) { errs.unshift(p); errs.length = Math.min(errs.length, 3); }
+    pintaErrors(); capcalera(); comptadors();
+    if (st === 'none') to(SO.miss);
+    if (st === 'ok' && p.code === actual) avisa(p);
+  }
+  function proposta(p, it) {
+    const ad = [tx(it.info01), tx(it.info02)].filter(Boolean).join(' '), cp = tx(it.cp);
+    if (!ad && !cp) return;
+    let z = {}; try { z = (!ad && cp === '25700') ? { z: '?', alt: 'La Seu · sense adreça' } : (zonaNova(ad, '', cp, '') || {}); } catch (e) { }
+    p.pz = { z: z.z && z.z !== '?' ? z.z : '', pt: z.pt || '', alt: z.alt || '', ad, cp, exp: tx(it.codexp) };
+  }
+  function avisa(p) {
+    const r = p.r;
+    if (!r) { parla('No és al llistat. ' + (SAY[p.pz && p.pz.z] || 'Sense zona'), 450); return; }
+    const suf = { ok: 'avui', late: 'endarrerit', prop: 'a prop', fut: 'deixar' }[p.k] || '';
+    let veu = r.ps ? 'Derivat. ' + r.ps : (SAY[r.z] || 'Sense zona') + (suf ? ', ' + suf : '');
+    let ms = 450;
+    if (r.p || r.i) { setTimeout(() => to(SO.prem), 450); ms = 1150; }
+    if (r.i) veu = 'Internacional. ' + veu;
+    if (r.p) veu = 'Premium. ' + veu;
+    parla(veu, ms);
+  }
+
+  function bandaAtlas(p) {
+    const f = p.it && tx(p.it.codrepatidor) ? 'Fulla ' + tx(p.it.codrepatidor) : '';
+    const M = {
+      wait: ['wait', '⏳ Esperant Atlas…', ''],
+      ok: ['ok', '✓ PUNTEJAT', f],
+      dup: ['dup', '↺ JA LLEGIT', 'Ja estava puntejat' + (f ? ' · ' + f : '')],
+      ko: ['ko', '✗ NO LLEGIT', p.msg || 'Bult incorrecte'],
+      none: ['none', '⚠ SENSE CONFIRMAR', (p.msg || 'Atlas no respon') + ' · torna a escanejar']
+    };
+    const [c, t, s] = M[p.st] || M.wait;
+    return `<div class="at ${c}">${t}${s ? `<small>${esc(s)}</small>` : ''}</div>`;
+  }
+  function targeta(r, k, txt, o, petit) {
     const col = COL()[r.z] || { bg: '#8a94a6', fg: '#fff' };
     const pm = r.p ? `<div class="pm">⚠ PREMIUM ${r.p === 'BP' ? 'BUSINESS PARCEL' : 'EXPRESS ' + r.p}</div>` : '';
     const inl = r.i ? '<div class="in">🌍 INTERNACIONAL · compta per a l\'SPC</div>' : '';
     const ps = r.ps ? `<div class="ps">📦 Derivat a ParcelShop · ${esc(r.ps)}</div>` : '';
-    B.innerHTML = pm + inl + ps + `<div class="zn" style="background:${col.bg};color:${col.fg}"><b>${esc(r.z === '?' ? 'Sense zona' : r.z)}</b>${r.pt ? `<i>${esc(r.pt)}</i>` : (r.a ? `<i>${esc(r.a)}</i>` : '')}</div>` +
-      `<div class="pr ${k}">${esc(txt)}</div>${o ? `<div class="sb prop">Al costat de: ${esc(o.ad)} · ${esc(o.l)} · FPE ${esc(dm(o.d))}</div>` : ''}<div class="sb">${esc(r.c[0])} · ${esc(r.l)} · ${esc(r.ad)}${r.cod ? ' · <b>Reemborsament ' + r.cod.toFixed(2) + ' €</b>' : ''}</div>`;
-    delete B.dataset.code;
-    to(SO[k]);
-    let veu = r.ps ? 'Parcel shop' : (SAY[r.z] || 'Sense zona');
-    if (r.p) { setTimeout(() => to(SO.prem), 350); veu = 'Premium. ' + veu; }
-    if (r.i) { if (!r.p) setTimeout(() => to(SO.prem), 350); veu = 'Internacional. ' + veu; }
-    parla(veu, 300);
+    return `<div class="cd${petit ? ' petit' : ''}">` + pm + inl + ps +
+      `<div class="zn" style="background:${col.bg};color:${col.fg}"><b>${esc(r.z === '?' ? 'Sense zona' : r.z)}</b>${r.pt ? `<i>${esc(r.pt)}</i>` : (r.a ? `<i>${esc(r.a)}</i>` : '')}</div>` +
+      `<div class="pr ${k}">${esc(txt)}</div>${o ? `<div class="sb prop">Al costat de: ${esc(o.ad)} · ${esc(o.l)} · FPE ${esc(dm(o.d))}</div>` : ''}` +
+      `<div class="sb"><code>${esc(r.c[0])}</code> · ${esc(r.l)} · ${esc(r.ad)}${r.cod ? ' · <b>Reemborsament ' + r.cod.toFixed(2) + ' €</b>' : ''}</div></div>`;
   }
-  // no és al llistat: Atlas torna l'expedició, el CP i l'adreça → la busquem o proposem zona
-  function respostaAtlas(code, txt) {
-    const B = caixa && caixa.querySelector('#pda909b');
-    if (!B || B.dataset.code !== String(code || '').trim()) return;
-    let i = {}; try { const j = JSON.parse(txt); i = (j && j.Data && j.Data.Item2) || {}; } catch (e) { return; }
-    const t = v => v == null ? '' : String(v).trim();
-    const exp = t(i.codexp), ref = t(i.referencia), r = (exp && busca(exp)) || (/^\d{9,12}$/.test(ref) ? busca(ref) : null);
-    if (r) { darrer = ''; lgUndo(); mostra(r.c[0]); return; }
-    const ad = [t(i.info01), t(i.info02)].filter(Boolean).join(' '), cp = t(i.cp);
-    if (!ad && !cp) return;
-    let z = {}; try { z = (!ad && cp === '25700') ? { z: '?', alt: 'La Seu · sense adreça' } : (zonaNova(ad, '', cp, '') || {}); } catch (e) { }
-    const zz = z.z && z.z !== '?' ? z.z : '', col = COL()[zz] || { bg: '#8a94a6', fg: '#fff' };
-    B.innerHTML = `<div class="pr miss">No és al llistat · zona proposada</div><div class="zn" style="background:${col.bg};color:${col.fg}"><b>${esc(zz || '?')}</b><i>${esc(z.pt || (zz ? 'Per adreça: revisa l\'etiqueta' : (z.alt || 'Sense zona clara')))}</i></div>` +
-      `<div class="sb">${esc(['CP ' + (cp || '—'), ad, exp ? 'exp. ' + exp : ''].filter(Boolean).join(' · '))} · revisar FPE</div>`;
-    delete B.dataset.code;
-    parla('No és al llistat. ' + (SAY[zz] || 'Sense zona'), 200);
+  function pinta(p) {
+    const B = caixa && caixa.querySelector('#pda909b'); if (!B) return;
+    const at = bandaAtlas(p);
+    if (p.st === 'ko') { B.innerHTML = at + `<div class="sb">Codi <code>${esc(p.code)}</code> · torna'l a passar o revisa l'etiqueta.</div>`; return; }
+    let cos;
+    if (p.r) cos = targeta(p.r, p.k, p.txt, p.o, p.st === 'dup');
+    else if (p.pz) {
+      const col = COL()[p.pz.z] || { bg: '#8a94a6', fg: '#fff' };
+      cos = `<div class="cd${p.st === 'dup' ? ' petit' : ''}"><div class="pr miss">No és al llistat · zona proposada</div><div class="zn" style="background:${col.bg};color:${col.fg}"><b>${esc(p.pz.z || '?')}</b><i>${esc(p.pz.pt || (p.pz.z ? 'Per adreça: revisa l\'etiqueta' : (p.pz.alt || 'Sense zona clara')))}</i></div>` +
+        `<div class="sb">${esc(['CP ' + (p.pz.cp || '—'), p.pz.ad, p.pz.exp ? 'exp. ' + p.pz.exp : ''].filter(Boolean).join(' · '))} · revisar FPE</div></div>`;
+    } else cos = `<div class="cd"><div class="pr miss">No és al llistat</div><div class="sb">Codi <code>${esc(p.code)}</code>${p.st === 'wait' ? ' · esperant Atlas…' : ''}</div></div>`;
+    B.innerHTML = at + cos;
   }
-  function lgUndo() { const lg = get(K_LOG, { dia: '', n: 0 }); if (lg.n > 0) { lg.n--; set(K_LOG, lg); } }
+  function pintaErrors() {
+    const E = caixa && caixa.querySelector('#pda909e'); if (!E) return;
+    E.innerHTML = errs.length ? `<div class="er"><div>✗ Lectura anterior sense puntejar: ${errs.map(p => '<code>' + esc(p.code) + '</code>').join(', ')}<br>Torna-la a passar.</div><button data-a="ne">OK</button></div>` : '';
+  }
+  function comptadors() {
+    if (!caixa) return;
+    const s = scans(), v = Object.values(s.m), c = k => v.filter(x => x === k).length;
+    const T = (cls, n, l) => `<div class="${cls}"><b>${n}</b>${l}</div>`;
+    caixa.querySelector('#pda909k').innerHTML =
+      T('g', c('ok'), 'FPE avui') + T('r', c('late'), 'Endarrerits') + T('', c('fut') + c('prop'), 'Futurs') + T('o', c('miss'), 'No al llistat') +
+      T('g', s.n.ok || 0, '✓ Puntejats') + T('o', s.n.dup || 0, '↺ Ja llegits') + T('r', s.n.ko || 0, '✗ No llegits') + T('r', s.n.none || 0, '⚠ Sense resp.');
+    const P = caixa.querySelector('#pda909p'), d = llista();
+    if (!d || !d.recs || d.dia !== avui()) { P.innerHTML = ''; P.hidden = true; return; }
+    const a = avui(), L = d.recs.filter(r => r.d && r.d <= a), fal = L.filter(r => !s.m[r.c[0]]), per = {};
+    fal.forEach(r => { per[r.z] = (per[r.z] || 0) + 1; });
+    const zs = Object.keys(per).sort((x, y) => (ZORD.indexOf(x) + 99) % 99 - (ZORD.indexOf(y) + 99) % 99);
+    P.hidden = false;
+    P.innerHTML = `<h4>FPE avui o endarrerits pendents d'escanejar</h4><div class="xp">${L.length - fal.length} de ${L.length} localitzats · en falten ${fal.length}</div><div class="ch">` +
+      zs.map(z => { const col = COL()[z] || { bg: '#8a94a6', fg: '#fff' }; return `<span style="background:${col.bg};color:${col.fg}">${esc(z === '?' ? 'SENSE ZONA' : z)} · ${per[z]}</span>`; }).join('') + '</div>';
+  }
 
   // la pistola escriu al camp d'Atlas i prem Enter: llegim el codi en aquell moment
   document.addEventListener('keydown', e => {
+    if (!(e.key === 'Enter' || e.keyCode === 13)) return;
     const t = e.target;
-    if ((e.key === 'Enter' || e.keyCode === 13) && t && t.tagName === 'INPUT' && t.type !== 'file' && !(t.closest && t.closest('#pda909'))) mostra(t.value);
+    if (!t || t.tagName !== 'INPUT' || t.type === 'file' || (t.closest && t.closest('#pda909'))) return;
+    const v = String(t.value || '').trim();
+    if (t.id === 'pnt-repartidorV2' || /^@@/.test(v)) { darrerFulla = ''; setTimeout(capcalera, 800); return; }
+    if (t.id === 'q_header') return;
+    const ci = codiInput(); if (ci && t !== ci) return;
+    nou(v);
   }, true);
-  // resposta del punteig d'Atlas (per als que no són al llistat)
+  // resposta del punteig d'Atlas: Item1 = 1 OK · 0/-1 no llegit · -2/-3 ja llegit
   const esPunteig = u => /ProcesaPunteo/i.test(String(u || ''));
   const codiDe = (u, b) => { try { const q = new URL(u, location.href).searchParams.get('codigo'); if (q) return q; } catch (e) { }
     try { if (typeof b === 'string') { const m = b.match(/codigo=([^&]+)/i) || b.match(/"codigo"\s*:\s*"?([^",}]+)/i); return m ? decodeURIComponent(m[1]) : null; } if (b instanceof FormData) return b.get('codigo'); } catch (e) { } return null; };
+  function respostaAtlas(code, txt) {
+    const p = troba(code); if (!p) return;
+    let j; try { j = JSON.parse(txt); } catch (e) { return resol(p, 'none', 'Resposta d\'Atlas il·legible (sessió caducada?)'); }
+    const d = j && j.Data, s = d ? +d.Item1 : NaN, it = (d && d.Item2) || {};
+    if (s === 1) resol(p, 'ok', '', it);
+    else if (s === -2 || s === -3) resol(p, 'dup', '', it);
+    else if (s === 0) resol(p, 'ko', 'No existeix l\'enviament', it);
+    else if (s === -1) resol(p, 'ko', 'Bult incorrecte', it);
+    else resol(p, 'none', (j && j.Message) || 'Resposta desconeguda d\'Atlas', it);
+  }
   const XO = XMLHttpRequest.prototype.open, XS = XMLHttpRequest.prototype.send;
   XMLHttpRequest.prototype.open = function (m, u) { this.__pda = esPunteig(u) ? String(u) : null; return XO.apply(this, arguments); };
   XMLHttpRequest.prototype.send = function (b) {
-    if (this.__pda) { const code = codiDe(this.__pda, b); this.addEventListener('loadend', () => { try { respostaAtlas(code, this.responseText); } catch (e) { } }); }
+    if (this.__pda) {
+      const code = codiDe(this.__pda, b), x = this, p0 = troba(code); if (p0) p0.enviat = true;
+      x.addEventListener('loadend', () => { try { if (x.status && x.status < 400) respostaAtlas(code, x.responseText); else resol(troba(code), 'none', 'Error de connexió amb Atlas'); } catch (e) { } });
+    }
     return XS.apply(this, arguments);
   };
   if (window.fetch) {
     const F = window.fetch;
     window.fetch = function (input, init) {
       const u = typeof input === 'string' ? input : (input && input.url), p = F.apply(this, arguments);
-      if (esPunteig(u)) { const code = codiDe(u, init && init.body); p.then(res => res.clone().text().then(t => respostaAtlas(code, t))).catch(() => { }); }
+      if (esPunteig(u)) { const code = codiDe(u, init && init.body), p0 = troba(code); if (p0) p0.enviat = true;
+        p.then(res => res.clone().text().then(t => respostaAtlas(code, t))).catch(() => resol(troba(code), 'none', 'Error de connexió amb Atlas')); }
       return p;
     };
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', munta); else munta();
-  setInterval(() => { munta(); const d = llista(); if (d && d.dia !== avui() && !carregant) carregaLlista(); }, 60000);
-  window.pda909 = { mostra, busca, carregaLlista };
+  // manteniment: cursor al camp d'Atlas, sense teclat de pantalla, i plegar si Atlas mostra un avís
+  setInterval(() => {
+    if (!caixa) { munta(); return; }
+    teclat();
+    const sw = document.querySelector('.sweet-alert.visible, .sweet-alert.showSweetAlert');
+    if (visible(sw) && !caixa.classList.contains('min')) plega();
+    const ci = codiInput(), x = caixa.querySelector('#pda909x');
+    if (x) x.innerHTML = visible(ci) ? '' : '<div class="nf">Atlas encara no està punteiant: plega la pantalla amb ▾, tria la fulla (normalment 999) i torna a obrir-la.</div>';
+    if (!caixa.classList.contains('min')) enfoca();
+    capcalera();
+  }, 1200);
+  setInterval(() => { const d = llista(); if (d && d.dia !== avui() && !carregant) carregaLlista(); }, 60000);
+  window.pda909 = { nou, busca, carregaLlista };
 })();
