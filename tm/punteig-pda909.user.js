@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Punteig PDA 909
 // @namespace    recollit-entregat-909
-// @version      2.4
-// @description  v2.4: també llegeix la resposta del punteig clàssic d'Atlas (ToPickCheckingWeekend / ToPick), el que fan servir les PDA amb codis d'expedició: puntejat / ja llegit / no llegit. v2.3: a Firefox (PDA) ara rep la resposta d'Atlas de cada lectura (puntejat / ja llegit / no llegit) en lloc de «sense confirmar». v2.2: funciona també amb el formulari clàssic de punteig d'Atlas («Código de barras» / «Repartidor»), que és el que surt a les PDA: zona a cada lectura i sense teclat de pantalla. v2.1: amb la pantalla plegada, el formulari de punteig d'Atlas es pot desplaçar per sobre de la barra blava (el camp «Código de barras» ja no queda tapat) i el cursor hi torna sol després de triar la fulla, perquè el làser llegeixi a Atlas. v2.0: pantalla completa plegable (per triar la fulla a Atlas) amb el resultat real del punteig d'Atlas: ✓ puntejat (verd), ✗ no llegit (vermell), ↺ ja llegit (taronja), ⚠ sense confirmar; veu del color només quan Atlas confirma; sense teclat de pantalla; comptadors i pendents FPE per zona. v1.9: serveis 97/98 = BUSINESS PARCEL (són nacionals); avís INTERNACIONAL (importació, compta per a l'SPC) amb pitet de Premium i veu. v1.8: avisa «Surt avui · a prop» dels no FPE que són a prop d'un FPE d'avui o endarrerit (La Seu: mateix carrer ±5 números; pobles: mateix poble i ruta). v1.7: correccions de zona del 04/11 (Salòria 64 i 83, Boixadera, Comtat d'Urgell 42, Camí Ral de Cerdanya, Coll del Pendís, Guils, Anserall, Pla de Sant Tirs). v1.6: derivats al PS Recollit i Entregat = punt Blau. v1.5: Grapats (C/ Mont) sempre Blau. v1.4: zones Blau v4 (Jueus, Muralla, Pou, Estret, Hèrcules, Graell, Europa, Portal d'Andorra, Garriga i Massó, Mont, Roda, Partida Sant Ermengol, Poble Sec, Alt Pirineu, Baixos de Calbinyà). v1.3: Av. Valls d'Andorra sencera a Blau (18-20 continua REA). v1.2: correccions verd (Llorenç Tomàs i Costa 52-83, Comtat d'Urgell 57-59, Setúria, Circumval·lació 71-77 i 82). v1.1: tot Castellciutat va a Organyà (excepte el polígon). Punteig de llegada amb la PDA a Atlas (agencia 909): a cada lectura mostra la zona, la prioritat FPE, els Premium i els derivats a ParcelShop, amb veu i pitets. Carrega sol el llistat del dia des d'Atlas (Miraenvios), sense Excel. No modifica res del que fa Atlas.
+// @version      2.5
+// @description  v2.5: pantalla gran per defecte (zona, resultat d'Atlas i prioritat en lletra grossa; comptadors i pendents amagats, es mostren amb el botó 📊). v2.4: també llegeix la resposta del punteig clàssic d'Atlas (ToPickCheckingWeekend / ToPick), el que fan servir les PDA amb codis d'expedició: puntejat / ja llegit / no llegit. v2.3: a Firefox (PDA) ara rep la resposta d'Atlas de cada lectura (puntejat / ja llegit / no llegit) en lloc de «sense confirmar». v2.2: funciona també amb el formulari clàssic de punteig d'Atlas («Código de barras» / «Repartidor»), que és el que surt a les PDA: zona a cada lectura i sense teclat de pantalla. v2.1: amb la pantalla plegada, el formulari de punteig d'Atlas es pot desplaçar per sobre de la barra blava (el camp «Código de barras» ja no queda tapat) i el cursor hi torna sol després de triar la fulla, perquè el làser llegeixi a Atlas. v2.0: pantalla completa plegable (per triar la fulla a Atlas) amb el resultat real del punteig d'Atlas: ✓ puntejat (verd), ✗ no llegit (vermell), ↺ ja llegit (taronja), ⚠ sense confirmar; veu del color només quan Atlas confirma; sense teclat de pantalla; comptadors i pendents FPE per zona. v1.9: serveis 97/98 = BUSINESS PARCEL (són nacionals); avís INTERNACIONAL (importació, compta per a l'SPC) amb pitet de Premium i veu. v1.8: avisa «Surt avui · a prop» dels no FPE que són a prop d'un FPE d'avui o endarrerit (La Seu: mateix carrer ±5 números; pobles: mateix poble i ruta). v1.7: correccions de zona del 04/11 (Salòria 64 i 83, Boixadera, Comtat d'Urgell 42, Camí Ral de Cerdanya, Coll del Pendís, Guils, Anserall, Pla de Sant Tirs). v1.6: derivats al PS Recollit i Entregat = punt Blau. v1.5: Grapats (C/ Mont) sempre Blau. v1.4: zones Blau v4 (Jueus, Muralla, Pou, Estret, Hèrcules, Graell, Europa, Portal d'Andorra, Garriga i Massó, Mont, Roda, Partida Sant Ermengol, Poble Sec, Alt Pirineu, Baixos de Calbinyà). v1.3: Av. Valls d'Andorra sencera a Blau (18-20 continua REA). v1.2: correccions verd (Llorenç Tomàs i Costa 52-83, Comtat d'Urgell 57-59, Setúria, Circumval·lació 71-77 i 82). v1.1: tot Castellciutat va a Organyà (excepte el polígon). Punteig de llegada amb la PDA a Atlas (agencia 909): a cada lectura mostra la zona, la prioritat FPE, els Premium i els derivats a ParcelShop, amb veu i pitets. Carrega sol el llistat del dia des d'Atlas (Miraenvios), sense Excel. No modifica res del que fa Atlas.
 // @match        https://atlas.gls-spain.es/pick/*
 // @match        https://atlas.gls-spain.es/Pick/*
 // @grant        none
@@ -350,7 +350,17 @@ return zoneOf;
 #pda909 .st{padding:8px 10px;font-size:14px;background:#fff3cd;color:#7a5b00;border-radius:8px}
 #pda909 .st.err{background:#fbe5e3;color:#c8261d}
 #pda909 .nf{background:#fff3cd;color:#7a5b00;border-radius:10px;padding:12px;font-size:16px;font-weight:700;text-align:center}
-#pda909 .idle{padding:18px 12px;text-align:center;font-size:18px;color:#55627a;background:#fff;border-radius:12px}`;
+#pda909 .idle{padding:18px 12px;text-align:center;font-size:18px;color:#55627a;background:#fff;border-radius:12px}
+#pda909.gran .kp,#pda909.gran .pd{display:none}
+#pda909.gran .at{font-size:min(12vw,58px);padding:16px 8px}
+#pda909.gran .at small{font-size:min(6vw,28px)}
+#pda909.gran .zn{padding:14px 6px 12px}
+#pda909.gran .zn b,#pda909.gran .cd.petit .zn b{font-size:min(27vw,150px)}
+#pda909.gran .zn i,#pda909.gran .cd.petit .zn i{font-size:min(7.5vw,36px);margin-top:8px}
+#pda909.gran .pr{font-size:min(10vw,50px);padding:10px 6px}
+#pda909.gran .pm,#pda909.gran .ps,#pda909.gran .in{font-size:min(7.5vw,36px);padding:10px 6px}
+#pda909.gran .sb,#pda909.gran .sb code{font-size:min(4.6vw,22px)}
+#pda909.gran .idle{font-size:min(6vw,28px);padding:30px 12px}`;
 
   let caixa = null, darrerFulla = '', ultim = '';
   const codiInput = () => { const a = document.getElementById('pnt-codigoV2'), b = document.getElementById('pnt-code'); if (a && a.offsetParent !== null) return a; if (b && b.offsetParent !== null) return b; return a || b; };
@@ -366,7 +376,7 @@ return zoneOf;
     if (caixa || !document.body) return;
     const st = document.createElement('style'); st.textContent = CSS; (document.head || document.body).appendChild(st);
     caixa = document.createElement('div'); caixa.id = 'pda909';
-    caixa.innerHTML = `<div class="hd"><div class="t"><b id="pda909f"></b><span id="pda909t"></span></div><button data-a="kb" title="Teclat">⌨</button><button data-a="re" title="Tornar a carregar el llistat">↻</button><button data-a="veu" title="Veu"></button><button data-a="min" title="Amagar / mostrar">▾</button></div>
+    caixa.innerHTML = `<div class="hd"><div class="t"><b id="pda909f"></b><span id="pda909t"></span></div><button data-a="st" title="Comptadors">📊</button><button data-a="kb" title="Teclat">⌨</button><button data-a="re" title="Tornar a carregar el llistat">↻</button><button data-a="veu" title="Veu"></button><button data-a="min" title="Amagar / mostrar">▾</button></div>
 <div class="cos"><div class="st" id="pda909s" hidden></div><div id="pda909x"></div><div id="pda909e"></div><div id="pda909b"><div class="idle">Escaneja. Aquí sortirà si Atlas l'ha puntejat, la zona i la prioritat FPE.</div></div><div class="kp" id="pda909k"></div><div class="pd" id="pda909p"></div></div>`;
     document.body.appendChild(caixa);
     // els botons no han de treure el cursor del camp on escriu la pistola
@@ -379,6 +389,7 @@ return zoneOf;
         if (a === 're') carregaLlista();
         if (a === 'veu') { c.veu = !c.veu; set(K_CFG, c); }
         if (a === 'kb') { c.kbd = !c.kbd; set(K_CFG, c); teclat(); }
+        if (a === 'st') { c.stats = !c.stats; set(K_CFG, c); modeGran(); }
         if (a === 'min') { if (caixa.classList.contains('min')) obre(); else plega(); }
         if (a === 'ne') { errs.length = 0; pintaErrors(); }
         capcalera();
@@ -386,10 +397,11 @@ return zoneOf;
       if (!caixa.classList.contains('min')) enfoca();
     });
     if (!visible(codiInput())) plega();
-    capcalera(); comptadors(); teclat();
+    capcalera(); comptadors(); teclat(); modeGran();
     const d = llista();
     if (!d || d.dia !== avui()) carregaLlista();
   }
+  function modeGran() { if (!caixa) return; const on = !!cfg().stats; caixa.classList.toggle('gran', !on); const b = caixa.querySelector('[data-a="st"]'); if (b) b.className = on ? 'on' : ''; }
   function obre() { if (!caixa) return; caixa.classList.remove('min'); caixa.querySelector('[data-a="min"]').textContent = '▾'; enfoca(); }
   function plega() { if (!caixa) return; caixa.classList.add('min'); caixa.querySelector('[data-a="min"]').textContent = '▴'; }
   function enfoca() { const ci = codiInput(); if (visible(ci) && document.activeElement !== ci) { try { ci.focus({ preventScroll: true }); } catch (e) { } } }
