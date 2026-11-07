@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Punteig PDA 909
 // @namespace    recollit-entregat-909
-// @version      2.1
-// @description  v2.1: amb la pantalla plegada, el formulari de punteig d'Atlas es pot desplaçar per sobre de la barra blava (el camp «Código de barras» ja no queda tapat) i el cursor hi torna sol després de triar la fulla, perquè el làser llegeixi a Atlas. v2.0: pantalla completa plegable (per triar la fulla a Atlas) amb el resultat real del punteig d'Atlas: ✓ puntejat (verd), ✗ no llegit (vermell), ↺ ja llegit (taronja), ⚠ sense confirmar; veu del color només quan Atlas confirma; sense teclat de pantalla; comptadors i pendents FPE per zona. v1.9: serveis 97/98 = BUSINESS PARCEL (són nacionals); avís INTERNACIONAL (importació, compta per a l'SPC) amb pitet de Premium i veu. v1.8: avisa «Surt avui · a prop» dels no FPE que són a prop d'un FPE d'avui o endarrerit (La Seu: mateix carrer ±5 números; pobles: mateix poble i ruta). v1.7: correccions de zona del 04/11 (Salòria 64 i 83, Boixadera, Comtat d'Urgell 42, Camí Ral de Cerdanya, Coll del Pendís, Guils, Anserall, Pla de Sant Tirs). v1.6: derivats al PS Recollit i Entregat = punt Blau. v1.5: Grapats (C/ Mont) sempre Blau. v1.4: zones Blau v4 (Jueus, Muralla, Pou, Estret, Hèrcules, Graell, Europa, Portal d'Andorra, Garriga i Massó, Mont, Roda, Partida Sant Ermengol, Poble Sec, Alt Pirineu, Baixos de Calbinyà). v1.3: Av. Valls d'Andorra sencera a Blau (18-20 continua REA). v1.2: correccions verd (Llorenç Tomàs i Costa 52-83, Comtat d'Urgell 57-59, Setúria, Circumval·lació 71-77 i 82). v1.1: tot Castellciutat va a Organyà (excepte el polígon). Punteig de llegada amb la PDA a Atlas (agencia 909): a cada lectura mostra la zona, la prioritat FPE, els Premium i els derivats a ParcelShop, amb veu i pitets. Carrega sol el llistat del dia des d'Atlas (Miraenvios), sense Excel. No modifica res del que fa Atlas.
+// @version      2.2
+// @description  v2.2: funciona també amb el formulari clàssic de punteig d'Atlas («Código de barras» / «Repartidor»), que és el que surt a les PDA: zona a cada lectura i sense teclat de pantalla. v2.1: amb la pantalla plegada, el formulari de punteig d'Atlas es pot desplaçar per sobre de la barra blava (el camp «Código de barras» ja no queda tapat) i el cursor hi torna sol després de triar la fulla, perquè el làser llegeixi a Atlas. v2.0: pantalla completa plegable (per triar la fulla a Atlas) amb el resultat real del punteig d'Atlas: ✓ puntejat (verd), ✗ no llegit (vermell), ↺ ja llegit (taronja), ⚠ sense confirmar; veu del color només quan Atlas confirma; sense teclat de pantalla; comptadors i pendents FPE per zona. v1.9: serveis 97/98 = BUSINESS PARCEL (són nacionals); avís INTERNACIONAL (importació, compta per a l'SPC) amb pitet de Premium i veu. v1.8: avisa «Surt avui · a prop» dels no FPE que són a prop d'un FPE d'avui o endarrerit (La Seu: mateix carrer ±5 números; pobles: mateix poble i ruta). v1.7: correccions de zona del 04/11 (Salòria 64 i 83, Boixadera, Comtat d'Urgell 42, Camí Ral de Cerdanya, Coll del Pendís, Guils, Anserall, Pla de Sant Tirs). v1.6: derivats al PS Recollit i Entregat = punt Blau. v1.5: Grapats (C/ Mont) sempre Blau. v1.4: zones Blau v4 (Jueus, Muralla, Pou, Estret, Hèrcules, Graell, Europa, Portal d'Andorra, Garriga i Massó, Mont, Roda, Partida Sant Ermengol, Poble Sec, Alt Pirineu, Baixos de Calbinyà). v1.3: Av. Valls d'Andorra sencera a Blau (18-20 continua REA). v1.2: correccions verd (Llorenç Tomàs i Costa 52-83, Comtat d'Urgell 57-59, Setúria, Circumval·lació 71-77 i 82). v1.1: tot Castellciutat va a Organyà (excepte el polígon). Punteig de llegada amb la PDA a Atlas (agencia 909): a cada lectura mostra la zona, la prioritat FPE, els Premium i els derivats a ParcelShop, amb veu i pitets. Carrega sol el llistat del dia des d'Atlas (Miraenvios), sense Excel. No modifica res del que fa Atlas.
 // @match        https://atlas.gls-spain.es/pick/*
 // @match        https://atlas.gls-spain.es/Pick/*
 // @grant        none
@@ -353,7 +353,7 @@ return zoneOf;
 #pda909 .idle{padding:18px 12px;text-align:center;font-size:18px;color:#55627a;background:#fff;border-radius:12px}`;
 
   let caixa = null, darrerFulla = '', ultim = '';
-  const codiInput = () => document.getElementById('pnt-codigoV2');
+  const codiInput = () => { const a = document.getElementById('pnt-codigoV2'), b = document.getElementById('pnt-code'); if (a && a.offsetParent !== null) return a; if (b && b.offsetParent !== null) return b; return a || b; };
   const visible = e => !!(e && e.offsetParent !== null);
   const scans = () => { const s = get(K_SCAN, null); return s && s.dia === avui() && s.m && s.n ? s : { dia: avui(), m: {}, n: { ok: 0, dup: 0, ko: 0, none: 0 } }; };
   function guardaScan(key, st, k) {
@@ -398,7 +398,7 @@ return zoneOf;
   function fullaActual() {
     if (darrerFulla) return darrerFulla;
     try { const v = W.codeDeliveryMan; if (v) return String(v).replace(/^@@/, ''); } catch (e) { }
-    const e = document.getElementById('pnt-repartidorV2'); if (e && e.value) return String(e.value).replace(/^@@/, '');
+    const e = document.getElementById('pnt-repartidorV2'); if (e && e.value) return String(e.value).replace(/^@@/, ''); const e2 = document.getElementById('nr-Name'); if (e2 && e2.value && e2.offsetParent !== null) return String(e2.value).replace(/^@@/, '');
     try { const d = W.my && W.my.vm && W.my.vm.dataDeliveryMan && W.my.vm.dataDeliveryMan(); const c = d && (typeof d.Code === 'function' ? d.Code() : d.Code); if (c) return String(c); } catch (e) { }
     return '';
   }
@@ -591,7 +591,7 @@ return zoneOf;
     const t = e.target;
     if (!t || t.tagName !== 'INPUT' || t.type === 'file' || (t.closest && t.closest('#pda909'))) return;
     const v = String(t.value || '').trim();
-    if (t.id === 'pnt-repartidorV2' || /^@@/.test(v)) { darrerFulla = ''; setTimeout(capcalera, 800); return; }
+    if (t.id === 'pnt-repartidorV2' || t.id === 'nr-Name' || t.id === 'nr-Pistol' || /^@@/.test(v)) { darrerFulla = ''; setTimeout(capcalera, 800); return; }
     if (t.id === 'q_header') return;
     const ci = codiInput(); if (ci && t !== ci) return;
     nou(v);
