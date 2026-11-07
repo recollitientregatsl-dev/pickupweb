@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Punteig PDA 909
 // @namespace    recollit-entregat-909
-// @version      2.2
-// @description  v2.2: funciona també amb el formulari clàssic de punteig d'Atlas («Código de barras» / «Repartidor»), que és el que surt a les PDA: zona a cada lectura i sense teclat de pantalla. v2.1: amb la pantalla plegada, el formulari de punteig d'Atlas es pot desplaçar per sobre de la barra blava (el camp «Código de barras» ja no queda tapat) i el cursor hi torna sol després de triar la fulla, perquè el làser llegeixi a Atlas. v2.0: pantalla completa plegable (per triar la fulla a Atlas) amb el resultat real del punteig d'Atlas: ✓ puntejat (verd), ✗ no llegit (vermell), ↺ ja llegit (taronja), ⚠ sense confirmar; veu del color només quan Atlas confirma; sense teclat de pantalla; comptadors i pendents FPE per zona. v1.9: serveis 97/98 = BUSINESS PARCEL (són nacionals); avís INTERNACIONAL (importació, compta per a l'SPC) amb pitet de Premium i veu. v1.8: avisa «Surt avui · a prop» dels no FPE que són a prop d'un FPE d'avui o endarrerit (La Seu: mateix carrer ±5 números; pobles: mateix poble i ruta). v1.7: correccions de zona del 04/11 (Salòria 64 i 83, Boixadera, Comtat d'Urgell 42, Camí Ral de Cerdanya, Coll del Pendís, Guils, Anserall, Pla de Sant Tirs). v1.6: derivats al PS Recollit i Entregat = punt Blau. v1.5: Grapats (C/ Mont) sempre Blau. v1.4: zones Blau v4 (Jueus, Muralla, Pou, Estret, Hèrcules, Graell, Europa, Portal d'Andorra, Garriga i Massó, Mont, Roda, Partida Sant Ermengol, Poble Sec, Alt Pirineu, Baixos de Calbinyà). v1.3: Av. Valls d'Andorra sencera a Blau (18-20 continua REA). v1.2: correccions verd (Llorenç Tomàs i Costa 52-83, Comtat d'Urgell 57-59, Setúria, Circumval·lació 71-77 i 82). v1.1: tot Castellciutat va a Organyà (excepte el polígon). Punteig de llegada amb la PDA a Atlas (agencia 909): a cada lectura mostra la zona, la prioritat FPE, els Premium i els derivats a ParcelShop, amb veu i pitets. Carrega sol el llistat del dia des d'Atlas (Miraenvios), sense Excel. No modifica res del que fa Atlas.
+// @version      2.3
+// @description  v2.3: a Firefox (PDA) ara rep la resposta d'Atlas de cada lectura (puntejat / ja llegit / no llegit) en lloc de «sense confirmar». v2.2: funciona també amb el formulari clàssic de punteig d'Atlas («Código de barras» / «Repartidor»), que és el que surt a les PDA: zona a cada lectura i sense teclat de pantalla. v2.1: amb la pantalla plegada, el formulari de punteig d'Atlas es pot desplaçar per sobre de la barra blava (el camp «Código de barras» ja no queda tapat) i el cursor hi torna sol després de triar la fulla, perquè el làser llegeixi a Atlas. v2.0: pantalla completa plegable (per triar la fulla a Atlas) amb el resultat real del punteig d'Atlas: ✓ puntejat (verd), ✗ no llegit (vermell), ↺ ja llegit (taronja), ⚠ sense confirmar; veu del color només quan Atlas confirma; sense teclat de pantalla; comptadors i pendents FPE per zona. v1.9: serveis 97/98 = BUSINESS PARCEL (són nacionals); avís INTERNACIONAL (importació, compta per a l'SPC) amb pitet de Premium i veu. v1.8: avisa «Surt avui · a prop» dels no FPE que són a prop d'un FPE d'avui o endarrerit (La Seu: mateix carrer ±5 números; pobles: mateix poble i ruta). v1.7: correccions de zona del 04/11 (Salòria 64 i 83, Boixadera, Comtat d'Urgell 42, Camí Ral de Cerdanya, Coll del Pendís, Guils, Anserall, Pla de Sant Tirs). v1.6: derivats al PS Recollit i Entregat = punt Blau. v1.5: Grapats (C/ Mont) sempre Blau. v1.4: zones Blau v4 (Jueus, Muralla, Pou, Estret, Hèrcules, Graell, Europa, Portal d'Andorra, Garriga i Massó, Mont, Roda, Partida Sant Ermengol, Poble Sec, Alt Pirineu, Baixos de Calbinyà). v1.3: Av. Valls d'Andorra sencera a Blau (18-20 continua REA). v1.2: correccions verd (Llorenç Tomàs i Costa 52-83, Comtat d'Urgell 57-59, Setúria, Circumval·lació 71-77 i 82). v1.1: tot Castellciutat va a Organyà (excepte el polígon). Punteig de llegada amb la PDA a Atlas (agencia 909): a cada lectura mostra la zona, la prioritat FPE, els Premium i els derivats a ParcelShop, amb veu i pitets. Carrega sol el llistat del dia des d'Atlas (Miraenvios), sense Excel. No modifica res del que fa Atlas.
 // @match        https://atlas.gls-spain.es/pick/*
 // @match        https://atlas.gls-spain.es/Pick/*
 // @grant        none
@@ -610,15 +610,18 @@ return zoneOf;
     else if (s === -1) resol(p, 'ko', 'Bult incorrecte', it);
     else resol(p, 'none', (j && j.Message) || 'Resposta desconeguda d\'Atlas', it);
   }
-  const XO = XMLHttpRequest.prototype.open, XS = XMLHttpRequest.prototype.send;
-  XMLHttpRequest.prototype.open = function (m, u) { this.__pda = esPunteig(u) ? String(u) : null; return XO.apply(this, arguments); };
-  XMLHttpRequest.prototype.send = function (b) {
-    if (this.__pda) {
-      const code = codiDe(this.__pda, b), x = this, p0 = troba(code); if (p0) p0.enviat = true;
-      x.addEventListener('loadend', () => { try { if (x.status && x.status < 400) respostaAtlas(code, x.responseText); else resol(troba(code), 'none', 'Error de connexió amb Atlas'); } catch (e) { } });
-    }
-    return XS.apply(this, arguments);
-  };
+  // v2.3: el ganxo de les peticions s'injecta a la pàgina (a Firefox, Tampermonkey no veu les peticions d'Atlas des del seu espai)
+  try {
+    const inj = document.createElement('script');
+    inj.textContent = "(function(){if(window.__pda909hook)return;window.__pda909hook=1;var XO=XMLHttpRequest.prototype.open,XS=XMLHttpRequest.prototype.send;XMLHttpRequest.prototype.open=function(m,u){this.__pda=/ProcesaPunteo/i.test(String(u||''))?String(u):null;return XO.apply(this,arguments)};XMLHttpRequest.prototype.send=function(b){var x=this;if(x.__pda){var bb=(typeof b==='string')?b:null;document.dispatchEvent(new CustomEvent('pda909-req',{detail:JSON.stringify({u:x.__pda,b:bb})}));x.addEventListener('loadend',function(){document.dispatchEvent(new CustomEvent('pda909-resp',{detail:JSON.stringify({u:x.__pda,b:bb,s:x.status,t:x.responseText})}))})}return XS.apply(this,arguments)}})();";
+    (document.head || document.documentElement).appendChild(inj); inj.remove();
+  } catch (e) { }
+  const llegeixDet = e => { try { return JSON.parse(typeof e.detail === 'string' ? e.detail : String(e.detail)); } catch (er) { return null; } };
+  document.addEventListener('pda909-req', e => { const o = llegeixDet(e); if (!o) return; const p0 = troba(codiDe(o.u, o.b)); if (p0) p0.enviat = true; });
+  document.addEventListener('pda909-resp', e => {
+    const o = llegeixDet(e); if (!o) return; const code = codiDe(o.u, o.b);
+    try { if (o.s && o.s < 400) respostaAtlas(code, o.t); else resol(troba(code), 'none', 'Error de connexió amb Atlas'); } catch (er) { }
+  });
   if (window.fetch) {
     const F = window.fetch;
     window.fetch = function (input, init) {
