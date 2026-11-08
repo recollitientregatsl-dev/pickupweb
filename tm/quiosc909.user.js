@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Quiosc Recepció 909
 // @namespace    recollit-entregat-909
-// @version      1.2
+// @version      1.3
 // @description  Pantalla tàctil de l'entrada de la nau GLS 909. El client escriu (o escaneja) el número d'enviament o el seu telèfon; la pantalla li diu si el paquet és a la nau, li dona un torn i avisa la pantalla de recepció de quin paquet ve a buscar. Consulta Atlas en directe. S'activa obrint https://atlas.gls-spain.es/shippingfinder/index?quiosc909 i es desactiva amb el codi de sortida.
 // @match        https://atlas.gls-spain.es/*
 // @grant        GM_xmlhttpRequest
@@ -106,7 +106,7 @@
     const s = +x.StatusId;
     const ps = String(x.nombrePSDestino || '');
     if ([3, 9, 11, 91].includes(s)) return 'aqui';
-    if (s === 6) return 'rep';
+    if (s === 6) { const z = x.__zona && x.__zona.z || ''; if (/^Rpt\s*10\b/i.test(z) || (z && !/^Rpt/i.test(z))) return 'aqui'; return 'rep'; }
     if ([-10, 0, 2, 16, 19, 21, 24].includes(s)) return 'cami';
     if (s === 25) return /LOCKER/i.test(ps) ? 'locker' : 'ps';
     if ([7, 8, 22, 50].includes(s)) return 'lliurat';
@@ -160,6 +160,23 @@
     return [];
   }
 
+  // última lectura de zona del tracking operatiu (on està dipositat a la nau)
+  async function zonaOP(x) {
+    try {
+      const r = await W.fetch('/ShippingFinder/GetTrackingOP/?CodExp=' + encodeURIComponent(x.ShippingId) + '&CodPlaza=' + encodeURIComponent(x.SourceSquareId || ''), { credentials: 'include' });
+      const j = await r.json(); const L = (j && j.Data) || [];
+      for (let i = L.length - 1; i >= 0; i--) {
+        const m = String(L[i].evento || '').match(/\ba \[([^\]]+)\]/);
+        if (m) { const d = dataMs(L[i].fecha); return { z: m[1].trim(), h: d ? ddmm(d) + ' ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0') : '' }; }
+      }
+    } catch (e) { }
+    return null;
+  }
+  async function ambZones(L) {
+    await Promise.all(L.map(async x => { x.__zona = await zonaOP(x); }));
+    return L;
+  }
+
   // llistat dels últims dies, només a memòria, per buscar pel telèfon
   let LLISTA = [], LLISTA_AT = 0, carregant = false;
   const normTel = v => {
@@ -208,7 +225,8 @@
       exp: String(x.ShippingId), cat: categoria(x), st: +x.StatusId, stn: NOM_ESTAT[x.StatusId] || String(x.StatusId),
       fpe: ddmm(dataMs(x.EstimatedDate)), nom: String(x.PostingName || '').trim(), adr: (String(x.PostingAddress || '') + ' · ' + String(x.PostingCity || '')).trim(),
       bul: +x.Packages || 0, kg: +x.Kgs || 0, cod: +x.CashOnDelivery || 0, due: +x.Due || 0, ps: ps.replace(/^PS\s+/i, ''), prem: PREMIUM(x.Schedule, x.ServiceId),
-      rem: String(x.SourceName || '').trim()
+      rem: String(x.SourceName || '').trim(),
+      zona: x.__zona ? x.__zona.z : '', zonaH: x.__zona ? x.__zona.h : ''
     };
   }
   function envia(dades) {
@@ -338,6 +356,7 @@
         <div class="bts"><button data-a="inici">${T('tornar')}</button><button class="g" data-a="parlar">${T('parlar')}</button></div></div>`);
       return programaFet(30);
     }
+    try { await ambZones(L.slice(0, 10)); } catch (e) { }
     resultat({ via, fitxes: L.map(fitxa), q: v });
   }
 
