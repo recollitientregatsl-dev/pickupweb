@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Quiosc Recepció 909
 // @namespace    recollit-entregat-909
-// @version      1.0
+// @version      1.1
 // @description  Pantalla tàctil de l'entrada de la nau GLS 909. El client escriu (o escaneja) el número d'enviament o el seu telèfon; la pantalla li diu si el paquet és a la nau, li dona un torn i avisa la pantalla de recepció de quin paquet ve a buscar. Consulta Atlas en directe. S'activa obrint https://atlas.gls-spain.es/shippingfinder/index?quiosc909 i es desactiva amb el codi de sortida.
 // @match        https://atlas.gls-spain.es/*
 // @grant        GM_xmlhttpRequest
@@ -51,7 +51,7 @@
       rept: 'Passa al taulell i ho comprovem.', taulell: 'Passa al taulell, t\'ho mirem.', notrob: 'No trobem cap enviament amb aquest número',
       notrobT: 'No trobem cap enviament amb aquest telèfon', revisa: 'Revisa el número o passa al taulell.', pagar: 'Cal pagar en recollir-lo',
       parlar: 'Vull parlar amb recepció', fet: 'Fet', tornar: 'Tornar', tancat: 'Ara la recepció és tancada', horari: 'Horari: dilluns a divendres, de 9 a 14 h i de 16 a 18 h',
-      error: 'Ara no podem consultar els enviaments. Passa al taulell, si us plau.', bultos: 'bultos', enviament: 'Enviament', curt: 'Número massa curt',
+      error: 'Ara no podem consultar els enviaments. Passa al taulell, si us plau.', bultos: 'bults', bult: 'bult', enviament: 'Enviament', curt: 'Número massa curt',
       trobats: n => n === 1 ? '1 enviament trobat' : n + ' enviaments trobats', avisat: 'Recepció ja està avisada.', senseAvis: 'Digues aquest número al taulell.',
       escaneja: 'També pots escanejar el codi de barres de l\'etiqueta o del SMS'
     },
@@ -63,7 +63,7 @@
       rept: 'Pasa al mostrador y lo comprobamos.', taulell: 'Pasa al mostrador, te lo miramos.', notrob: 'No encontramos ningún envío con este número',
       notrobT: 'No encontramos ningún envío con este teléfono', revisa: 'Revisa el número o pasa al mostrador.', pagar: 'Hay que pagar al recogerlo',
       parlar: 'Quiero hablar con recepción', fet: 'Hecho', tornar: 'Volver', tancat: 'Ahora la recepción está cerrada', horari: 'Horario: lunes a viernes, de 9 a 14 h y de 16 a 18 h',
-      error: 'Ahora no podemos consultar los envíos. Pasa al mostrador, por favor.', bultos: 'bultos', enviament: 'Envío', curt: 'Número demasiado corto',
+      error: 'Ahora no podemos consultar los envíos. Pasa al mostrador, por favor.', bultos: 'bultos', bult: 'bulto', enviament: 'Envío', curt: 'Número demasiado corto',
       trobats: n => n === 1 ? '1 envío encontrado' : n + ' envíos encontrados', avisat: 'Recepción ya está avisada.', senseAvis: 'Di este número en el mostrador.',
       escaneja: 'También puedes escanear el código de barras de la etiqueta o del SMS'
     },
@@ -75,7 +75,7 @@
       rept: 'Please go to the counter and we will check.', taulell: 'Please go to the counter.', notrob: 'No parcel found with this number',
       notrobT: 'No parcel found with this phone', revisa: 'Check the number or go to the counter.', pagar: 'Payment due on collection',
       parlar: 'I want to talk to reception', fet: 'Done', tornar: 'Back', tancat: 'Reception is closed now', horari: 'Opening hours: Monday to Friday, 9–14 h and 16–18 h',
-      error: 'We cannot check parcels right now. Please go to the counter.', bultos: 'packages', enviament: 'Parcel', curt: 'Number too short',
+      error: 'We cannot check parcels right now. Please go to the counter.', bultos: 'packages', bult: 'package', enviament: 'Parcel', curt: 'Number too short',
       trobats: n => n === 1 ? '1 parcel found' : n + ' parcels found', avisat: 'Reception has been notified.', senseAvis: 'Tell this number at the counter.',
       escaneja: 'You can also scan the barcode of the label or the SMS'
     },
@@ -87,7 +87,7 @@
       rept: 'Allez au comptoir, nous vérifions.', taulell: 'Allez au comptoir, s\'il vous plaît.', notrob: 'Aucun envoi trouvé avec ce numéro',
       notrobT: 'Aucun envoi trouvé avec ce téléphone', revisa: 'Vérifiez le numéro ou allez au comptoir.', pagar: 'Paiement à la remise',
       parlar: 'Je veux parler à la réception', fet: 'Terminé', tornar: 'Retour', tancat: 'La réception est fermée', horari: 'Horaires : du lundi au vendredi, 9–14 h et 16–18 h',
-      error: 'Impossible de consulter les envois pour le moment. Allez au comptoir, s\'il vous plaît.', bultos: 'colis', enviament: 'Envoi', curt: 'Numéro trop court',
+      error: 'Impossible de consulter les envois pour le moment. Allez au comptoir, s\'il vous plaît.', bultos: 'colis', bult: 'colis', enviament: 'Envoi', curt: 'Numéro trop court',
       trobats: n => n === 1 ? '1 envoi trouvé' : n + ' envois trouvés', avisat: 'La réception est prévenue.', senseAvis: 'Donnez ce numéro au comptoir.',
       escaneja: 'Vous pouvez aussi scanner le code-barres de l\'étiquette ou du SMS'
     }
@@ -376,7 +376,7 @@
     let det = '';
     if (f.cat === 'cami' && f.fpe) det = `${T('prev')}: <b>${f.fpe}</b>`;
     else if (f.cat === 'locker') det = T('locker');
-    else if (f.bul) det = `${f.bul} ${T('bultos')}`;
+    else if (f.bul) det = `${f.bul} ${f.bul === 1 ? T('bult') : T('bultos')}`;
     const pag = (f.cod > 0 || f.due > 0) && ['aqui', 'rep', 'taulell'].includes(f.cat) ? `<div class="p">💶 ${T('pagar')}: ${eur(f.cod + f.due)}</div>` : '';
     return `<div class="card ${f.cat}"><div class="e">${T('enviament')} ···${esc(f.exp.slice(-4))} ${f.nom ? '· ' + esc(inicials(f.nom)) : ''}</div><div class="s">${tit}</div><div class="d">${det}</div>${pag}</div>`;
   }
