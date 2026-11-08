@@ -29,6 +29,8 @@
   .bd.cami{background:#f59e0b}.bd.rep,.bd.taulell{background:#e11d48}.bd.lliurat,.bd.ps,.bd.locker{background:#3b82f6}.bd.prem{background:#7c3aed}
   .cob{background:#fff3c4;border-radius:6px;padding:3px 8px;margin-top:4px;font-weight:700;display:inline-block}
   .nota{color:#e11d48;font-weight:700}
+  .zona{display:inline-block;background:#061ab1;color:#fff;border-radius:6px;padding:3px 9px;margin-top:5px;font-weight:800;font-size:16px}
+  .zona small{font-weight:400;opacity:.8;font-size:12px}
   .acc{display:flex;gap:8px;padding:10px 14px 12px}
   .acc button{flex:1;border:0;border-radius:10px;padding:12px;font-size:16px;font-weight:800;cursor:pointer}
   .ok{background:#18a34a;color:#fff}.ko{background:#e5e7f2;color:#0b1446}
@@ -60,6 +62,20 @@ const CAT = { aqui: 'A LA NAU', cami: 'NO ARRIBAT', lliurat: 'LLIURAT', ps: 'AL 
 let vistos = null, soOn = false, AC = null;
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const eur = n => (+n || 0).toFixed(2).replace('.', ',') + ' €';
+function nomZona(z) {
+  z = String(z || '');
+  let m;
+  if ((m = z.match(/^Rpt\s*(\d+)/i))) return +m[1] === 10 ? 'NAU · recull a agència' : 'Fulla repartidor R' + m[1];
+  if ((m = z.match(/(\d+)/))) {
+    const n = +m[1];
+    if (n === 999) return 'Arribada (999)';
+    if (n === 1000) return 'Incidències (1000)';
+    if (n === 2000) return 'No accepta / falten dades (2000)';
+    if (n === 400) return 'Emmagatzemat (400)';
+    if (n >= 700000) return 'Estanteria ' + n;
+  }
+  return z;
+}
 const min = s => { const p = String(s || '').split(':').map(Number); return p[0] * 60 + (p[1] || 0) + (p[2] || 0) / 60; };
 
 document.getElementById('so').onclick = () => {
@@ -102,6 +118,7 @@ function pinta(d) {
     const exps = items.length ? items.map(i => `<div class="exp"><span class="c">${esc(i.exp)}</span><span class="bd ${i.cat}">${CAT[i.cat] || i.stn}</span>${i.prem ? `<span class="bd prem">${esc(i.prem)}</span>` : ''}
         <div>${esc(i.nom)} · ${i.bul || '?'} bult. · ${String(i.kg || 0).replace('.', ',')} kg${i.ps ? ' · PS ' + esc(i.ps) : ''}</div>
         <div style="color:#5a6290">${esc(i.adr)}${i.rem ? ' · Rem.: ' + esc(i.rem) : ''}</div>
+        ${i.zona ? `<div class="zona">📍 ${esc(nomZona(i.zona))} <small>${esc(i.zona)} · ${esc(i.zonaH)}</small></div>` : ''}
         ${i.cod + i.due > 0 ? `<div class="cob">💶 Cobrar ${eur(i.cod + i.due)}${i.cod > 0 ? ' (reemb. ' + eur(i.cod) + ')' : ''}${i.due > 0 ? ' (ports deguts ' + eur(i.due) + ')' : ''}</div>` : ''}
         ${i.cat === 'rep' ? '<div class="nota">Atlas diu EN REPARTO: comprovar si és a la fulla d\'un repartidor</div>' : ''}
         ${i.cat === 'taulell' ? '<div class="nota">Estat: ' + esc(i.stn) + '</div>' : ''}
