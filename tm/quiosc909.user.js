@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Quiosc Recepció 909
 // @namespace    recollit-entregat-909
-// @version      1.1
+// @version      1.2
 // @description  Pantalla tàctil de l'entrada de la nau GLS 909. El client escriu (o escaneja) el número d'enviament o el seu telèfon; la pantalla li diu si el paquet és a la nau, li dona un torn i avisa la pantalla de recepció de quin paquet ve a buscar. Consulta Atlas en directe. S'activa obrint https://atlas.gls-spain.es/shippingfinder/index?quiosc909 i es desactiva amb el codi de sortida.
 // @match        https://atlas.gls-spain.es/*
 // @grant        GM_xmlhttpRequest
@@ -53,7 +53,8 @@
       parlar: 'Vull parlar amb recepció', fet: 'Fet', tornar: 'Tornar', tancat: 'Ara la recepció és tancada', horari: 'Horari: dilluns a divendres, de 9 a 14 h i de 16 a 18 h',
       error: 'Ara no podem consultar els enviaments. Passa al taulell, si us plau.', bultos: 'bults', bult: 'bult', enviament: 'Enviament', curt: 'Número massa curt',
       trobats: n => n === 1 ? '1 enviament trobat' : n + ' enviaments trobats', avisat: 'Recepció ja està avisada.', senseAvis: 'Digues aquest número al taulell.',
-      escaneja: 'També pots escanejar el codi de barres de l\'etiqueta o del SMS'
+      escaneja: 'També pots escanejar el codi de barres de l\'etiqueta o del SMS',
+      compartit: 'Aquest telèfon té enviaments de diverses persones. Escriu el número d\'enviament o passa al taulell.'
     },
     es: {
       tit: '¿Vienes a recoger un paquete?', sub: 'Escribe el número de envío o tu teléfono', ph: 'Número de envío o teléfono',
@@ -65,7 +66,8 @@
       parlar: 'Quiero hablar con recepción', fet: 'Hecho', tornar: 'Volver', tancat: 'Ahora la recepción está cerrada', horari: 'Horario: lunes a viernes, de 9 a 14 h y de 16 a 18 h',
       error: 'Ahora no podemos consultar los envíos. Pasa al mostrador, por favor.', bultos: 'bultos', bult: 'bulto', enviament: 'Envío', curt: 'Número demasiado corto',
       trobats: n => n === 1 ? '1 envío encontrado' : n + ' envíos encontrados', avisat: 'Recepción ya está avisada.', senseAvis: 'Di este número en el mostrador.',
-      escaneja: 'También puedes escanear el código de barras de la etiqueta o del SMS'
+      escaneja: 'También puedes escanear el código de barras de la etiqueta o del SMS',
+      compartit: 'Este teléfono tiene envíos de varias personas. Escribe el número de envío o pasa al mostrador.'
     },
     en: {
       tit: 'Here to collect a parcel?', sub: 'Type your tracking number or your phone', ph: 'Tracking number or phone',
@@ -77,7 +79,8 @@
       parlar: 'I want to talk to reception', fet: 'Done', tornar: 'Back', tancat: 'Reception is closed now', horari: 'Opening hours: Monday to Friday, 9–14 h and 16–18 h',
       error: 'We cannot check parcels right now. Please go to the counter.', bultos: 'packages', bult: 'package', enviament: 'Parcel', curt: 'Number too short',
       trobats: n => n === 1 ? '1 parcel found' : n + ' parcels found', avisat: 'Reception has been notified.', senseAvis: 'Tell this number at the counter.',
-      escaneja: 'You can also scan the barcode of the label or the SMS'
+      escaneja: 'You can also scan the barcode of the label or the SMS',
+      compartit: 'This phone has parcels for several people. Type the tracking number or go to the counter.'
     },
     fr: {
       tit: 'Vous venez retirer un colis ?', sub: 'Saisissez le numéro d\'envoi ou votre téléphone', ph: 'Numéro d\'envoi ou téléphone',
@@ -89,7 +92,8 @@
       parlar: 'Je veux parler à la réception', fet: 'Terminé', tornar: 'Retour', tancat: 'La réception est fermée', horari: 'Horaires : du lundi au vendredi, 9–14 h et 16–18 h',
       error: 'Impossible de consulter les envois pour le moment. Allez au comptoir, s\'il vous plaît.', bultos: 'colis', bult: 'colis', enviament: 'Envoi', curt: 'Numéro trop court',
       trobats: n => n === 1 ? '1 envoi trouvé' : n + ' envois trouvés', avisat: 'La réception est prévenue.', senseAvis: 'Donnez ce numéro au comptoir.',
-      escaneja: 'Vous pouvez aussi scanner le code-barres de l\'étiquette ou du SMS'
+      escaneja: 'Vous pouvez aussi scanner le code-barres de l\'étiquette ou du SMS',
+      compartit: 'Ce téléphone a des envois pour plusieurs personnes. Saisissez le numéro d\'envoi ou allez au comptoir.'
     }
   };
   let LG = 'ca';
@@ -176,7 +180,7 @@
         L.forEach(x => {
           const e = String(x.ShippingId || ''); if (!e || vist.has(e)) return; vist.add(e);
           const t = [normTel(x.PostingMobilePhone), normTel(x.PostingPhone)].filter(v => v.length >= 6);
-          if (t.length) out.push({ e, t });
+          if (t.length) out.push({ e, t, n: String(x.PostingName || '').trim().toUpperCase().replace(/\s+/g, ' ') });
         });
       }
       if (out.length) { LLISTA = out; LLISTA_AT = Date.now(); }
@@ -185,7 +189,10 @@
   async function perTelefon(tel) {
     const n = normTel(tel);
     if (!LLISTA.length || Date.now() - LLISTA_AT > REFRESC_LLISTAT_MIN * 60000) await carregaLlista();
-    const exps = LLISTA.filter(r => r.t.includes(n)).map(r => r.e).slice(-10);
+    const trobats = LLISTA.filter(r => r.t.includes(n));
+    // telèfon compartit (punts de concentració, empreses...): no ensenyem enviaments d'altres persones
+    if (new Set(trobats.map(r => r.n).filter(Boolean)).size > 2) return { compartit: true };
+    const exps = trobats.map(r => r.e).slice(-10);
     const res = [];
     for (const e of exps) { const L = await atlas({ fltCode: e, rows: '5' }); if (L[0]) res.push(L[0]); }   // estat en directe
     return res;
@@ -324,6 +331,13 @@
     let L;
     try { L = via === 'codi' ? await perCodi(v) : await perTelefon(v); }
     catch (e) { return resultat({ error: true, via }); }
+    if (L && L.compartit) {
+      entrada = ''; ULT = { via, q: v, fitxes: [] };
+      envia({ a: 'add', via, q: amaga(v), items: [], torn: false, err: 0, compartit: 1 });
+      pinta(`<div class="res"><div class="msg">${T('compartit')}</div>
+        <div class="bts"><button data-a="inici">${T('tornar')}</button><button class="g" data-a="parlar">${T('parlar')}</button></div></div>`);
+      return programaFet(30);
+    }
     resultat({ via, fitxes: L.map(fitxa), q: v });
   }
 
