@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Registre Punteig 909
 // @namespace    recollit-entregat-909
-// @version      2.5
-// @description  v2.5: correccions de zona del 04/11 (Salòria 64 i 83, Boixadera, Comtat d'Urgell 42, Camí Ral de Cerdanya, Coll del Pendís, Guils, Anserall, Pla de Sant Tirs). v2.4: derivats al PS Recollit i Entregat = punt Blau. v2.3: Grapats (C/ Mont) sempre Blau. v2.2: zones Blau v4 (Jueus, Muralla, Pou, Estret, Hèrcules, Graell, Europa, Portal d'Andorra, Garriga i Massó, Mont, Roda, Partida Sant Ermengol, Poble Sec, Alt Pirineu, Baixos de Calbinyà). v2.1: Av. Valls d'Andorra sencera a Blau (18-20 continua REA). v2.0: correccions verd (Llorenç Tomàs i Costa 52-83, Comtat d'Urgell 57-59, Setúria, Circumval·lació 71-77 i 82). v1.9: tot Castellciutat va a Organyà (excepte el polígon). v1.8: Aravell va a Organyà (no Arcavell/La Farga); carrer E del polígon = Madahe encara que l'adreça vingui tallada. v1.7: el requadre s'ajusta a l'alçada de la pantalla (mida 3 amb text al 125%). v1.6: correccions del 03/11 (Sant Climent, Pg. Parc 49, Dr. Robert, Andorra REA, N-145 km 9 amb 'KM: 9'). v1.5: correccions de zona del 02/11 (Sostres, Codina, Lleteries, Costa Carreu, Tomàs i Costa, Cantacorbs, Pallerols, N-145 km 9, Seur). v1.4: zona proposada als que no són al llistat, zones de l'Escàner FPE, avís ParcelShop, codis internacionals i requadre més gran. Registre de totes les lectures del punteig d'Atlas (agencia 909): consultar errors, corregir zones i exportar. Completa les zones que el Punteig 909 no sap ubicar amb les regles de carrers noves. No modifica res del que fa Atlas.
+// @version      2.6
+// @description  v2.6: mida 4 = pantalla gran (requadre a tota l'alçada de la pantalla, per defecte); franja amb el resultat real d'Atlas (✓ puntejat / ↺ ja llegit / ✗ no llegit); també llegeix el punteig clàssic d'Atlas (ToPickCheckingWeekend). v2.5: correccions de zona del 04/11 (Salòria 64 i 83, Boixadera, Comtat d'Urgell 42, Camí Ral de Cerdanya, Coll del Pendís, Guils, Anserall, Pla de Sant Tirs). v2.4: derivats al PS Recollit i Entregat = punt Blau. v2.3: Grapats (C/ Mont) sempre Blau. v2.2: zones Blau v4 (Jueus, Muralla, Pou, Estret, Hèrcules, Graell, Europa, Portal d'Andorra, Garriga i Massó, Mont, Roda, Partida Sant Ermengol, Poble Sec, Alt Pirineu, Baixos de Calbinyà). v2.1: Av. Valls d'Andorra sencera a Blau (18-20 continua REA). v2.0: correccions verd (Llorenç Tomàs i Costa 52-83, Comtat d'Urgell 57-59, Setúria, Circumval·lació 71-77 i 82). v1.9: tot Castellciutat va a Organyà (excepte el polígon). v1.8: Aravell va a Organyà (no Arcavell/La Farga); carrer E del polígon = Madahe encara que l'adreça vingui tallada. v1.7: el requadre s'ajusta a l'alçada de la pantalla (mida 3 amb text al 125%). v1.6: correccions del 03/11 (Sant Climent, Pg. Parc 49, Dr. Robert, Andorra REA, N-145 km 9 amb 'KM: 9'). v1.5: correccions de zona del 02/11 (Sostres, Codina, Lleteries, Costa Carreu, Tomàs i Costa, Cantacorbs, Pallerols, N-145 km 9, Seur). v1.4: zona proposada als que no són al llistat, zones de l'Escàner FPE, avís ParcelShop, codis internacionals i requadre més gran. Registre de totes les lectures del punteig d'Atlas (agencia 909): consultar errors, corregir zones i exportar. Completa les zones que el Punteig 909 no sap ubicar amb les regles de carrers noves. No modifica res del que fa Atlas.
 // @match        https://atlas.gls-spain.es/pick/*
 // @match        https://atlas.gls-spain.es/Pick/*
 // @grant        none
@@ -268,6 +268,8 @@ return zoneOf;
   // ---------- requadre del Punteig 909: mida, avís ParcelShop i enviaments que no troba ----------
   // mida 2 i 3: més alt però prou estret perquè es vegi el color del requadre de punteig d'Atlas a l'esquerra
   const CSS2 = `#p909{max-height:calc(100vh - 24px);overflow:auto}#p909.r909m2{width:min(520px,40vw)}#p909.r909m2 #p909r{zoom:1.5}
+#p909.r909m4{position:fixed!important;top:64px!important;right:8px!important;bottom:8px!important;left:auto!important;width:min(1150px,64vw)!important;max-height:none!important;display:flex!important;flex-direction:column}#p909.r909m4 .bd{flex:1;display:flex;flex-direction:column;overflow:hidden}#p909.r909m4 #p909r{flex:1}
+  #p909 .r909at{font:800 30px system-ui,Arial;text-align:center;padding:10px 8px;color:#fff!important;border-radius:6px;margin:0 0 6px}#p909 .r909at.ok{background:#0f8a4b!important}#p909 .r909at.dup{background:#ef6c00!important}#p909 .r909at.ko{background:#c8261d!important}
   #p909.r909m3{width:min(760px,50vw)}#p909.r909m3 #p909r{zoom:2.3}
   .r909ps{background:#c2185b;color:#fff;font:800 22px system-ui,Arial;padding:8px 12px;text-transform:uppercase;letter-spacing:.02em}
   .r909zn{padding:10px;text-align:center}.r909zn b{display:block;font-size:44px;line-height:1;text-transform:uppercase}
@@ -286,9 +288,9 @@ return zoneOf;
   let infoAtlas = { codi: '', o: null };
   // camps que llegeix el punteig d'Atlas: Data.Item2.{codexp, cp, info01, info02, fecha, servicio, referencia}
   function treuInfo(d) {
-    const i = (d && d.Item2) || {}, t = v => v == null ? '' : String(v).trim();
-    const exp = t(i.codexp), info = [t(i.info01), t(i.info02)].filter(Boolean).join(' ');
-    return { exp: /^\d{8,}$/.test(exp) ? exp : '', cp: t(i.cp), ad: info, l: '', fecha: t(i.fecha), ref: t(i.referencia) };
+    const i = (d && (d.Item2 || d.Details)) || {}, t = v => v == null ? '' : String(v).trim();
+    const exp = t(i.codexp || i.codExp), info = [t(i.info01), t(i.info02)].filter(Boolean).join(' ');
+    return { exp: /^\d{8,}$/.test(exp) ? exp : '', cp: t(i.cp || i.pc), ad: info, l: '', fecha: t(i.fecha), ref: t(i.referencia) };
   }
   function retoca() {
     const el = document.getElementById('p909r');
@@ -326,7 +328,7 @@ return zoneOf;
     } finally { setTimeout(() => { propi = false; }, 0); }
   }
   // v1.7: el requadre mai surt de la pantalla (pantalles petites o text al 125%): redueix el zoom fins que hi cap
-  const ZBASE = { 1: 1, 2: 1.5, 3: 2.3 };
+  const ZBASE = { 1: 1, 2: 1.5, 3: 2.3, 4: 3.4 };
   let encT = null, encBusy = false;
   function encaixa() {
     const p = document.getElementById('p909'), r = document.getElementById('p909r'); if (!p || !r) return;
@@ -342,9 +344,9 @@ return zoneOf;
     if (el && observat !== el) { observat = el; new MutationObserver(() => { if (!propi) setTimeout(retoca, 40); encaixaAviat(); }).observe(el, { childList: true, subtree: true, characterData: true }); }
     if (!p || p.querySelector('[data-a="r909mida"]')) return;
     const hd = p.querySelector('.hd'); if (!hd) return;
-    const b = document.createElement('button'); b.setAttribute('data-a', 'r909mida'); b.title = 'Mida del requadre (1-3)';
-    const aplica = () => { const m = +(get(K_MIDA, 1) || 1); p.classList.remove('r909m2', 'r909m3'); if (m > 1) p.classList.add('r909m' + m); b.textContent = '🔍 ' + m; encaixa(); };
-    b.addEventListener('click', ev => { ev.stopPropagation(); ev.preventDefault(); set(K_MIDA, (+(get(K_MIDA, 1) || 1)) % 3 + 1); aplica(); }, true);
+    const b = document.createElement('button'); b.setAttribute('data-a', 'r909mida'); b.title = 'Mida del requadre (1-4)'; try { if (!localStorage.getItem('r909:mida4')) { localStorage.setItem('r909:mida4', '1'); set(K_MIDA, 4); } } catch (e) { }
+    const aplica = () => { const m = +(get(K_MIDA, 1) || 1); p.classList.remove('r909m2', 'r909m3', 'r909m4'); if (m > 1) p.classList.add('r909m' + m); b.textContent = '🔍 ' + m; encaixa(); };
+    b.addEventListener('click', ev => { ev.stopPropagation(); ev.preventDefault(); set(K_MIDA, (+(get(K_MIDA, 1) || 1)) % 4 + 1); aplica(); }, true);
     hd.insertBefore(b, hd.querySelector('[data-a="min"]') || null); aplica();
   }
   setInterval(muntaPunteig, 1000);
@@ -397,6 +399,23 @@ return zoneOf;
     if (/ \/ /.test(r.z)) return 'dubte';
     return 'ok';
   }
+  // v2.6: franja amb el resultat real d'Atlas a dalt del requadre (puntejat / ja llegit / no llegit)
+  function resultatAtlas(j) {
+    const d = j && j.Data; if (!d) return '';
+    let s = null;
+    if (d.Item1 !== undefined) s = +d.Item1;
+    else if (d.Result !== undefined) { const R = +d.Result; if (R === 2) return ''; s = ({ 1: 1, 1001: 1, 0: 0, 1000: 0, '-1': -1, '-2': -2, '-3': -3 })[R]; }
+    if (s === 1) return 'ok'; if (s === -2 || s === -3) return 'dup'; if (s === 0 || s === -1) return 'ko'; return '';
+  }
+  function posaFranja(k) {
+    if (!k) return;
+    const el = document.getElementById('p909r'); if (!el) return;
+    const T = { ok: '✓ PUNTEJAT A ATLAS', dup: '↺ JA LLEGIT', ko: '✗ NO LLEGIT · torna-ho a passar' };
+    propi = true;
+    try { el.querySelectorAll('.r909at').forEach(x => x.remove()); const d = document.createElement('div'); d.className = 'r909at ' + k; d.setAttribute('data-r909', '1'); d.textContent = T[k]; el.prepend(d); }
+    finally { setTimeout(() => { propi = false; }, 0); }
+    encaixaAviat();
+  }
   function registra(code, status, resp) {
     code = String(code || '').trim();
     if (!code) return;
@@ -408,6 +427,8 @@ return zoneOf;
       const m = j && (j.Message || j.message || j.Error || j.error || (j.Data && (j.Data.Message || j.Data.Item3)));
       if (m) msg = String(m).slice(0, 160);
       if (j && j.Data && j.Data.Item1 !== undefined) msg = 'resultat ' + j.Data.Item1 + (msg ? ' · ' + msg : '');
+      else if (j && j.Data && j.Data.Result !== undefined) { if (+j.Data.Result === 2) return; msg = 'resultat ' + j.Data.Result + (msg ? ' · ' + msg : ''); }
+      const fr = resultatAtlas(j); setTimeout(() => posaFranja(fr), 350);
       if (j && j.Success === false) okAtlas = false;
       if (!r) { const o = treuInfo(j && j.Data); infoAtlas = { codi: code, o }; atlasRaw = JSON.stringify(j && j.Data ? j.Data : j).slice(0, 400); if (o.exp) r = busca(o.exp); }
     } catch (e) { if (resp && !okAtlas) msg = String(resp).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').slice(0, 160); }
@@ -436,9 +457,9 @@ return zoneOf;
   }
 
   // intercepta el punteig d'Atlas sense modificar-lo
-  const codiDeUrl = u => { try { return new URL(u, location.href).searchParams.get('codigo'); } catch (e) { return null; } };
-  const codiDeCos = b => { try { if (!b) return null; if (typeof b === 'string') { const m = b.match(/codigo=([^&]+)/i) || b.match(/"codigo"\s*:\s*"?([^",}]+)/i); return m ? decodeURIComponent(m[1]) : null; } if (b instanceof FormData) return b.get('codigo'); } catch (e) { } return null; };
-  const esPunteig = u => /ProcesaPunteo/i.test(String(u || ''));
+  const codiDeUrl = u => { try { const sp = new URL(u, location.href).searchParams; return sp.get('codigo') || sp.get('DistrictCode'); } catch (e) { return null; } };
+  const codiDeCos = b => { try { if (!b) return null; if (typeof b === 'string') { const m = b.match(/(?:codigo|DistrictCode)=([^&]+)/i) || b.match(/"codigo"\s*:\s*"?([^",}]+)/i); return m ? decodeURIComponent(m[1]) : null; } if (b instanceof FormData) return b.get('codigo'); } catch (e) { } return null; };
+  const esPunteig = u => /ProcesaPunteo|\/pick\/ToPickCheckingWeekend/i.test(String(u || ''));
 
   const XO = XMLHttpRequest.prototype.open, XS = XMLHttpRequest.prototype.send;
   XMLHttpRequest.prototype.open = function (m, u) { this.__r909 = esPunteig(u) ? { u: String(u) } : null; return XO.apply(this, arguments); };
