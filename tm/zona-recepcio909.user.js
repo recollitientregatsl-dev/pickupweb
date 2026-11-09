@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Zona Recepció 909
 // @namespace    recollit-entregat-909
-// @version      1.0
+// @version      1.1
 // @description  Pantalla per al personal de recepció de la nau GLS 909: escaneja o escriu el número d'enviament i et diu de quin color és la zona on l'has de buscar (Vermell, Verd, Groc, Blau, Polígon, Organyà, Cerdanya, La Farga, Agència...), si és a l'estanteria, a la fulla d'un repartidor, al ParcelShop, si encara no ha arribat o si ja està lliurat. Consulta Atlas en directe i fa servir les mateixes zones que el Punteig 909. S'obre amb https://atlas.gls-spain.es/shippingfinder/index?zona909 i es tanca amb el botó ✕.
 // @match        https://atlas.gls-spain.es/*
 // @grant        none
@@ -308,34 +308,36 @@ return zoneOf;
   const CSS = `
   #zr909{position:fixed;inset:0;z-index:2147483000;background:#eef0f8;font-family:'Segoe UI',Arial,sans-serif;color:#0b1446;display:flex;flex-direction:column}
   #zr909 *{box-sizing:border-box}
-  #zr909 header{background:#061ab1;color:#fff;display:flex;align-items:center;gap:12px;padding:10px 18px}
-  #zr909 header h1{font-size:20px;margin:0;flex:1}#zr909 header h1 b{color:#ffd400}
-  #zr909 header button{background:#ffd400;color:#061ab1;border:0;border-radius:8px;padding:8px 12px;font-weight:800;font-size:15px;cursor:pointer}
+  #zr909 header,#zr909 .cerca,#zr909 .llegenda{flex:none}
+  #zr909 header{position:static!important;height:auto!important;width:auto!important;top:auto!important;background:#061ab1;color:#fff;display:flex;align-items:center;gap:10px;padding:6px 14px}
+  #zr909 header h1{font-size:18px;margin:0;padding:0;flex:1;line-height:1.25;height:auto;color:#fff}#zr909 header h1 b{color:#ffd400}
+  #zr909 header button{background:#ffd400;color:#061ab1;border:0;border-radius:8px;padding:5px 10px;font-weight:800;font-size:14px;cursor:pointer}
   #zr909 header button.x{background:#fff2}
-  #zr909 .cerca{display:flex;gap:10px;padding:14px 18px}
-  #zr909 .cerca input{flex:1;font-size:30px;font-family:Consolas,monospace;padding:12px 16px;border:3px solid #061ab1;border-radius:12px;outline:none;min-width:0}
+  #zr909 .cerca{display:flex;gap:10px;padding:8px 14px}
+  #zr909 .cerca input{flex:1;font-size:26px;font-family:Consolas,monospace;padding:7px 14px;border:3px solid #061ab1;border-radius:12px;outline:none;min-width:0}
   #zr909 .cerca button{font-size:22px;font-weight:800;border:0;border-radius:12px;padding:0 26px;background:#061ab1;color:#fff;cursor:pointer}
-  #zr909 main{flex:1;display:flex;gap:16px;padding:0 18px 16px;min-height:0}
-  #zr909 .res{flex:1;display:flex;flex-direction:column;gap:12px;min-width:0;overflow:auto}
-  #zr909 .gran{border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;min-height:44vh;box-shadow:0 4px 14px #0b144633}
-  #zr909 .gran .t1{font-size:22px;font-weight:700;opacity:.85;text-transform:uppercase;letter-spacing:2px}
-  #zr909 .gran .t2{font-size:clamp(56px,11vw,150px);font-weight:900;line-height:1.05;word-break:break-word}
-  #zr909 .gran .t3{font-size:24px;font-weight:600;margin-top:10px;max-width:900px}
-  #zr909 .gran .alt{margin-top:14px;font-size:22px;font-weight:800;border-radius:10px;padding:6px 16px;border:3px solid #fff}
-  #zr909 .fit{background:#fff;border-radius:14px;padding:14px 18px;font-size:18px;box-shadow:0 2px 8px #0b144622;line-height:1.5}
-  #zr909 .fit .c{font-family:Consolas,monospace;font-weight:800;font-size:22px;color:#061ab1}
+  #zr909 main{flex:1;display:flex;gap:12px;padding:0 14px 10px;min-height:0}
+  #zr909 .res{flex:1;display:flex;flex-direction:column;gap:8px;min-width:0;overflow:auto}
+  #zr909 .gran{border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:14px 20px;min-height:min(44vh,360px);flex:none;box-shadow:0 4px 14px #0b144633}
+  #zr909 .gran .t1{font-size:clamp(14px,2.6vh,22px);font-weight:700;opacity:.85;text-transform:uppercase;letter-spacing:2px}
+  #zr909 .gran .t2{font-size:clamp(44px,min(10vw,17vh),150px);font-weight:900;line-height:1.05;word-break:break-word}
+  #zr909 .gran .t3{font-size:clamp(15px,2.8vh,24px);font-weight:600;margin-top:6px;max-width:900px}
+  #zr909 .gran .alt{margin-top:8px;font-size:clamp(15px,2.6vh,22px);font-weight:800;border-radius:10px;padding:6px 16px;border:3px solid #fff}
+  #zr909 .fit{background:#fff;border-radius:14px;padding:8px 14px;font-size:15px;box-shadow:0 2px 8px #0b144622;line-height:1.5}
+  #zr909 .fit .c{font-family:Consolas,monospace;font-weight:800;font-size:19px;color:#061ab1}
   #zr909 .fit .g{color:#5a6290}
   #zr909 .bd{display:inline-block;border-radius:6px;padding:1px 8px;font-size:14px;font-weight:800;color:#fff;background:#7c3aed;margin-left:6px;vertical-align:middle}
-  #zr909 .cob{display:inline-block;background:#fff3c4;border-radius:8px;padding:4px 10px;font-weight:800;margin-top:6px;font-size:20px}
+  #zr909 .cob{display:inline-block;background:#fff3c4;border-radius:8px;padding:4px 10px;font-weight:800;margin-top:4px;font-size:17px}
   #zr909 .buit{color:#5a6290;font-size:24px;text-align:center;padding:50px 20px;background:#fff;border-radius:18px}
-  #zr909 aside{width:300px;flex:none;background:#fff;border-radius:14px;padding:10px;overflow:auto;box-shadow:0 2px 8px #0b144622}
+  #zr909 aside{width:250px;flex:none;background:#fff;border-radius:14px;padding:10px;overflow:auto;box-shadow:0 2px 8px #0b144622}
   #zr909 aside h3{margin:4px 6px 8px;font-size:13px;text-transform:uppercase;letter-spacing:1px;color:#5a6290}
   #zr909 aside div.h{display:flex;align-items:center;gap:8px;padding:7px 6px;border-top:1px solid #eef0f8;cursor:pointer;font-size:14px}
   #zr909 aside div.h i{display:inline-block;width:14px;height:14px;border-radius:4px;flex:none}
   #zr909 aside div.h span{font-family:Consolas,monospace;font-weight:700}
   #zr909 aside div.h small{margin-left:auto;color:#5a6290;white-space:nowrap}
-  #zr909 .llegenda{display:flex;flex-wrap:wrap;gap:6px;padding:0 18px 10px}
-  #zr909 .llegenda b{border-radius:6px;padding:2px 9px;font-size:13px}
+  #zr909 .llegenda{display:flex;flex-wrap:wrap;gap:6px;padding:0 14px 8px}
+  #zr909 .llegenda b{border-radius:6px;padding:1px 8px;font-size:12px}
+  @media (max-height:620px){#zr909 .llegenda{display:none}}
   @media (max-width:900px){#zr909 aside{display:none}}
   `;
   let arrel, inp;
