@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Zona Recepció 909
 // @namespace    recollit-entregat-909
-// @version      1.4
-// @description  v1.4: FPE en gran al costat de la fitxa (es veu de lluny). v1.3: mostra sempre la FPE (data prevista d'entrega) amb avís AVUI / VENÇUDA / futura. Pantalla per al personal de recepció de la nau GLS 909: escaneja o escriu el número d'enviament i et diu de quin color és la zona on l'has de buscar (Vermell, Verd, Groc, Blau, Polígon, Organyà, Cerdanya, La Farga, Agència...), si és a l'estanteria, a la fulla d'un repartidor, al ParcelShop, si encara no ha arribat o si ja està lliurat. Consulta Atlas en directe i fa servir les mateixes zones que el Punteig 909. S'obre NOMÉS amb https://atlas.gls-spain.es/shippingfinder/index?zona909 (adreça pròpia); l'adreça normal de Mil Envíos no es toca mai.
+// @version      1.5
+// @description  v1.5: la veu diu la FPE (Fora FPE / FPE avui / FPE demà / FPE dia X). v1.4: FPE en gran al costat de la fitxa (es veu de lluny). v1.3: mostra sempre la FPE (data prevista d'entrega) amb avís AVUI / VENÇUDA / futura. Pantalla per al personal de recepció de la nau GLS 909: escaneja o escriu el número d'enviament i et diu de quin color és la zona on l'has de buscar (Vermell, Verd, Groc, Blau, Polígon, Organyà, Cerdanya, La Farga, Agència...), si és a l'estanteria, a la fulla d'un repartidor, al ParcelShop, si encara no ha arribat o si ja està lliurat. Consulta Atlas en directe i fa servir les mateixes zones que el Punteig 909. S'obre NOMÉS amb https://atlas.gls-spain.es/shippingfinder/index?zona909 (adreça pròpia); l'adreça normal de Mil Envíos no es toca mai.
 // @match        https://atlas.gls-spain.es/*
 // @grant        none
 // @run-at       document-start
@@ -398,6 +398,11 @@ return zoneOf;
       ${r.alt && r.alt.t !== r.gran ? `<div class="alt" style="background:${r.alt.c.bg};color:${r.alt.c.fg};border-color:${r.c.fg}">Zona per adreça: ${esc(r.alt.t)}</div>` : ''}
     </div>`;
   }
+  function fpeVeu(x) {
+    const fd = dataMs(x.EstimatedDate); if (!fd) return '';
+    const h = new Date(); h.setHours(0,0,0,0); const d0 = new Date(fd); d0.setHours(0,0,0,0); const dif = Math.round((d0 - h) / 864e5);
+    return dif < 0 ? 'Fora FPE' : dif === 0 ? 'FPE avui' : dif === 1 ? 'FPE demà' : 'FPE dia ' + d0.getDate();
+  }
   function fitxa(x, r) {
     const cob = (+x.CashOnDelivery || 0) + (+x.Due || 0);
     const prem = PREMIUM(x.Schedule, x.ServiceId);
@@ -438,7 +443,7 @@ return zoneOf;
       const rs = L.map((x, i) => decideix(x, ops[i]));
       R.innerHTML = L.map((x, i) => blocGran(rs[i], i + 1, L.length) + fitxa(x, rs[i])).join('');
       beep(true);
-      parla(rs.map(r => r.say).filter(Boolean).join('. '));
+      parla(rs.map((r, i) => [r.say, r.gran === 'JA LLIURAT' ? '' : fpeVeu(L[i])].filter(Boolean).join('. ')).filter(Boolean).join('. '));
       L.forEach((x, i) => desaHist({ c: String(x.ShippingId), g: rs[i].gran, bg: rs[i].c.bg, h: hhmm(new Date()) }));
     } catch (e) {
       const ses = String(e && e.message) === 'SESSIO';
