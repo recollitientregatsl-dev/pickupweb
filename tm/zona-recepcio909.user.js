@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Zona Recepció 909
 // @namespace    recollit-entregat-909
-// @version      1.2
-// @description  Pantalla per al personal de recepció de la nau GLS 909: escaneja o escriu el número d'enviament i et diu de quin color és la zona on l'has de buscar (Vermell, Verd, Groc, Blau, Polígon, Organyà, Cerdanya, La Farga, Agència...), si és a l'estanteria, a la fulla d'un repartidor, al ParcelShop, si encara no ha arribat o si ja està lliurat. Consulta Atlas en directe i fa servir les mateixes zones que el Punteig 909. S'obre NOMÉS amb https://atlas.gls-spain.es/shippingfinder/index?zona909 (adreça pròpia); l'adreça normal de Mil Envíos no es toca mai.
+// @version      1.3
+// @description  v1.3: mostra sempre la FPE (data prevista d'entrega) amb avís AVUI / VENÇUDA / futura. Pantalla per al personal de recepció de la nau GLS 909: escaneja o escriu el número d'enviament i et diu de quin color és la zona on l'has de buscar (Vermell, Verd, Groc, Blau, Polígon, Organyà, Cerdanya, La Farga, Agència...), si és a l'estanteria, a la fulla d'un repartidor, al ParcelShop, si encara no ha arribat o si ja està lliurat. Consulta Atlas en directe i fa servir les mateixes zones que el Punteig 909. S'obre NOMÉS amb https://atlas.gls-spain.es/shippingfinder/index?zona909 (adreça pròpia); l'adreça normal de Mil Envíos no es toca mai.
 // @match        https://atlas.gls-spain.es/*
 // @grant        none
 // @run-at       document-start
@@ -330,6 +330,7 @@ return zoneOf;
   #zr909 .fit{background:#fff;border-radius:14px;padding:8px 14px;font-size:15px;box-shadow:0 2px 8px #0b144622;line-height:1.5}
   #zr909 .fit .c{font-family:Consolas,monospace;font-weight:800;font-size:19px;color:#061ab1}
   #zr909 .fit .g{color:#5a6290}
+  #zr909 .fit .fpe{display:inline-block;margin-top:4px;padding:3px 12px;border-radius:999px;font-weight:800;font-size:17px}
   #zr909 .bd{display:inline-block;border-radius:6px;padding:1px 8px;font-size:14px;font-weight:800;color:#fff;background:#7c3aed;margin-left:6px;vertical-align:middle}
   #zr909 .cob{display:inline-block;background:#fff3c4;border-radius:8px;padding:4px 10px;font-weight:800;margin-top:4px;font-size:17px}
   #zr909 .buit{color:#5a6290;font-size:24px;text-align:center;padding:50px 20px;background:#fff;border-radius:18px}
@@ -395,8 +396,14 @@ return zoneOf;
   function fitxa(x, r) {
     const cob = (+x.CashOnDelivery || 0) + (+x.Due || 0);
     const prem = PREMIUM(x.Schedule, x.ServiceId);
+    const fd = dataMs(x.EstimatedDate); let fpeH = '';
+    if (fd) { const h = new Date(); h.setHours(0,0,0,0); const d0 = new Date(fd); d0.setHours(0,0,0,0); const dif = Math.round((d0 - h) / 864e5);
+      const [et, bg, fg] = dif === 0 ? ['AVUI', '#d7261e', '#fff'] : dif < 0 ? ['VENÇUDA', '#7a0b0b', '#fff'] : [dif === 1 ? 'demà' : 'futura', '#e3e8f7', '#061ab1'];
+      fpeH = `<div><span class="fpe" style="background:${bg};color:${fg}">FPE ${ddmm(fd)} · ${et}</span></div>`; }
+    else fpeH = `<div><span class="fpe" style="background:#eee;color:#555">FPE: sense data</span></div>`;
     return `<div class="fit">
       <span class="c">${esc(x.ShippingId)}</span>${prem ? `<span class="bd">${prem}</span>` : ''} · <b>${+x.Packages || '?'} bult${+x.Packages === 1 ? '' : 's'}</b> · ${String(+x.Kgs || 0).replace('.', ',')} kg · <span class="g">${esc(NOM_ESTAT[x.StatusId] || x.StatusId)}</span>
+      ${fpeH}
       <div><b>${esc(String(x.PostingName || '').trim())}</b></div>
       <div class="g">${esc(String(x.PostingAddress || '').trim())} · ${esc(String(x.PostingCity || '').trim())}${x.SourceName ? ' · Rem.: ' + esc(String(x.SourceName).trim()) : ''}</div>
       ${r.op ? `<div class="g">Última lectura a Atlas: <b>${esc(r.op)}</b></div>` : ''}
