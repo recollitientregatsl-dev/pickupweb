@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Punteig PDA 909
 // @namespace    recollit-entregat-909
-// @version      3.3
-// @description  v3.3: derivats a ParcelShop es mostren curts (PS CELINA). v3.2: obre sol el punteo del dia si el troba tancat (un cop Atlas ha carregat l'estat i abans de cada lectura). v3.1: des de la icona, si Atlas demana la contrasenya, després d'entrar torna sol a Punteo; si el punteo del dia és tancat, toca «Abrir punteo» abans de preparar-ho. v3.0: un sol toc per començar: l'enllaç https://atlas.gls-spain.es/pick/index?auto909=999 (icona a la pantalla d'inici o QR) obre «Puntear», assigna la fulla 999 i deixa el cursor a «Código de barras». v2.9: textos de la pantalla gran ajustats (el nom de la zona sempre cap sencer; la prioritat llarga no es trepitja). Quan Atlas demana el número de bult, la pantalla es plega perquè es vegi la finestra d'Atlas, la veu ho avisa i, si s'hi escaneja l'etiqueta sencera, no la deixa passar (cal escriure només el número de bult, normalment 1). v2.8: les brides de saca (codi de 11 xifres que comença per 00 o 10) surten com «SACA PUNTEJADA» en lloc de «no és al llistat». v2.7: la pantalla gran ocupa tota l'alçada (zona al mig, resultat a dalt, prioritat i adreça a baix, amb més aire). v2.6: amb el punteig clàssic, les etiquetes amb codi llarg (no el número d'expedició) es busquen al llistat pel número d'expedició que torna Atlas, i surten amb zona i FPE. v2.5: pantalla gran per defecte (zona, resultat d'Atlas i prioritat en lletra grossa; comptadors i pendents amagats, es mostren amb el botó 📊). v2.4: també llegeix la resposta del punteig clàssic d'Atlas (ToPickCheckingWeekend / ToPick), el que fan servir les PDA amb codis d'expedició: puntejat / ja llegit / no llegit. v2.3: a Firefox (PDA) ara rep la resposta d'Atlas de cada lectura (puntejat / ja llegit / no llegit) en lloc de «sense confirmar». v2.2: funciona també amb el formulari clàssic de punteig d'Atlas («Código de barras» / «Repartidor»), que és el que surt a les PDA: zona a cada lectura i sense teclat de pantalla. v2.1: amb la pantalla plegada, el formulari de punteig d'Atlas es pot desplaçar per sobre de la barra blava (el camp «Código de barras» ja no queda tapat) i el cursor hi torna sol després de triar la fulla, perquè el làser llegeixi a Atlas. v2.0: pantalla completa plegable (per triar la fulla a Atlas) amb el resultat real del punteig d'Atlas: ✓ puntejat (verd), ✗ no llegit (vermell), ↺ ja llegit (taronja), ⚠ sense confirmar; veu del color només quan Atlas confirma; sense teclat de pantalla; comptadors i pendents FPE per zona. v1.9: serveis 97/98 = BUSINESS PARCEL (són nacionals); avís INTERNACIONAL (importació, compta per a l'SPC) amb pitet de Premium i veu. v1.8: avisa «Surt avui · a prop» dels no FPE que són a prop d'un FPE d'avui o endarrerit (La Seu: mateix carrer ±5 números; pobles: mateix poble i ruta). v1.7: correccions de zona del 04/11 (Salòria 64 i 83, Boixadera, Comtat d'Urgell 42, Camí Ral de Cerdanya, Coll del Pendís, Guils, Anserall, Pla de Sant Tirs). v1.6: derivats al PS Recollit i Entregat = punt Blau. v1.5: Grapats (C/ Mont) sempre Blau. v1.4: zones Blau v4 (Jueus, Muralla, Pou, Estret, Hèrcules, Graell, Europa, Portal d'Andorra, Garriga i Massó, Mont, Roda, Partida Sant Ermengol, Poble Sec, Alt Pirineu, Baixos de Calbinyà). v1.3: Av. Valls d'Andorra sencera a Blau (18-20 continua REA). v1.2: correccions verd (Llorenç Tomàs i Costa 52-83, Comtat d'Urgell 57-59, Setúria, Circumval·lació 71-77 i 82). v1.1: tot Castellciutat va a Organyà (excepte el polígon). Punteig de llegada amb la PDA a Atlas (agencia 909): a cada lectura mostra la zona, la prioritat FPE, els Premium i els derivats a ParcelShop, amb veu i pitets. Carrega sol el llistat del dia des d'Atlas (Miraenvios), sense Excel. No modifica res del que fa Atlas.
+// @version      3.4
+// @description  v3.4: carrer i número en lletra gran sota la zona (als pobles, el poble en gran i el carrer a sota), perquè el repartidor el llegeixi d'un cop d'ull. v3.3: derivats a ParcelShop es mostren curts (PS CELINA). v3.2: obre sol el punteo del dia si el troba tancat (un cop Atlas ha carregat l'estat i abans de cada lectura). v3.1: des de la icona, si Atlas demana la contrasenya, després d'entrar torna sol a Punteo; si el punteo del dia és tancat, toca «Abrir punteo» abans de preparar-ho. v3.0: un sol toc per començar: l'enllaç https://atlas.gls-spain.es/pick/index?auto909=999 (icona a la pantalla d'inici o QR) obre «Puntear», assigna la fulla 999 i deixa el cursor a «Código de barras». v2.9: textos de la pantalla gran ajustats (el nom de la zona sempre cap sencer; la prioritat llarga no es trepitja). Quan Atlas demana el número de bult, la pantalla es plega perquè es vegi la finestra d'Atlas, la veu ho avisa i, si s'hi escaneja l'etiqueta sencera, no la deixa passar (cal escriure només el número de bult, normalment 1). v2.8: les brides de saca (codi de 11 xifres que comença per 00 o 10) surten com «SACA PUNTEJADA» en lloc de «no és al llistat». v2.7: la pantalla gran ocupa tota l'alçada (zona al mig, resultat a dalt, prioritat i adreça a baix, amb més aire). v2.6: amb el punteig clàssic, les etiquetes amb codi llarg (no el número d'expedició) es busquen al llistat pel número d'expedició que torna Atlas, i surten amb zona i FPE. v2.5: pantalla gran per defecte (zona, resultat d'Atlas i prioritat en lletra grossa; comptadors i pendents amagats, es mostren amb el botó 📊). v2.4: també llegeix la resposta del punteig clàssic d'Atlas (ToPickCheckingWeekend / ToPick), el que fan servir les PDA amb codis d'expedició: puntejat / ja llegit / no llegit. v2.3: a Firefox (PDA) ara rep la resposta d'Atlas de cada lectura (puntejat / ja llegit / no llegit) en lloc de «sense confirmar». v2.2: funciona també amb el formulari clàssic de punteig d'Atlas («Código de barras» / «Repartidor»), que és el que surt a les PDA: zona a cada lectura i sense teclat de pantalla. v2.1: amb la pantalla plegada, el formulari de punteig d'Atlas es pot desplaçar per sobre de la barra blava (el camp «Código de barras» ja no queda tapat) i el cursor hi torna sol després de triar la fulla, perquè el làser llegeixi a Atlas. v2.0: pantalla completa plegable (per triar la fulla a Atlas) amb el resultat real del punteig d'Atlas: ✓ puntejat (verd), ✗ no llegit (vermell), ↺ ja llegit (taronja), ⚠ sense confirmar; veu del color només quan Atlas confirma; sense teclat de pantalla; comptadors i pendents FPE per zona. v1.9: serveis 97/98 = BUSINESS PARCEL (són nacionals); avís INTERNACIONAL (importació, compta per a l'SPC) amb pitet de Premium i veu. v1.8: avisa «Surt avui · a prop» dels no FPE que són a prop d'un FPE d'avui o endarrerit (La Seu: mateix carrer ±5 números; pobles: mateix poble i ruta). v1.7: correccions de zona del 04/11 (Salòria 64 i 83, Boixadera, Comtat d'Urgell 42, Camí Ral de Cerdanya, Coll del Pendís, Guils, Anserall, Pla de Sant Tirs). v1.6: derivats al PS Recollit i Entregat = punt Blau. v1.5: Grapats (C/ Mont) sempre Blau. v1.4: zones Blau v4 (Jueus, Muralla, Pou, Estret, Hèrcules, Graell, Europa, Portal d'Andorra, Garriga i Massó, Mont, Roda, Partida Sant Ermengol, Poble Sec, Alt Pirineu, Baixos de Calbinyà). v1.3: Av. Valls d'Andorra sencera a Blau (18-20 continua REA). v1.2: correccions verd (Llorenç Tomàs i Costa 52-83, Comtat d'Urgell 57-59, Setúria, Circumval·lació 71-77 i 82). v1.1: tot Castellciutat va a Organyà (excepte el polígon). Punteig de llegada amb la PDA a Atlas (agencia 909): a cada lectura mostra la zona, la prioritat FPE, els Premium i els derivats a ParcelShop, amb veu i pitets. Carrega sol el llistat del dia des d'Atlas (Miraenvios), sense Excel. No modifica res del que fa Atlas.
 // @match        https://atlas.gls-spain.es/*
 // @match        https://atlas.gls-spain.es/pick/*
 // @match        https://atlas.gls-spain.es/Pick/*
@@ -390,7 +390,16 @@ return zoneOf;
 #pda909.gran .idle{flex:1;display:flex;align-items:center;justify-content:center}
 #pda909.gran .zn b{white-space:nowrap;max-width:100%;overflow:hidden}
 #pda909.gran .pr{line-height:1.15;font-size:min(8.5vw,42px)}
-#pda909.gran .pr.llarg{font-size:min(6.5vw,32px)}`;
+#pda909.gran .pr.llarg{font-size:min(6.5vw,32px)}
+#pda909 .cr{background:#fff;color:#14213a;text-align:center;font-weight:900;text-transform:uppercase;padding:8px 8px 10px;border-top:3px solid #14213a;line-height:1.05;letter-spacing:.3px}
+#pda909 .cr b{display:block;font-size:min(9vw,44px);overflow-wrap:anywhere}
+#pda909 .cr i{display:block;font-style:normal;font-weight:700;font-size:min(5.5vw,26px);color:#3a4558;margin-top:4px;overflow-wrap:anywhere}
+#pda909 .cr.llarg b{font-size:min(7vw,34px)}
+#pda909.gran .cr{padding:14px 8px 16px}
+#pda909.gran .cr b{font-size:min(12vw,64px)}
+#pda909.gran .cr.llarg b{font-size:min(8.5vw,46px)}
+#pda909.gran .cr i{font-size:min(7vw,34px)}
+#pda909 .cd.petit .cr b{font-size:min(7vw,32px)}`;
 
   let caixa = null, darrerFulla = '', ultim = '';
   const codiInput = () => { const a = document.getElementById('pnt-codigoV2'), b = document.getElementById('pnt-code'); if (a && a.offsetParent !== null) return a; if (b && b.offsetParent !== null) return b; return a || b; };
@@ -587,6 +596,24 @@ return zoneOf;
     const [c, t, s] = M[p.st] || M.wait;
     return `<div class="at ${c}">${t}${s ? `<small>${esc(s)}</small>` : ''}</div>`;
   }
+  // v1.1/3.4: carrer en gran, com treballen els repartidors (La Seu: carrer i número; pobles: poble i carrer)
+  const ABREV = [[/^(C\/|C\.|CL\.?|CALLE|CARRER|CARRE|C)\s+/, 'C/ '], [/^(AVDA\.?|AVGDA\.?|AVENIDA|AVINGUDA|AV\.?)\s+/, 'AV. '], [/^(PASSEIG|PASEO|PG\.?|PSO\.?)\s+/, 'PG. '], [/^(PLAZA|PLAÇA|PLACA|PZA\.?|PL\.?)\s+/, 'PL. '], [/^(CARRETERA|CTRA\.?|CRTA\.?|CRA\.?)\s+/, 'CTRA. '], [/^(PASSATGE|PASAJE|PGE\.?|PTGE\.?)\s+/, 'PTGE. '], [/^(TRAVESSIA|TRAVESIA|TRAV\.?)\s+/, 'TRAV. '], [/^(PARTIDA|PDA\.?|PD\.?)\s+/, 'PDA. ']];
+  function carrerGran(ad) {
+    let t = String(ad || '').toUpperCase().replace(/\s+/g, ' ').trim(); if (!t) return '';
+    t = t.replace(/^C\/(?=\S)/, 'C/ ');
+    for (const [re, ab] of ABREV) if (re.test(t)) { t = t.replace(re, ab); break; }
+    const m = /\bKM\b/.test(t) ? null : t.match(/^(.*?\D)\s*,?\s*(?:N[º°O]?\.?\s*)?(\d+\s*(?:[-\/]\s*\d+)?(?:\s?[A-Z](?![A-Z]))?)/);
+    if (m) t = m[1].replace(/[\s,·-]+$/, '') + ' ' + m[2].replace(/\s+/g, '');
+    return t.length > 60 ? t.slice(0, 58) + '…' : t;
+  }
+  function bandaCarrer(ad, loc, z, seu) {
+    if (z === 'REA') return '';
+    const c = carrerGran(ad), l = String(loc || '').toUpperCase().trim();
+    let gran = c, petit = '';
+    if (!seu && l && !/SEU D.?URGELL|^LA SEU$/.test(l)) { gran = l; petit = c; }
+    if (!gran) return '';
+    return `<div class="cr${gran.length > 22 ? ' llarg' : ''}"><b>${esc(gran)}</b>${petit ? `<i>${esc(petit)}</i>` : ''}</div>`;
+  }
   function targeta(r, k, txt, o, petit) {
     const col = COL()[r.z] || { bg: '#8a94a6', fg: '#fff' };
     const pm = r.p ? `<div class="pm">⚠ PREMIUM ${r.p === 'BP' ? 'BUSINESS PARCEL' : 'EXPRESS ' + r.p}</div>` : '';
@@ -594,6 +621,7 @@ return zoneOf;
     const ps = r.ps ? `<div class="ps">📦 PS ${esc(r.ps)}</div>` : '';
     return `<div class="cd${petit ? ' petit' : ''}">` + pm + inl + ps +
       `<div class="zn" style="background:${col.bg};color:${col.fg}"><b>${esc(r.z === '?' ? 'Sense zona' : r.z)}</b>${r.pt ? `<i>${esc(r.pt)}</i>` : (r.a ? `<i>${esc(r.a)}</i>` : '')}</div>` +
+      (r.ps || r.pt ? '' : bandaCarrer(r.ad, r.l, r.z, ZSEU(r.z) || r.z === '?')) +
       `<div class="pr ${k}">${esc(txt)}</div>${o ? `<div class="sb prop">Al costat de: ${esc(o.ad)} · ${esc(o.l)} · FPE ${esc(dm(o.d))}</div>` : ''}` +
       `<div class="sb"><code>${esc(r.c[0])}</code> · ${esc(r.l)} · ${esc(r.ad)}${r.cod ? ' · <b>Reemborsament ' + r.cod.toFixed(2) + ' €</b>' : ''}</div></div>`;
   }
@@ -606,7 +634,7 @@ return zoneOf;
     else if (esSaca(p.code)) cos = `<div class="cd"><div class="zn" style="background:#14213a;color:#fff"><b>SACA</b><i>${p.st === 'wait' ? 'esperant Atlas…' : (p.st === 'dup' ? 'Ja estava puntejada' : 'Saca puntejada')}</i></div><div class="sb">Brida <code>${esc(p.code)}</code></div></div>`;
     else if (p.pz) {
       const col = COL()[p.pz.z] || { bg: '#8a94a6', fg: '#fff' };
-      cos = `<div class="cd${p.st === 'dup' ? ' petit' : ''}"><div class="pr miss">No és al llistat · zona proposada</div><div class="zn" style="background:${col.bg};color:${col.fg}"><b>${esc(p.pz.z || '?')}</b><i>${esc(p.pz.pt || (p.pz.z ? 'Per adreça: revisa l\'etiqueta' : (p.pz.alt || 'Sense zona clara')))}</i></div>` +
+      cos = `<div class="cd${p.st === 'dup' ? ' petit' : ''}"><div class="pr miss">No és al llistat · zona proposada</div><div class="zn" style="background:${col.bg};color:${col.fg}"><b>${esc(p.pz.z || '?')}</b><i>${esc(p.pz.pt || (p.pz.z ? 'Per adreça: revisa l\'etiqueta' : (p.pz.alt || 'Sense zona clara')))}</i></div>` + (p.pz.pt ? '' : bandaCarrer(p.pz.ad, '', p.pz.z, true)) +
         `<div class="sb">${esc(['CP ' + (p.pz.cp || '—'), p.pz.ad, p.pz.exp ? 'exp. ' + p.pz.exp : ''].filter(Boolean).join(' · '))} · revisar FPE</div></div>`;
     } else cos = `<div class="cd"><div class="pr miss">No és al llistat</div><div class="sb">Codi <code>${esc(p.code)}</code>${p.st === 'wait' ? ' · esperant Atlas…' : ''}</div></div>`;
     B.innerHTML = at + cos;
