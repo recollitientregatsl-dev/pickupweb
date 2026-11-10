@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Zona Recepció 909
 // @namespace    recollit-entregat-909
-// @version      1.1
-// @description  Pantalla per al personal de recepció de la nau GLS 909: escaneja o escriu el número d'enviament i et diu de quin color és la zona on l'has de buscar (Vermell, Verd, Groc, Blau, Polígon, Organyà, Cerdanya, La Farga, Agència...), si és a l'estanteria, a la fulla d'un repartidor, al ParcelShop, si encara no ha arribat o si ja està lliurat. Consulta Atlas en directe i fa servir les mateixes zones que el Punteig 909. S'obre amb https://atlas.gls-spain.es/shippingfinder/index?zona909 i es tanca amb el botó ✕.
+// @version      1.2
+// @description  Pantalla per al personal de recepció de la nau GLS 909: escaneja o escriu el número d'enviament i et diu de quin color és la zona on l'has de buscar (Vermell, Verd, Groc, Blau, Polígon, Organyà, Cerdanya, La Farga, Agència...), si és a l'estanteria, a la fulla d'un repartidor, al ParcelShop, si encara no ha arribat o si ja està lliurat. Consulta Atlas en directe i fa servir les mateixes zones que el Punteig 909. S'obre NOMÉS amb https://atlas.gls-spain.es/shippingfinder/index?zona909 (adreça pròpia); l'adreça normal de Mil Envíos no es toca mai.
 // @match        https://atlas.gls-spain.es/*
 // @grant        none
 // @run-at       document-start
@@ -12,18 +12,22 @@
 
 (function () {
   'use strict';
-  const ON = 'zr909:on', K_HIST = 'zr909:hist', K_SO = 'zr909:so';
+  const ON = 'zr909:on', PEND = 'zr909:pend', K_HIST = 'zr909:hist', K_SO = 'zr909:so';
   const qs = new URLSearchParams(location.search);
+  // v1.2: la pantalla NOMÉS surt a l'adreça amb ?zona909. L'adreça normal /shippingfinder/index (Mil Envíos) queda sempre lliure.
+  try { localStorage.removeItem(ON); } catch (e) { }                        // neteja el mode "enganxat" de la v1.0/1.1
   try {
-    if (qs.has('zona909')) localStorage.setItem(ON, '1');
-    if (qs.has('sortirzona909')) localStorage.removeItem(ON);
     const ru = decodeURIComponent(qs.get('ReturnUrl') || qs.get('returnUrl') || '');
-    if (/zona909/.test(ru)) localStorage.setItem(ON, '1');
+    if (/zona909/.test(ru)) sessionStorage.setItem(PEND, '1');               // si caduca la sessió, recorda-ho només en aquesta pestanya
   } catch (e) { }
-  let actiu = false; try { actiu = localStorage.getItem(ON) === '1'; } catch (e) { }
-  if (!actiu) return;
   if (/\/account\//i.test(location.pathname)) return;                       // que el personal entri la contrasenya d'Atlas
   if (!/^\/shippingfinder\/index/i.test(location.pathname)) return;         // la resta d'Atlas funciona normal
+  let actiu = qs.has('zona909');
+  try {
+    if (!actiu && sessionStorage.getItem(PEND) === '1') { actiu = true; history.replaceState(null, '', '/shippingfinder/index?zona909'); }
+    sessionStorage.removeItem(PEND);
+  } catch (e) { }
+  if (!actiu) return;
 
   // ================= ZONES (mateix motor que Punteig 909 PC repartidors v1.0) =================
   const zonaNova = (function () {
@@ -355,7 +359,7 @@ return zoneOf;
     document.body.appendChild(arrel);
     inp = arrel.querySelector('#zr909i');
     arrel.querySelector('[data-a="ok"]').onclick = () => busca(inp.value);
-    arrel.querySelector('[data-a="x"]').onclick = () => { try { localStorage.removeItem(ON); } catch (e) { } location.href = '/shippingfinder/index'; };
+    arrel.querySelector('[data-a="x"]').onclick = () => { location.href = '/shippingfinder/index'; };
     const bso = arrel.querySelector('[data-a="so"]');
     const pintaSo = () => bso.textContent = soOn ? '🔊 Veu' : '🔇 Veu';
     pintaSo();
