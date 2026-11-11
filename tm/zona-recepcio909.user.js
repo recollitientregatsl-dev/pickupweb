@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Zona Recepció 909
 // @namespace    recollit-entregat-909
-// @version      1.5
-// @description  v1.5: la veu diu la FPE (Fora FPE / FPE avui / FPE demà / FPE dia X). v1.4: FPE en gran al costat de la fitxa (es veu de lluny). v1.3: mostra sempre la FPE (data prevista d'entrega) amb avís AVUI / VENÇUDA / futura. Pantalla per al personal de recepció de la nau GLS 909: escaneja o escriu el número d'enviament i et diu de quin color és la zona on l'has de buscar (Vermell, Verd, Groc, Blau, Polígon, Organyà, Cerdanya, La Farga, Agència...), si és a l'estanteria, a la fulla d'un repartidor, al ParcelShop, si encara no ha arribat o si ja està lliurat. Consulta Atlas en directe i fa servir les mateixes zones que el Punteig 909. S'obre NOMÉS amb https://atlas.gls-spain.es/shippingfinder/index?zona909 (adreça pròpia); l'adreça normal de Mil Envíos no es toca mai.
+// @version      1.6
+// @description  v1.6: si és a la fulla d'un repartidor, la pantalla es pinta del color de la zona per adreça; la veu diu «FPE vençuda» en lloc de «Fora FPE». v1.5: la veu diu la FPE (FPE vençuda / FPE avui / FPE demà / FPE dia X). v1.4: FPE en gran al costat de la fitxa (es veu de lluny). v1.3: mostra sempre la FPE (data prevista d'entrega) amb avís AVUI / VENÇUDA / futura. Pantalla per al personal de recepció de la nau GLS 909: escaneja o escriu el número d'enviament i et diu de quin color és la zona on l'has de buscar (Vermell, Verd, Groc, Blau, Polígon, Organyà, Cerdanya, La Farga, Agència...), si és a l'estanteria, a la fulla d'un repartidor, al ParcelShop, si encara no ha arribat o si ja està lliurat. Consulta Atlas en directe i fa servir les mateixes zones que el Punteig 909. S'obre NOMÉS amb https://atlas.gls-spain.es/shippingfinder/index?zona909 (adreça pròpia); l'adreça normal de Mil Envíos no es toca mai.
 // @match        https://atlas.gls-spain.es/*
 // @grant        none
 // @run-at       document-start
@@ -73,7 +73,7 @@ const CERDANYA=['ALAS','ALL','AMBRET','ANSOVELL','ARDAIX','ARDOVOL','ARISTOT','A
 const STOP=new Set('C CL CA CALLE CARRER CR CRA AV AVD AVDA AVGDA AVINGUDA AVENIDA PG PSG PASSEIG PASEO PSO CTRA CARRETERA PTGE PASSATGE PASAJE PJE DE DEL DELS LA LES LOS LAS ELS EL L D LO I Y SANT SANTA SAN ST STA S N NUM NO NR BAIXOS BAJOS BJ BX PIS PISO PTA PORTA PUERTA ESC ESCALA BLOC BLOQUE LOCAL CAMI CAMINO'.split(' '));
 const SYN={COMTAT:'COMPTAT',VESCOMTAT:'VESCOMPTAT',GUILLEN:'GUILLEM',SOLARIA:'SALORIA',AIGES:'AIGUES',PORTALS:'PORTAL',CARMEN:'CARME',BARRIO:'BARRI',ANTONIO:'ANTONI',SEBASTIAN:'SEBASTIA',LERIDA:'LLEIDA',MAYOR:'MAJOR',CATALUNA:'CATALUNYA',CIRCUNVALLACIO:'CIRCUMVALLACIO',CIRCUNVALACIO:'CIRCUMVALLACIO',CIRCUMVALACIO:'CIRCUMVALLACIO',CIRCUNVALACION:'CIRCUMVALLACIO',CIRCUNVALLACION:'CIRCUMVALLACIO',
   DOMENECH:'DOMENEC',ORGANA:'ORGANYA',PL:'PLACA',PZA:'PLACA',PLAZA:'PLACA',PCA:'PLACA',PLAÇA:'PLACA',SEO:'SEU',URGEL:'URGELL',LLORENS:'LLORENC',LORENZO:'LLORENC',
-  POL:'POLIGON',PGNO:'POLIGON',PARCELA:'PARCELLA',ZELOETA:'ZULUETA',ZULOETA:'ZULUETA',CALASSANC:'CALASANC',CALASANZ:'CALASANC',PARQUE:'PARC',PARK:'PARC',REGERENCIA:'REGENCIA',LALT:'ALT',BRUIDEU:'BRUDIEU',CONTACT:'COMPTAT',MONTORULL:'MONTURULL',LLESTERIAS:'LLETERIES',LLESTERIES:'LLETERIES',LLETERIAS:'LLETERIES',CORREUS:'CARREUS',DELEGACIO:'DELEGACION',LORRI:'ORRI',RECOGEN:'RECOGE',POLIGONO:'POLIGON',INDUSTRIAL:'POLIGON',PI:'PI'};
+  POL:'POLIGON',PGNO:'POLIGON',PARCELA:'PARCELLA',ZELOETA:'ZULUETA',ZULOETA:'ZULUETA',CALASSANC:'CALASANC',CALASANZ:'CALASANC',PARQUE:'PARC',PARK:'PARC',REGERENCIA:'REGENCIA',LALT:'ALT',PAUCLARIS:'CLARIS',BRUIDEU:'BRUDIEU',CONTACT:'COMPTAT',MONTORULL:'MONTURULL',LLESTERIAS:'LLETERIES',LLESTERIES:'LLETERIES',LLETERIAS:'LLETERIES',CORREUS:'CARREUS',DELEGACIO:'DELEGACION',LORRI:'ORRI',RECOGEN:'RECOGE',POLIGONO:'POLIGON',INDUSTRIAL:'POLIGON',PI:'PI'};
 function ztoks(s){
   s=String(s??'').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/Ç/g,'C').replace(/Ñ/g,'N').replace(/L[·.]L/g,'LL').replace(/[^A-Z0-9]+/g,' ').replace(/([A-Z]{3,})(\d)/g,'$1 $2').trim();
   if(!s)return [];const out=[];
@@ -280,7 +280,7 @@ return zoneOf;
 
     // a la fulla d'un repartidor (no la 10, que és la nau)
     if (rpt && +rpt[1] !== 10 && s === 6)
-      return { gran: 'REPARTIDOR R' + rpt[1], c: ESP.REP, sub: 'Assignat a la fulla del R' + rpt[1] + '. Si la furgoneta encara no ha sortit, busca\'l a la zona ' + colorZona.t + '; si ja ha sortit, és a la furgoneta.', say: 'Repartidor ' + rpt[1] + '. ' + colorZona.say, alt: colorZona, op: opTxt };
+      return { gran: 'REPARTIDOR R' + rpt[1], c: zc === '?' ? ESP.REP : colorZona.c, sub: 'Assignat a la fulla del R' + rpt[1] + '. Si la furgoneta encara no ha sortit, busca\'l a la zona ' + colorZona.t + '; si ja ha sortit, és a la furgoneta.', say: 'Repartidor ' + rpt[1] + '. ' + colorZona.say, alt: colorZona, op: opTxt };
     // guardat a l'agència: fulla 10 (NAU), 400 emmagatzemat o estanteria
     if ((rpt && +rpt[1] === 10) || s === 9 || num === 400 || (num && num >= 700000))
       return { gran: 'AGÈNCIA', c: ESP.AGENCIA, sub: (s === 9 || num === 400 || (num && num >= 700000) ? 'Emmagatzemat a l\'agència' + (num && num !== 999 && num !== 1000 ? ' (zona ' + num + ')' : '') : 'Fulla 10 · NAU (guardat a l\'agència)') + '.', say: 'Agència', op: opTxt, alt: colorZona };
@@ -401,7 +401,7 @@ return zoneOf;
   function fpeVeu(x) {
     const fd = dataMs(x.EstimatedDate); if (!fd) return '';
     const h = new Date(); h.setHours(0,0,0,0); const d0 = new Date(fd); d0.setHours(0,0,0,0); const dif = Math.round((d0 - h) / 864e5);
-    return dif < 0 ? 'Fora FPE' : dif === 0 ? 'FPE avui' : dif === 1 ? 'FPE demà' : 'FPE dia ' + d0.getDate();
+    return dif < 0 ? 'FPE vençuda' : dif === 0 ? 'FPE avui' : dif === 1 ? 'FPE demà' : 'FPE dia ' + d0.getDate();
   }
   function fitxa(x, r) {
     const cob = (+x.CashOnDelivery || 0) + (+x.Due || 0);
