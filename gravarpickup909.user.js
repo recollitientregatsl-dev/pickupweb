@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gravar Pickup 909
 // @namespace    https://pickuppointandorra.com/
-// @version      1.2
+// @version      1.3
 // @description  Grava enviaments multimarca del Pickup Point a Mensatrans (client PICKUP MENSATRANS) a partir de destinataris habituals, i imprimeix l'etiqueta.
 // @author       Recollit i Entregat
 // @match        https://app.mensatrans.com/app.html*
@@ -21,7 +21,7 @@
   const CLIENT_ID = '199569b4049199569974ab93';           // PICKUP MENSATRANS
   const DEPT = '2';
   const FORM_HASH = '#/recogida/@/envio/?customer=' + CLIENT_ID + '&dept=' + DEPT;
-  const VERSION = '1.2';
+  const VERSION = '1.3';
   const LS = {
     queue: 'gp909_queue', mode: 'gp909_mode', revisar: 'gp909_revisar',
     fets: 'gp909_fets', open: 'gp909_open', running: 'gp909_running'
@@ -111,6 +111,7 @@
       const n = N(exactes[0].nombre);
       const iguals = dirs.filter(x => N(x.nombre) === n).length;
       if (iguals > 1) return { estat: 'DUBTE', cands: dirs.filter(x => N(x.nombre) === n).map(d => ({ d, motiu: 'nom repetit' })), motiu: 'Hi ha dos habituals amb el mateix nom' };
+      if (/\bLOCKER\b/.test(N(exactes[0].nombre))) return { estat: 'LOCKER', cands: [], motiu: 'Client LOCKER (' + exactes[0].nombre + '): va a un altre lloc, no es grava' };
       return { estat: 'OK', dir: exactes[0], cands: [], motiu: '' };
     }
     if (exactes.length > 1) return { estat: 'DUBTE', cands: exactes.slice(0, 8).map(d => ({ d, motiu: 'coincideix' })), motiu: exactes.length + ' habituals coincideixen' };
@@ -216,7 +217,7 @@
     }
     const r = buscar(item.nom);
     if (r.estat !== 'OK') {
-      afegirRevisar(item, r.estat === 'NO' ? 'No registrat: no es grava' : 'Dubte: ' + r.motiu + (r.cands.length ? ' (' + r.cands.map(c => c.d.nombre).slice(0, 3).join(' / ') + ')' : ''));
+      afegirRevisar(item, r.estat === 'LOCKER' ? r.motiu : r.estat === 'NO' ? 'No registrat: no es grava' : 'Dubte: ' + r.motiu + (r.cands.length ? ' (' + r.cands.map(c => c.d.nombre).slice(0, 3).join(' / ') + ')' : ''));
       q.shift(); sv(LS.queue, q); pintar();
       return processarSeguentInt();
     }
@@ -399,6 +400,7 @@
       else if (a === 'gravar1') {
         const item = { nom: $('#gp909-nom').value, ref: $('#gp909-ref').value.trim(), obs: $('#gp909-obs').value.trim(), pes: $('#gp909-pes').value.trim() };
         if (!cur) return;
+        if (/\bLOCKER\b/.test(N(cur.nombre))) { estat('⚠ Client LOCKER: va a un altre lloc, no es grava aquí'); return; }
         if (jaFet(item.ref) && !confirm('Aquesta referència ja s\'ha gravat amb aquest script. La tornes a gravar?')) return;
         t.disabled = true; estat('Gravant ' + cur.nombre + '…');
         const dir = cur;
