@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Punteig PDA 909
 // @namespace    recollit-entregat-909
-// @version      3.5
-// @description  v3.5: més ràpid — la veu diu la zona en el moment de llegir (abans esperava la resposta d'Atlas); si Atlas després diu que no l'ha llegit, talla la veu i avisa «No llegit»; el llistat es llegeix de memòria en lloc de rellegir-lo a cada lectura. v3.4: carrer i número en lletra gran sota la zona (als pobles, el poble en gran i el carrer a sota), perquè el repartidor el llegeixi d'un cop d'ull. v3.3: derivats a ParcelShop es mostren curts (PS CELINA). v3.2: obre sol el punteo del dia si el troba tancat (un cop Atlas ha carregat l'estat i abans de cada lectura). v3.1: des de la icona, si Atlas demana la contrasenya, després d'entrar torna sol a Punteo; si el punteo del dia és tancat, toca «Abrir punteo» abans de preparar-ho. v3.0: un sol toc per començar: l'enllaç https://atlas.gls-spain.es/pick/index?auto909=999 (icona a la pantalla d'inici o QR) obre «Puntear», assigna la fulla 999 i deixa el cursor a «Código de barras». v2.9: textos de la pantalla gran ajustats (el nom de la zona sempre cap sencer; la prioritat llarga no es trepitja). Quan Atlas demana el número de bult, la pantalla es plega perquè es vegi la finestra d'Atlas, la veu ho avisa i, si s'hi escaneja l'etiqueta sencera, no la deixa passar (cal escriure només el número de bult, normalment 1). v2.8: les brides de saca (codi de 11 xifres que comença per 00 o 10) surten com «SACA PUNTEJADA» en lloc de «no és al llistat». v2.7: la pantalla gran ocupa tota l'alçada (zona al mig, resultat a dalt, prioritat i adreça a baix, amb més aire). v2.6: amb el punteig clàssic, les etiquetes amb codi llarg (no el número d'expedició) es busquen al llistat pel número d'expedició que torna Atlas, i surten amb zona i FPE. v2.5: pantalla gran per defecte (zona, resultat d'Atlas i prioritat en lletra grossa; comptadors i pendents amagats, es mostren amb el botó 📊). v2.4: també llegeix la resposta del punteig clàssic d'Atlas (ToPickCheckingWeekend / ToPick), el que fan servir les PDA amb codis d'expedició: puntejat / ja llegit / no llegit. v2.3: a Firefox (PDA) ara rep la resposta d'Atlas de cada lectura (puntejat / ja llegit / no llegit) en lloc de «sense confirmar». v2.2: funciona també amb el formulari clàssic de punteig d'Atlas («Código de barras» / «Repartidor»), que és el que surt a les PDA: zona a cada lectura i sense teclat de pantalla. v2.1: amb la pantalla plegada, el formulari de punteig d'Atlas es pot desplaçar per sobre de la barra blava (el camp «Código de barras» ja no queda tapat) i el cursor hi torna sol després de triar la fulla, perquè el làser llegeixi a Atlas. v2.0: pantalla completa plegable (per triar la fulla a Atlas) amb el resultat real del punteig d'Atlas: ✓ puntejat (verd), ✗ no llegit (vermell), ↺ ja llegit (taronja), ⚠ sense confirmar; veu del color només quan Atlas confirma; sense teclat de pantalla; comptadors i pendents FPE per zona. v1.9: serveis 97/98 = BUSINESS PARCEL (són nacionals); avís INTERNACIONAL (importació, compta per a l'SPC) amb pitet de Premium i veu. v1.8: avisa «Surt avui · a prop» dels no FPE que són a prop d'un FPE d'avui o endarrerit (La Seu: mateix carrer ±5 números; pobles: mateix poble i ruta). v1.7: correccions de zona del 04/11 (Salòria 64 i 83, Boixadera, Comtat d'Urgell 42, Camí Ral de Cerdanya, Coll del Pendís, Guils, Anserall, Pla de Sant Tirs). v1.6: derivats al PS Recollit i Entregat = punt Blau. v1.5: Grapats (C/ Mont) sempre Blau. v1.4: zones Blau v4 (Jueus, Muralla, Pou, Estret, Hèrcules, Graell, Europa, Portal d'Andorra, Garriga i Massó, Mont, Roda, Partida Sant Ermengol, Poble Sec, Alt Pirineu, Baixos de Calbinyà). v1.3: Av. Valls d'Andorra sencera a Blau (18-20 continua REA). v1.2: correccions verd (Llorenç Tomàs i Costa 52-83, Comtat d'Urgell 57-59, Setúria, Circumval·lació 71-77 i 82). v1.1: tot Castellciutat va a Organyà (excepte el polígon). Punteig de llegada amb la PDA a Atlas (agencia 909): a cada lectura mostra la zona, la prioritat FPE, els Premium i els derivats a ParcelShop, amb veu i pitets. Carrega sol el llistat del dia des d'Atlas (Miraenvios), sense Excel. No modifica res del que fa Atlas.
+// @version      3.6
+// @description  v3.6: botó «🐢 Retraso ruta»: activat, cada enviament que Atlas confirma com a puntejat rep la incidència RETRASO EN RUTA NACIONAL (com l'app oficial GLS Punteo); capçalera vermella i comptador mentre és actiu; no el repeteix si ja s'ha anotat; es desactiva sol a les 14:00. v3.5: més ràpid — la veu diu la zona en el moment de llegir (abans esperava la resposta d'Atlas); si Atlas després diu que no l'ha llegit, talla la veu i avisa «No llegit»; el llistat es llegeix de memòria en lloc de rellegir-lo a cada lectura. v3.4: carrer i número en lletra gran sota la zona (als pobles, el poble en gran i el carrer a sota), perquè el repartidor el llegeixi d'un cop d'ull. v3.3: derivats a ParcelShop es mostren curts (PS CELINA). v3.2: obre sol el punteo del dia si el troba tancat (un cop Atlas ha carregat l'estat i abans de cada lectura). v3.1: des de la icona, si Atlas demana la contrasenya, després d'entrar torna sol a Punteo; si el punteo del dia és tancat, toca «Abrir punteo» abans de preparar-ho. v3.0: un sol toc per començar: l'enllaç https://atlas.gls-spain.es/pick/index?auto909=999 (icona a la pantalla d'inici o QR) obre «Puntear», assigna la fulla 999 i deixa el cursor a «Código de barras». v2.9: textos de la pantalla gran ajustats (el nom de la zona sempre cap sencer; la prioritat llarga no es trepitja). Quan Atlas demana el número de bult, la pantalla es plega perquè es vegi la finestra d'Atlas, la veu ho avisa i, si s'hi escaneja l'etiqueta sencera, no la deixa passar (cal escriure només el número de bult, normalment 1). v2.8: les brides de saca (codi de 11 xifres que comença per 00 o 10) surten com «SACA PUNTEJADA» en lloc de «no és al llistat». v2.7: la pantalla gran ocupa tota l'alçada (zona al mig, resultat a dalt, prioritat i adreça a baix, amb més aire). v2.6: amb el punteig clàssic, les etiquetes amb codi llarg (no el número d'expedició) es busquen al llistat pel número d'expedició que torna Atlas, i surten amb zona i FPE. v2.5: pantalla gran per defecte (zona, resultat d'Atlas i prioritat en lletra grossa; comptadors i pendents amagats, es mostren amb el botó 📊). v2.4: també llegeix la resposta del punteig clàssic d'Atlas (ToPickCheckingWeekend / ToPick), el que fan servir les PDA amb codis d'expedició: puntejat / ja llegit / no llegit. v2.3: a Firefox (PDA) ara rep la resposta d'Atlas de cada lectura (puntejat / ja llegit / no llegit) en lloc de «sense confirmar». v2.2: funciona també amb el formulari clàssic de punteig d'Atlas («Código de barras» / «Repartidor»), que és el que surt a les PDA: zona a cada lectura i sense teclat de pantalla. v2.1: amb la pantalla plegada, el formulari de punteig d'Atlas es pot desplaçar per sobre de la barra blava (el camp «Código de barras» ja no queda tapat) i el cursor hi torna sol després de triar la fulla, perquè el làser llegeixi a Atlas. v2.0: pantalla completa plegable (per triar la fulla a Atlas) amb el resultat real del punteig d'Atlas: ✓ puntejat (verd), ✗ no llegit (vermell), ↺ ja llegit (taronja), ⚠ sense confirmar; veu del color només quan Atlas confirma; sense teclat de pantalla; comptadors i pendents FPE per zona. v1.9: serveis 97/98 = BUSINESS PARCEL (són nacionals); avís INTERNACIONAL (importació, compta per a l'SPC) amb pitet de Premium i veu. v1.8: avisa «Surt avui · a prop» dels no FPE que són a prop d'un FPE d'avui o endarrerit (La Seu: mateix carrer ±5 números; pobles: mateix poble i ruta). v1.7: correccions de zona del 04/11 (Salòria 64 i 83, Boixadera, Comtat d'Urgell 42, Camí Ral de Cerdanya, Coll del Pendís, Guils, Anserall, Pla de Sant Tirs). v1.6: derivats al PS Recollit i Entregat = punt Blau. v1.5: Grapats (C/ Mont) sempre Blau. v1.4: zones Blau v4 (Jueus, Muralla, Pou, Estret, Hèrcules, Graell, Europa, Portal d'Andorra, Garriga i Massó, Mont, Roda, Partida Sant Ermengol, Poble Sec, Alt Pirineu, Baixos de Calbinyà). v1.3: Av. Valls d'Andorra sencera a Blau (18-20 continua REA). v1.2: correccions verd (Llorenç Tomàs i Costa 52-83, Comtat d'Urgell 57-59, Setúria, Circumval·lació 71-77 i 82). v1.1: tot Castellciutat va a Organyà (excepte el polígon). Punteig de llegada amb la PDA a Atlas (agencia 909): a cada lectura mostra la zona, la prioritat FPE, els Premium i els derivats a ParcelShop, amb veu i pitets. Carrega sol el llistat del dia des d'Atlas (Miraenvios), sense Excel. No modifica res del que fa Atlas.
 // @match        https://atlas.gls-spain.es/*
 // @match        https://atlas.gls-spain.es/pick/*
 // @match        https://atlas.gls-spain.es/Pick/*
@@ -287,7 +287,7 @@ return zoneOf;
           const c = [e]; [x.Barcode, x.Reference, x.REFN].forEach(v => { v = String(v == null ? '' : v).replace(/\s/g, ''); if (/^\d{9,20}$/.test(v) && !c.includes(v)) c.push(v); });
           const ad = String(x.PostingAddress || ''), l = String(x.PostingCity || ''), cp = String(x.PostingSourceCode || ''), ps = psNom(x.nombrePSDestino);
           let z = {}; try { z = zonaNova(ad, l, cp, x.nombrePSDestino || '') || {}; } catch (er) { }
-          recs.push({ c, d: fpe, z: z.z || '?', a: z.alt || '', pt: z.pt || '', p: premium(x.Schedule, x.ServiceId), l, ad, n: String(x.PostingName || ''), ps, cod: +x.CashOnDelivery || 0, i: intl(x) ? 1 : 0 });
+          recs.push({ c, d: fpe, z: z.z || '?', a: z.alt || '', pt: z.pt || '', p: premium(x.Schedule, x.ServiceId), l, ad, n: String(x.PostingName || ''), ps, cod: +x.CashOnDelivery || 0, i: intl(x) ? 1 : 0, o: +x.SourceSquareId || 0 });
         });
       }
       if (!recs.length) throw new Error('Atlas no ha tornat cap enviament');
@@ -328,6 +328,7 @@ return zoneOf;
   const ZORD = ['VERMELL', 'VERD', 'GROC', 'BLAU', 'POLÍGON', 'ORGANYÀ', 'CERDANYA', 'LA FARGA', 'PS RECOLLIT', 'REA', '?'];
   const K_SCAN = 'pda909:scan';
   const CSS = `
+#pda909.ret .hd{background:#c62828!important}#pda909 .hd button.on{background:#fff;color:#c62828;font-weight:700}#pda909 .rt{margin:6px 0;padding:6px 10px;border-radius:8px;font-weight:700;font-size:15px}#pda909 .rt.ok{background:#ffe0e0;color:#a31515}#pda909 .rt.err{background:#c62828;color:#fff}
 #pda909{position:fixed;left:0;right:0;top:0;bottom:0;z-index:2147483000;font-family:system-ui,Arial,sans-serif;background:#eef1f6;color:#14213a;display:flex;flex-direction:column;overflow:hidden}
 #pda909.min{top:auto;height:50px;box-shadow:0 -4px 16px rgba(0,0,0,.35)}
 #pda909.min .cos{display:none}
@@ -424,7 +425,7 @@ return zoneOf;
     if (caixa || !document.body) return;
     const st = document.createElement('style'); st.textContent = CSS; (document.head || document.body).appendChild(st);
     caixa = document.createElement('div'); caixa.id = 'pda909';
-    caixa.innerHTML = `<div class="hd"><div class="t"><b id="pda909f"></b><span id="pda909t"></span></div><button data-a="st" title="Comptadors">📊</button><button data-a="kb" title="Teclat">⌨</button><button data-a="re" title="Tornar a carregar el llistat">↻</button><button data-a="veu" title="Veu"></button><button data-a="min" title="Amagar / mostrar">▾</button></div>
+    caixa.innerHTML = `<div class="hd"><div class="t"><b id="pda909f"></b><span id="pda909t"></span></div><button data-a="ret" title="Retraso ruta">🐢 Retraso ruta</button><button data-a="st" title="Comptadors">📊</button><button data-a="kb" title="Teclat">⌨</button><button data-a="re" title="Tornar a carregar el llistat">↻</button><button data-a="veu" title="Veu"></button><button data-a="min" title="Amagar / mostrar">▾</button></div>
 <div class="cos"><div class="st" id="pda909s" hidden></div><div id="pda909x"></div><div id="pda909e"></div><div id="pda909b"><div class="idle">Escaneja. Aquí sortirà si Atlas l'ha puntejat, la zona i la prioritat FPE.</div></div><div class="kp" id="pda909k"></div><div class="pd" id="pda909p"></div></div>`;
     document.body.appendChild(caixa);
     // els botons no han de treure el cursor del camp on escriu la pistola
@@ -434,6 +435,7 @@ return zoneOf;
       const b = e.target.closest('button');
       if (b) {
         const a = b.dataset.a, c = cfg();
+        if (a === 'ret') retCommuta();
         if (a === 're') carregaLlista();
         if (a === 'veu') { c.veu = !c.veu; set(K_CFG, c); }
         if (a === 'kb') { c.kbd = !c.kbd; set(K_CFG, c); teclat(); }
@@ -445,7 +447,7 @@ return zoneOf;
       if (!caixa.classList.contains('min')) enfoca();
     });
     if (!visible(codiInput())) plega();
-    capcalera(); comptadors(); teclat(); modeGran();
+    capcalera(); comptadors(); teclat(); modeGran(); retPinta();
     const d = llista();
     if (!d || d.dia !== avui()) carregaLlista();
   }
@@ -572,6 +574,7 @@ return zoneOf;
     if ((st === 'ko' || st === 'none') && p.code !== actual) { errs.unshift(p); errs.length = Math.min(errs.length, 3); }
     pintaErrors(); capcalera(); comptadors();
     if (st === 'none') to(SO.miss);
+    if (st === 'ok') retAnota(p);
     if (st === 'ok' && p.code === actual && !p.dit) avisa(p);
     if ((st === 'ko' || st === 'none') && p.dit && p.code === actual) { try { speechSynthesis.cancel(); } catch (e) { } parla(st === 'ko' ? 'No llegit. Torna-la a passar' : 'Sense resposta. Torna-la a passar', 0); }
   }
@@ -605,7 +608,8 @@ return zoneOf;
       none: ['none', '⚠ SENSE CONFIRMAR', (p.msg || 'Atlas no respon') + ' · torna a escanejar']
     };
     const [c, t, s] = M[p.st] || M.wait;
-    return `<div class="at ${c}">${t}${s ? `<small>${esc(s)}</small>` : ''}</div>`;
+    const rt = p.ret ? `<div class="rt ${p.ret.st}">${p.ret.st === 'ok' ? '🔴 ' : '⚠ '}${esc(p.ret.msg)}</div>` : (p.st === 'ok' && retActiu() ? '<div class="rt ok">🔴 Anotant retraso ruta…</div>' : '');
+    return `<div class="at ${c}">${t}${s ? `<small>${esc(s)}</small>` : ''}</div>` + rt;
   }
   // v1.1/3.4: carrer en gran, com treballen els repartidors (La Seu: carrer i número; pobles: poble i carrer)
   const ABREV = [[/^(C\/|C\.|CL\.?|CALLE|CARRER|CARRE|C)\s+/, 'C/ '], [/^(AVDA\.?|AVGDA\.?|AVENIDA|AVINGUDA|AV\.?)\s+/, 'AV. '], [/^(PASSEIG|PASEO|PG\.?|PSO\.?)\s+/, 'PG. '], [/^(PLAZA|PLAÇA|PLACA|PZA\.?|PL\.?)\s+/, 'PL. '], [/^(CARRETERA|CTRA\.?|CRTA\.?|CRA\.?)\s+/, 'CTRA. '], [/^(PASSATGE|PASAJE|PGE\.?|PTGE\.?)\s+/, 'PTGE. '], [/^(TRAVESSIA|TRAVESIA|TRAV\.?)\s+/, 'TRAV. '], [/^(PARTIDA|PDA\.?|PD\.?)\s+/, 'PDA. ']];
@@ -687,6 +691,77 @@ return zoneOf;
     const ci = codiInput(); if (ci && t !== ci) return;
     nou(v);
   }, true);
+
+  // ---------- v-RET: mode «Ruta amb retard» ----------
+  // Amb el mode actiu, cada enviament que Atlas confirma com a puntejat rep la incidència I-18 RETRASO EN RUTA NACIONAL
+  // (el mateix que fa l'app oficial GLS Punteo). GLS accepta informar-la si la ruta arriba després de les 10:00.
+  const K_RET = 'pda909:retard', RET_FINS = 14; // es desactiva sol a les 14:00
+  const retEstat = () => { const s = get(K_RET, null); return s && s.dia === avui() ? s : { dia: avui(), on: false, fets: {}, err: 0 }; };
+  const retActiu = () => { const s = retEstat(); return !!s.on && new Date().getHours() < RET_FINS; };
+  const retN = () => Object.keys(retEstat().fets || {}).length;
+  function retCommuta() {
+    const s = retEstat();
+    if (!s.on && new Date().getHours() >= RET_FINS) { parla('Ja són les ' + RET_FINS + '. Retraso ruta no es pot activar', 0); return; }
+    s.on = !s.on; set(K_RET, s); retPinta();
+    parla(s.on ? 'Retraso ruta activat' : 'Retraso ruta desactivat. ' + retN() + ' enviaments marcats', 0);
+  }
+  function retPinta() {
+    if (!caixa) return;
+    const on = retActiu(), b = caixa.querySelector('[data-a="ret"]');
+    caixa.classList.toggle('ret', on);
+    if (b) { b.className = on ? 'on' : ''; b.textContent = on ? '🔴 RETRASO RUTA ' + retN() : '🐢 Retraso ruta'; b.title = on ? 'RETRASO RUTA actiu: cada puntejat rep RETRASO EN RUTA NACIONAL (toca per desactivar)' : 'Activar Retraso ruta'; }
+  }
+  // la crida es fa des de la pàgina d'Atlas (mateix camí que el seu formulari d'incidències)
+  try {
+    const injR = document.createElement('script');
+    injR.textContent = "(function(){if(window.__ret909)return;window.__ret909=1;document.addEventListener('ret909-req',function(e){var o={};try{o=JSON.parse(e.detail)}catch(x){}var fi=function(r){document.dispatchEvent(new CustomEvent('ret909-resp',{detail:JSON.stringify({id:o.shippingId,r:r})}))};try{window.jQuery.post('/Common/SaveIncidence',o).done(function(r){fi(r)}).fail(function(x){fi({result:'KO',message:'HTTP '+x.status})})}catch(er){fi({result:'KO',message:String(er)})}})})();";
+    (document.head || document.documentElement).appendChild(injR); injR.remove();
+  } catch (e) { }
+  const RET_ESPERA = {};
+  document.addEventListener('ret909-resp', e => {
+    let o = null; try { o = JSON.parse(e.detail); } catch (er) { return; }
+    const cb = RET_ESPERA[o.id]; delete RET_ESPERA[o.id]; if (cb) cb(o.r || {});
+  });
+  const retCrida = params => new Promise(res => {
+    RET_ESPERA[params.shippingId] = res;
+    document.dispatchEvent(new CustomEvent('ret909-req', { detail: JSON.stringify(params) }));
+    setTimeout(() => { if (RET_ESPERA[params.shippingId]) { delete RET_ESPERA[params.shippingId]; res({ result: 'KO', message: 'Atlas no respon' }); } }, 15000);
+  });
+  async function retOrigen(exp) {
+    // plaça d'origen (la demana Atlas per anotar la incidència): primer del llistat, si no, cerca a Atlas
+    const r = busca(exp); if (r && r.o) return r.o;
+    try {
+      const tok = await tokenAtlas(), p = new URLSearchParams();
+      const C = { fltCode: exp, fltPosting: '909', fltHighlighted: 'false', fltRed: '-1', fltTsp: '-1', fltLastStatus: 'true', fltLastIncidence: 'true', fltTypeCode: '0', fltTypeAduanaFile: '-1', page: '1', rows: '20' };
+      for (const k in C) p.append('searchCriteria[' + k + ']', C[k]);
+      ['OrderBy', '', 'Order', '', 'draw', '0', 'start', '0', 'length', '0'].forEach((v, i, a) => { if (i % 2 === 0) p.append(v, a[i + 1]); });
+      p.append('__RequestVerificationToken', tok);
+      const j = await (await fetch('/ShippingFinder/GetShippings', { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest' }, body: p.toString() })).json();
+      const L = (j && j.data && j.data.shippingInfoList) || [], x = L.find(x => String(x.ShippingId) === String(exp)) || L[0];
+      return x ? +x.SourceSquareId || 0 : 0;
+    } catch (e) { return 0; }
+  }
+  async function retAnota(p) {
+    if (!retActiu()) return;
+    const exp = tx(p.r ? p.r.c[0] : '') || tx(p.it && p.it.codexp);
+    if (!/^\d{9,12}$/.test(exp)) { retMarca(p, 'err', 'Retraso ruta NO anotat: no sé el número d\'expedició'); return; }
+    const s0 = retEstat(); if (s0.fets && s0.fets[exp]) { retMarca(p, 'ok', 'Retraso ruta ja anotat'); return; }
+    s0.fets = s0.fets || {}; s0.fets[exp] = 'pend'; set(K_RET, s0);
+    const org = await retOrigen(exp);
+    if (!org) { const s = retEstat(); delete s.fets[exp]; s.err = (s.err || 0) + 1; set(K_RET, s); retMarca(p, 'err', 'Retraso ruta NO anotat: no trobo l\'enviament a Atlas'); return; }
+    const z = n => String(n).padStart(2, '0'), d = new Date();
+    const r = await retCrida({ squareId: org, shippingId: +exp, date: null, incidenceId: 18, solutionId: null, deliveryDate: null, squareIdAnotation: null, userIdAnotation: null, observations: '', typeId: null, gap: null, program: null,
+      incidenceDate: z(d.getDate()) + '/' + z(d.getMonth() + 1) + '/' + d.getFullYear() + ' ' + z(d.getHours()) + ':' + z(d.getMinutes()), processPayment: 0, byCall: false, seguimiento: true, cp: '', poblacion: '', codpais: null, direccion: '' });
+    const s = retEstat(); s.fets = s.fets || {};
+    if (String(r.result || r.Result).toUpperCase() === 'OK') { s.fets[exp] = new Date().toTimeString().slice(0, 5); set(K_RET, s); retMarca(p, 'ok', 'Retraso ruta anotat'); }
+    else { delete s.fets[exp]; s.err = (s.err || 0) + 1; set(K_RET, s); retMarca(p, 'err', 'Retraso ruta NO anotat: ' + (r.message || r.Message || 'error d\'Atlas')); to(SO.miss); parla('Retraso ruta no anotat', 600); }
+    retPinta();
+  }
+  function retMarca(p, st, msg) {
+    p.ret = { st, msg };
+    if (p.code === actual) try { pinta(p); } catch (e) { }
+  }
+  setInterval(retPinta, 30000);
   // resposta del punteig d'Atlas: Item1 = 1 OK · 0/-1 no llegit · -2/-3 ja llegit
   const esPunteig = u => /ProcesaPunteo|\/pick\/ToPickCheckingWeekend/i.test(String(u || ''));
   const codiDe = (u, b) => { try { const sp = new URL(u, location.href).searchParams, q = sp.get('codigo') || sp.get('DistrictCode'); if (q) return q; } catch (e) { }
