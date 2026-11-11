@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gravar Pickup 909
 // @namespace    https://pickuppointandorra.com/
-// @version      1.0
+// @version      1.1
 // @description  Grava enviaments multimarca del Pickup Point a Mensatrans (client PICKUP MENSATRANS) a partir de destinataris habituals, i imprimeix l'etiqueta.
 // @author       Recollit i Entregat
 // @match        https://app.mensatrans.com/app.html*
@@ -18,7 +18,7 @@
   const CLIENT_ID = '199569b4049199569974ab93';           // PICKUP MENSATRANS
   const DEPT = '2';
   const FORM_HASH = '#/recogida/@/envio/?customer=' + CLIENT_ID + '&dept=' + DEPT;
-  const VERSION = '1.0';
+  const VERSION = '1.1';
   const LS = {
     queue: 'gp909_queue', mode: 'gp909_mode', revisar: 'gp909_revisar',
     fets: 'gp909_fets', open: 'gp909_open', running: 'gp909_running'
@@ -138,20 +138,25 @@
   async function gravarImprimir() {
     const link = [...document.querySelectorAll('a[ng-click]')].find(a => /imprimir etiquetas/i.test(a.getAttribute('title') || ''));
     if (!link) throw new Error('No trobo el botó "guardar envío e imprimir etiquetas"');
-    const hash0 = location.hash, es0 = scopeEnvio();
+    const hash0 = location.hash;
+    const blobs0 = new Set([...document.querySelectorAll('iframe')].map(f => f.src).filter(s => /^blob:/.test(s)));
     link.click();
+    // Mensatrans guarda, salta a la llista d'enviaments (#/recogida/N/envios/ver) i imprimeix amb un iframe blob
     const t0 = Date.now();
-    while (Date.now() - t0 < 20000) {
+    let desat = false;
+    while (Date.now() - t0 < 25000) {
       await sleep(400);
-      const es = scopeEnvio();
-      if (location.hash !== hash0) return true;
-      if (es && es.envio && es.envio._id) return true;
-      if (es0 && es0.envio && es0.envio._id) return true;
+      if (!desat && location.hash !== hash0 && /\/recogida\/\d+\//.test(location.hash)) { desat = true; estat('Desat ✔ · imprimint etiqueta…'); }
+      if (desat) {
+        const nou = [...document.querySelectorAll('iframe')].some(f => /^blob:/.test(f.src) && !blobs0.has(f.src));
+        if (nou) { await sleep(3500); return true; }          // deixem temps perquè l'etiqueta arribi a la impressora
+        if (Date.now() - t0 > 15000) return true;            // desat però sense iframe detectat: no bloquegem
+      }
       const err = [...document.querySelectorAll('.modal, .alerta, [class*="alert"], [class*="snackbar"]')]
         .map(e => e.textContent).find(t => /error|obligatori|no se ha podido|incorrect/i.test(t || ''));
       if (err) throw new Error('Mensatrans diu: ' + err.trim().slice(0, 140));
     }
-    throw new Error("Mensatrans no ha confirmat la gravació en 20 s: comprova-ho a mà abans de continuar");
+    throw new Error("Mensatrans no ha confirmat la gravació en 25 s: comprova-ho a mà abans de continuar");
   }
 
   /* ---------- Registres ---------- */
