@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gravar Pickup 909
 // @namespace    https://pickuppointandorra.com/
-// @version      1.1
+// @version      1.2
 // @description  Grava enviaments multimarca del Pickup Point a Mensatrans (client PICKUP MENSATRANS) a partir de destinataris habituals, i imprimeix l'etiqueta.
 // @author       Recollit i Entregat
 // @match        https://app.mensatrans.com/app.html*
@@ -13,12 +13,15 @@
 
 (function () {
   'use strict';
+  // Evita que dues còpies de l'script (p. ex. versions antiga i nova) treballin alhora
+  if (window.__gp909) return;
+  window.__gp909 = true;
 
   /* ---------- Configuració ---------- */
   const CLIENT_ID = '199569b4049199569974ab93';           // PICKUP MENSATRANS
   const DEPT = '2';
   const FORM_HASH = '#/recogida/@/envio/?customer=' + CLIENT_ID + '&dept=' + DEPT;
-  const VERSION = '1.1';
+  const VERSION = '1.2';
   const LS = {
     queue: 'gp909_queue', mode: 'gp909_mode', revisar: 'gp909_revisar',
     fets: 'gp909_fets', open: 'gp909_open', running: 'gp909_running'
@@ -190,8 +193,17 @@
     }).filter(x => x.nom && !/^nom$/i.test(x.nom));
   }
 
+  let processant = false;
   async function processarSeguent() {
     if (!ld(LS.running, false)) return;
+    // Bloqueig: només un paquet alhora (també entre pestanyes o còpies de l'script)
+    if (processant) return;
+    const lk = ld('gp909_lock', 0);
+    if (Date.now() - lk < 40000) return;
+    processant = true; sv('gp909_lock', Date.now());
+    try { await processarSeguentInt(); } finally { processant = false; sv('gp909_lock', 0); }
+  }
+  async function processarSeguentInt() {
     const q = ld(LS.queue, []);
     if (!q.length) { sv(LS.running, false); estat('Lot acabat ✔'); pintar(); return; }
     if (!esFormPickup()) { estat('Obrint formulari nou…'); location.hash = FORM_HASH + '&t=' + Date.now(); return; }
@@ -206,15 +218,20 @@
     if (r.estat !== 'OK') {
       afegirRevisar(item, r.estat === 'NO' ? 'No registrat: no es grava' : 'Dubte: ' + r.motiu + (r.cands.length ? ' (' + r.cands.map(c => c.d.nombre).slice(0, 3).join(' / ') + ')' : ''));
       q.shift(); sv(LS.queue, q); pintar();
-      return processarSeguent();
+      return processarSeguentInt();
     }
     try {
       await seleccionar(r.dir);
       omplir(item);
       if (ld(LS.mode, 'manual') === 'auto') {
+        // Treiem el paquet de la cua ABANS de gravar: mai es pot gravar dues vegades
+        const q2 = ld(LS.queue, []);
+        if (!q2.length || N(q2[0].nom) !== N(item.nom) || (q2[0].ref || '') !== (item.ref || '')) return;
+        q2.shift(); sv(LS.queue, q2);
+        if (jaFet(item.ref)) { afegirRevisar(item, 'Referència ja gravada avui per aquest script'); pintar(); return seguentForm(); }
         await gravarImprimir();
         afegirFet(item, r.dir);
-        q.shift(); sv(LS.queue, q); pintar();
+        pintar();
         await sleep(800);
         return seguentForm();
       } else {
