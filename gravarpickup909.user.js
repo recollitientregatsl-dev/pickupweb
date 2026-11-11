@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gravar Pickup 909
 // @namespace    https://pickuppointandorra.com/
-// @version      1.3
+// @version      1.4
 // @description  Grava enviaments multimarca del Pickup Point a Mensatrans (client PICKUP MENSATRANS) a partir de destinataris habituals, i imprimeix l'etiqueta.
 // @author       Recollit i Entregat
 // @match        https://app.mensatrans.com/app.html*
@@ -21,7 +21,7 @@
   const CLIENT_ID = '199569b4049199569974ab93';           // PICKUP MENSATRANS
   const DEPT = '2';
   const FORM_HASH = '#/recogida/@/envio/?customer=' + CLIENT_ID + '&dept=' + DEPT;
-  const VERSION = '1.3';
+  const VERSION = '1.4';
   const LS = {
     queue: 'gp909_queue', mode: 'gp909_mode', revisar: 'gp909_revisar',
     fets: 'gp909_fets', open: 'gp909_open', running: 'gp909_running'
@@ -134,7 +134,16 @@
     const es = scopeEnvio();
     es.$apply(() => {
       es.envio.referencia = item.ref || '';
-      es.envio.observaciones = item.obs || '';
+      // El reembolso va a les observacions del destinatari (la Zule ho vol allà); la resta, a les de l'enviament
+      const obs = String(item.obs || '');
+      const iR = obs.search(/REEMBOLSO/i);
+      const reemb = iR >= 0 ? obs.slice(iR).trim() : '';
+      const resta = (iR >= 0 ? obs.slice(0, iR) : obs).replace(/[\s·|,-]+$/, '').trim();
+      es.envio.observaciones = resta;
+      if (reemb && es.envio.destino) {
+        const prev = String(es.envio.destino.observaciones || '').trim();
+        es.envio.destino.observaciones = prev && !prev.includes(reemb) ? prev + ' · ' + reemb : reemb;
+      }
       const p = parseFloat(String(item.pes || '').replace(',', '.'));
       if (p > 0) es.envio.datos.peso = p;
     });
