@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Propers 909
 // @namespace    recollit-entregat-909
-// @version      1.7
+// @version      1.7.1
 // @description  Botó "Revisar propers" a Control de Entregas: amb la fulla d'un repartidor oberta, mostra els enviaments sense assignar (Sin asignar, 999 i 1000) que són a prop de les seves parades i permet assignar-los a la fulla. Agència 909.
 // @match        https://atlas.gls-spain.es/delivery/*
 // @match        https://atlas.gls-spain.es/Delivery/*
@@ -241,10 +241,10 @@
     w.querySelector('#p909r').onclick = () => revisa();
     w.querySelector('#p909x').onclick = () => { obert = false; pinta(); };
     // a la capçalera d'Atlas, just després del títol (no tapa cap botó ni el panell del Tancament)
-    const placa = () => { const t = document.querySelector('#headerAtlas h1'); const x = t ? Math.round(t.getBoundingClientRect().right) + 24 : 420; b.style.left = x + 'px'; w.style.left = Math.min(x, Math.max(10, innerWidth - 440)) + 'px'; };
+    const placa = () => { const t = document.querySelector('#headerAtlas h1'); const tr = t ? t.getBoundingClientRect().right : 0; const x = tr > 0 ? Math.round(tr) + 24 : 420; b.style.left = x + 'px'; w.style.left = Math.min(x, Math.max(10, innerWidth - 440)) + 'px'; };
     placa(); addEventListener('resize', placa); setTimeout(placa, 1500);
     enllaca(); pinta();
-    setInterval(() => { if (!enMarxa) { const bb = document.getElementById('p909b'); const f = fullaOberta(); if (bb) bb.textContent = '🔎 Revisar propers' + (f ? ' · ' + (f.nom || f.codi) : ''); } }, 3000);
+    setInterval(() => { placa(); if (!enMarxa) { const bb = document.getElementById('p909b'); const f = fullaOberta(); if (bb) bb.textContent = '🔎 Revisar propers' + (f ? ' · ' + (f.nom || f.codi) : ''); } }, 3000);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', munta); else munta();
 })();
