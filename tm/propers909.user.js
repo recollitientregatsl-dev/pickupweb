@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Propers 909
 // @namespace    recollit-entregat-909
-// @version      1.6
+// @version      1.7
 // @description  Botó "Revisar propers" a Control de Entregas: amb la fulla d'un repartidor oberta, mostra els enviaments sense assignar (Sin asignar, 999 i 1000) que són a prop de les seves parades i permet assignar-los a la fulla. Agència 909.
 // @match        https://atlas.gls-spain.es/delivery/*
 // @match        https://atlas.gls-spain.es/Delivery/*
@@ -189,8 +189,8 @@
   // ---------- interfície ----------
   let estat = {}, enMarxa = false, obert = false;
   const CSS = `
-  #p909b{position:fixed;right:24px;bottom:16px;z-index:2147483000;background:#0b3d91;color:#fff;border:0;border-radius:8px;padding:8px 12px;font:700 13px system-ui,Arial;box-shadow:0 2px 8px rgba(0,0,0,.3);cursor:pointer}
-  #p909{position:fixed;right:24px;bottom:58px;z-index:2147483000;width:420px;max-width:calc(100vw - 20px);max-height:70vh;display:flex;flex-direction:column;background:#fff;color:#14213a;border:1px solid #c9d2e0;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.25);font:12px/1.35 system-ui,Arial;text-align:left}
+  #p909b{position:fixed;left:420px;top:5px;z-index:2147483000;background:#0b3d91;color:#fff;border:0;border-radius:8px;padding:6px 12px;font:700 13px system-ui,Arial;box-shadow:0 2px 8px rgba(0,0,0,.3);cursor:pointer}
+  #p909{position:fixed;left:420px;top:46px;z-index:2147483000;width:420px;max-width:calc(100vw - 20px);max-height:70vh;display:flex;flex-direction:column;background:#fff;color:#14213a;border:1px solid #c9d2e0;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.25);font:12px/1.35 system-ui,Arial;text-align:left}
   #p909 *{box-sizing:border-box;font-family:inherit}
   #p909 .hd{display:flex;gap:6px;align-items:center;padding:5px 8px;background:#0b3d91;color:#fff;border-radius:8px 8px 0 0}
   #p909 .hd b{flex:1}
@@ -240,6 +240,9 @@
     b.onclick = () => { obert = true; revisa(); };
     w.querySelector('#p909r').onclick = () => revisa();
     w.querySelector('#p909x').onclick = () => { obert = false; pinta(); };
+    // a la capçalera d'Atlas, just després del títol (no tapa cap botó ni el panell del Tancament)
+    const placa = () => { const t = document.querySelector('#headerAtlas h1'); const x = t ? Math.round(t.getBoundingClientRect().right) + 24 : 420; b.style.left = x + 'px'; w.style.left = Math.min(x, Math.max(10, innerWidth - 440)) + 'px'; };
+    placa(); addEventListener('resize', placa); setTimeout(placa, 1500);
     enllaca(); pinta();
     setInterval(() => { if (!enMarxa) { const bb = document.getElementById('p909b'); const f = fullaOberta(); if (bb) bb.textContent = '🔎 Revisar propers' + (f ? ' · ' + (f.nom || f.codi) : ''); } }, 3000);
   }
