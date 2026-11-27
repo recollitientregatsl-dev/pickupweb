@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Tancament 909 (boto Atlas)
 // @namespace    recollit-entregat-909
-// @version      1.27
+// @version      1.28
 // @description  Tancament diari Atlas agencia 909: boto Executar/Simular
 // @match        https://atlas.gls-spain.es/*
 // @grant        none
@@ -11,7 +11,7 @@
 // ==/UserScript==
 
 const TANC909=function(){
-const S=window.TANC={v:'1.27',res:null,step:'',running:false,done:new Set()};
+const S=window.TANC={v:'1.28',res:null,step:'',running:false,done:new Set()};
 const sl=ms=>new Promise(r=>setTimeout(r,ms));
 const z=n=>String(n).padStart(2,'0');
 const avui=()=>{const d=new Date();return z(d.getDate())+'/'+z(d.getMonth()+1)+'/'+d.getFullYear();};
@@ -77,7 +77,8 @@ const add=(k,v)=>R[k].push(v);
 const EDS=/ENTREGA DIA SIGUIENTE|EN RUTA|ENTREGAR HOY/i,tk=d=>ymd(d)+String(d).slice(11,19);
 const sosp=ev=>{const s0=ev.find(v=>v.t==='S'&&EDS.test(v.x));if(!s0)return null;const k0=tk(s0.d);if(ev.some(v=>v.t==='P'&&tk(v.d)>=k0))return null;const ds=new Set(ev.filter(v=>v.t==='I'&&tk(v.d)>=k0).map(v=>ymd(v.d)));return ds.size>=2?{n:ds.size,d0:s0.d.slice(0,5)}:null;};
 const dn=e=>S.done.add(e);
-const R1000=/^(AUSENTE|CAUSA DE FUERZA MAYOR|PUNTO ENTREGA NO DISPONIBLE|FACILITADA SOLUCION.*|NO TIENE DINERO|RETORNO NO PREPARADO)$/,R2000=/^(NO ACEPTA|FALTAN DATOS|DIRECCI[O\u00d3]N INCORRECTA)/,STORE=/LOC-|MAGATZEM|RACO|ALMACENADO/;
+// v1.28: ENTREGA EN MAX 72H tambe passa a la 1000 (cas 1382569690, quedat a fulla R sense incidentar)
+const R1000=/^(AUSENTE|CAUSA DE FUERZA MAYOR|PUNTO ENTREGA NO DISPONIBLE|FACILITADA SOLUCION.*|NO TIENE DINERO|RETORNO NO PREPARADO|ENTREGA EN MAX\.? ?72 ?H)$/,R2000=/^(NO ACEPTA|FALTAN DATOS|DIRECCI[O\u00d3]N INCORRECTA)/,STORE=/LOC-|MAGATZEM|RACO|ALMACENADO/;
 const PARC=/FALTA[N]? BULTOS|ENTREGA PARCIAL/i,DET=/DETERIORAD/,NOTOUCH=/(^|\D)(707070|808080|818181|828282|838383|848484|858585)(\D|$)/,PS=/PARCEL ?SHOP/i;
 const nd=s=>!!(s.last&&s.last.t==='S'&&!/PASARAN A RECOGER|RECOGERAN EN AGENCIA/.test(s.last.x));
 const OBS2='AGOTADOS INTENTOS. DESTINATARIO TIENE 10 DIAS PARA RECOGER EL ENVIO';
