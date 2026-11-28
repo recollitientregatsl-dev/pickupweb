@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Propers 909
 // @namespace    recollit-entregat-909
-// @version      1.7.1
-// @description  Botó "Revisar propers" a Control de Entregas: amb la fulla d'un repartidor oberta, mostra els enviaments sense assignar (Sin asignar, 999 i 1000) que són a prop de les seves parades i permet assignar-los a la fulla. Agència 909.
+// @version      1.8.3
+// @description  Botó "Revisar propers" a Control de Entregas: amb la fulla d'un repartidor oberta, mostra els enviaments sense assignar (Sin asignar, 999 i 1000) que són a prop de les seves parades i permet assignar-los a la fulla. Només llista enviaments segurs: puntejats a la nau (EN DELEGACION DESTINO), no derivats a ParcelShop, FPE vençuda de 7 dies com a màxim; amb incidència només si es pot tornar a intentar (no adreça incorrecta, falten dades, no accepta...), és anterior a la FPE i la FPE és avui o futura (es comprova al seguiment d'Atlas). Agència 909.
 // @match        https://atlas.gls-spain.es/delivery/*
 // @match        https://atlas.gls-spain.es/Delivery/*
 // @updateURL    https://pickuppointandorra.com/tm/propers909.user.js
@@ -23,6 +23,11 @@
     { nom: '1000', dealer: 1000 }
   ];
   const ESPERA_ENTRE = 700, TEMPS_MAX = 20000;
+  // només enviaments que segur que són a la nau pendents de repartir
+  const ESTATS_NAU = [3, 9];       // 3 = EN DELEGACION DESTINO (puntejat d'arribada); 9 = ALMACENADO (amb condicions)
+  const ESTATS_REF = [3, 6];       // parades de referència de la fulla: a la nau o ja en reparto
+  const MAX_VENCUT = 7;            // FPE vençuda de fa més de 7 dies = enviament rar (extraviat o mal tancat)
+  const NOM_ESTAT = { '-10': 'només grabat', 0: 'manifestat, no ha arribat', 1: 'retingut', 2: 'en trànsit, no ha arribat', 5: 'anul·lat', 6: 'ja en reparto', 7: 'ja entregat', 8: 'entrega parcial', 9: 'emmagatzemat amb incidència', 10: 'retornat', 11: 'pendent de dades', 12: 'retornat al client', 13: 'possible devolució', 14: 'sol·licitud de devolució', 15: 'en devolució', 19: 'a la plataforma, no ha arribat' };
 
   const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const dorm = ms => new Promise(r => setTimeout(r, ms));
@@ -43,6 +48,49 @@
   const generica = loc => !loc || /^(LLEIDA|LERIDA)( LLEIDA| LERIDA)*$/.test(loc);
   // recull a l'agència: no són parades de cap repartidor
   const esREA = e => { const d = NRM(e.DestStreet); return /VALLS D?\s?ANDORRA\W*18\b|VALLS D?\s?ANDORRA\W*20\b/.test(d) || (/LLETERIES/.test(d) && /\b(NAU|NAVE)\s*6\b/.test(d)) || /NAVE GLS|NAU GLS|OFICINA GLS/.test(d); };
+  const esPS = e => /^PARCELSHOP\b/.test(NRM(e.DestName));
+  // motiu pel qual un enviament proper NO s'ha de proposar ('' = es pot proposar)
+  function motiu(e, orig) {
+    const est = Number(e.CodEstado);
+    if (!ESTATS_NAU.includes(est)) return NOM_ESTAT[est] || ('estat Atlas ' + est);
+    if (esPS(e)) return 'derivat a ParcelShop';
+    const d = fpe(e.FPDelivery).dif;
+    if (d === 99) return 'sense FPE';
+    if (d < -MAX_VENCUT) return 'FPE de fa més de ' + MAX_VENCUT + ' dies';
+    return '';
+  }
+  // ---------- seguiment d'Atlas (incidències i solucions de l'agència) ----------
+  // incidències definitives: no es torna a sortir a reparto
+  const INC_NO = /DIRECCI\w* INCORRECTA|DIRECCI\w* INCOMPLETA|FALTAN DATOS|NO ACEPTA|REHUS|DESCONOCID|FALLECID|MAL CANALIZAD|ROBAD|DETERIORAD|DANAD|FALTAN BULTOS|FALTA EXPEDICION|EXTRAVIAD|RETENID|SINIESTRO/;
+  // solucions que treuen l'enviament del reparto
+  const SOL_NO = /PASARAN A RECOGER|RECOGER EN AGENCIA|PARCEL ?SHOP|CAMBIO DE DIRECCI|NUEVA DIRECCI|DEVOLUCI|DEVOLVER/;
+  // incidències que no són un intent d'entrega (p. ex. retard de la ruta en puntejar): no compten
+  const INC_IGNORA = /RETRASO EN RUTA|LLEGADA TARDIA|LLEGADA TARDE/;
+  const msDe = v => { const m = String(v || '').match(/-?\d{10,}/); return m ? +m[0] : null; };
+  const diaDe = ms => { const d = new Date(ms); d.setHours(0, 0, 0, 0); return Math.round((d - avui0()) / 864e5); };
+  const ddmmMs = ms => { const d = new Date(ms); return String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0'); };
+  async function seguiment(e) {
+    const r = await fetch('/Delivery/GetTrackingLog/?CodExp=' + encodeURIComponent(e.CodExp) + '&CodPlaza=' + encodeURIComponent(e.CodPlaceOrg), { credentials: 'include' });
+    const j = await r.json();
+    if (!j || j.Result !== 'OK') throw new Error('sense seguiment');
+    return (j.Data || []).map(v => ({ t: String(v.tipo || '').toUpperCase(), ms: msDe(v.fecha), x: NRM(v.evento), raw: String(v.evento || '').replace(/\s*\{[^}]*\}\s*$/, '').trim(), pl: Number(v.plaza) })).filter(v => v.ms).sort((a, b) => a.ms - b.ms);
+  }
+  // { mo: motiu per descartar ('' = es pot proposar), et: etiqueta a mostrar }
+  async function revisaSeguiment(e, d) {
+    const es9 = Number(e.CodEstado) === 9;
+    let ev; try { ev = await seguiment(e); } catch (x) { return { mo: es9 ? 'no s\'ha pogut llegir el seguiment' : '', et: '' }; }
+    const inc = ev.filter(v => v.t === 'INCIDENCIA' && v.pl === 909 && !INC_IGNORA.test(v.x)).pop();
+    if (!inc) { const s0 = ev.filter(v => v.t === 'SOLUCION').pop(); return (s0 && SOL_NO.test(s0.x)) ? { mo: 'solució: ' + s0.raw, et: '' } : { mo: '', et: '' }; }   // sense intent d'entrega (p. ex. només retard de ruta): surt
+    const sol = ev.filter(v => v.t === 'SOLUCION' && v.ms > inc.ms).pop();
+    const et = 'incidència ' + ddmmMs(inc.ms) + ': ' + inc.raw + (sol ? ' · solució: ' + sol.raw : '');
+    if (INC_NO.test(inc.x)) return { mo: 'incidència que no torna a reparto: ' + inc.raw, et };
+    if (sol && SOL_NO.test(sol.x)) return { mo: 'solució: ' + sol.raw, et };
+    const di = diaDe(inc.ms);
+    if (d < 0) return { mo: 'incidència amb FPE ja passada (no suma qualitat)', et };
+    if (di >= 0) return { mo: 'incidència d\'avui (ja intentat avui)', et };
+    if (di >= d) return { mo: 'ja intentat el dia de la FPE (' + ddmmMs(inc.ms) + ')', et };
+    return { mo: '', et };
+  }
   function clau(e) {
     const loc = NRM(e.DestLocation), cp = String(e.DestCp || '').trim();
     if (esSeu(loc, cp)) { const p = parseAdreca(e.DestStreet); return { seu: true, poble: 'SEU', carrer: p.carrer, num: p.num, parada: p.carrer + '|' + p.num }; }
@@ -99,7 +147,7 @@
     try {
       const meus = await detall(f.codi, f.place);
       if (!meus.length) { estat = { msg: 'La fulla ' + f.codi + ' no té enviaments.', fulla: f }; pinta(); return; }
-      const parades = meus.filter(e => !esREA(e)).map(e => Object.assign(clau(e), { exp: String(e.CodExp), adr: String(e.DestStreet || '').trim(), F: fpe(e.FPDelivery) })).filter(p => p.F.dif <= 0);   // només parades on SÍ ha d'anar avui (FPE avui o vençut)
+      const parades = meus.filter(e => !esREA(e) && ESTATS_REF.includes(Number(e.CodEstado))).map(e => Object.assign(clau(e), { exp: String(e.CodExp), adr: String(e.DestStreet || '').trim(), F: fpe(e.FPDelivery) })).filter(p => p.F.dif <= 0 && p.F.dif >= -MAX_VENCUT);   // només parades on SÍ ha d'anar avui (FPE avui o vençut)
       if (!parades.length) { estat = { msg: 'La fulla ' + f.codi + ' no té cap enviament amb FPE avui o vençut: no hi ha parades de referència.', fulla: f }; pinta(); return; }
       const jaHi = new Set(meus.map(e => String(e.CodExp)));
       const origens = fullesOrigen();
@@ -110,7 +158,7 @@
         let d = []; try { d = await detall(o.codi, o.place); } catch (e) { }
         d.forEach(e => { if (!jaHi.has(String(e.CodExp))) cand.push(Object.assign({ __o: o.nom }, e)); });
       }
-      const vistos = new Set(), res = [];
+      const vistos = new Set(), res = [], descart = [], perRevisar = [];
       for (const e of cand) {
         if (vistos.has(String(e.CodExp)) || esREA(e)) continue;
         const k = clau(e);
@@ -125,11 +173,24 @@
         if (!tipus) continue;
         vistos.add(String(e.CodExp));
         const F = fpe(e.FPDelivery);
-        res.push({ exp: String(e.CodExp), orig: e.__o, adr: String(e.DestStreet || '').trim(), loc: String(e.DestLocation || '').trim(), dest: String(e.DestName || '').trim(), fpe: F.txt, dif: F.dif, tipus, refExp: ref.exp, refAdr: ref.adr, refFpe: ref.F.txt, refDif: ref.F.dif, inc: String(e.DeliveryDate || '').trim() && !/^\d/.test(String(e.DeliveryDate)) ? String(e.DeliveryDate).trim() : '' });
+        const mo = motiu(e, e.__o);
+        if (mo) { descart.push({ exp: String(e.CodExp), orig: e.__o, adr: String(e.DestStreet || '').trim(), fpe: F.txt, motiu: mo }); continue; }
+        perRevisar.push({ exp: String(e.CodExp), orig: e.__o, adr: String(e.DestStreet || '').trim(), loc: String(e.DestLocation || '').trim(), dest: String(e.DestName || '').trim(), fpe: F.txt, dif: F.dif, tipus, refExp: ref.exp, refAdr: ref.adr, refFpe: ref.F.txt, refDif: ref.F.dif, __e: e, inc: (String(e.DeliveryDate || '').trim() && !/^\d/.test(String(e.DeliveryDate)) ? String(e.DeliveryDate).trim() : '') });
       }
+      // segona passada: seguiment d'Atlas només dels propers (incidències i solucions)
+      if (perRevisar.length) { estat = { msg: 'Revisant el seguiment de ' + perRevisar.length + ' propers…', fulla: f }; pinta(); }
+      let idx = 0;
+      const treballa = async () => {
+        while (idx < perRevisar.length) {
+          const it = perRevisar[idx++]; const s = await revisaSeguiment(it.__e, it.dif); delete it.__e;
+          if (s.mo) descart.push({ exp: it.exp, orig: it.orig, adr: it.adr, fpe: it.fpe, motiu: s.mo });
+          else { if (s.et) it.inc = s.et + (it.inc && !s.et.includes(it.inc) ? ' · ' + it.inc : ''); res.push(it); }
+        }
+      };
+      await Promise.all([treballa(), treballa(), treballa(), treballa()]);
       const ordre = { parada: 0, carrer: 1, poble: 2 };
       res.sort((a, b) => (ordre[a.tipus] - ordre[b.tipus]) || (a.dif - b.dif) || a.adr.localeCompare(b.adr));
-      estat = { fulla: f, items: res, nMeus: meus.length, msg: res.length ? '' : 'Cap enviament proper sense assignar. Fulla completa 👍' };
+      estat = { fulla: f, items: res, descart, nMeus: meus.length, msg: res.length ? '' : 'Cap enviament proper sense assignar. Fulla completa 👍' };
     } catch (e) { estat = { msg: 'No s\'han pogut llegir les dades d\'Atlas (' + e.message + ').', fulla: f }; }
     pinta();
   }
@@ -205,6 +266,7 @@
   #p909 .fp{font-weight:700} #p909 .fp.v{color:#c8261d} #p909 .fp.av{color:#7a3d00;background:#ffe08a;padding:0 3px;border-radius:3px} #p909 .rf{color:#14213a}
   #p909 button.p{background:#0b3d91;color:#fff;border:0;border-radius:5px;padding:3px 8px;font-size:12px;font-weight:600;cursor:pointer}
   #p909 button.p:disabled{opacity:.5;cursor:default}
+  #p909 .ds{color:#5b6780;border-top:1px dashed #c9d2e0;padding-top:4px} #p909 .ds summary{cursor:pointer;font-weight:600} #p909 .ds div{padding:2px 0;border-bottom:1px solid #eef2f8} #p909 .ds i{color:#8a5a00}
   #p909 .FET{color:#1b7f3b;font-weight:700} #p909 .ERROR{color:#c0392b;font-weight:700}`;
   const NOMS = { parada: 'A la mateixa parada (ja hi passes)', carrer: 'Al mateix carrer, a ±' + MARGE_NUM + ' números (de camí)', poble: 'Al mateix poble' };
 
@@ -223,6 +285,8 @@
       h += g.map(x => `<div class="it ${t}"><div><b>${esc(x.exp)}</b> · <span class="fp ${x.dif < 0 ? 'v' : ''}">${esc(x.fpe)}</span> <small>(${esc(x.orig)})</small><br>${esc(x.adr)}${x.seu === false ? '' : ''} · ${esc(x.loc)}<br><small>${esc(x.dest)}${x.inc ? ' · ' + esc(x.inc) : ''}</small>${x.refExp ? '<br><small class="rf">\u21b3 a prop de <b>' + esc(x.refExp) + '</b> \u00b7 ' + esc(x.refAdr) + ' \u00b7 <span class="fp ' + (x.refDif <= 0 ? 'av' : '') + '">' + esc(x.refFpe) + '</span></small>' : ''}</div>
         <div>${x.estat ? `<span class="${esc(x.estat)}">${esc(x.estat)}</span>${x.text && x.estat === 'ERROR' ? '<br><small>' + esc(x.text) + '</small>' : ''}` : `<button class="p" data-e="${esc(x.exp)}" ${enMarxa ? 'disabled' : ''}>Assignar</button>`}</div></div>`).join('');
     }
+    const ds = estat.descart || [];
+    if (ds.length) h += `<details class="ds"><summary>${ds.length} a prop però descartats (no segurs)</summary>` + ds.map(x => `<div><b>${esc(x.exp)}</b> · ${esc(x.adr)} · ${esc(x.fpe)} <small>(${esc(x.orig)})</small><br><i>${esc(x.motiu)}</i></div>`).join('') + `</details>`;
     w.querySelector('.cos').innerHTML = h || '<div class="res">Obre la fulla del repartidor i prem «Revisar propers».</div>';
     const b = w.querySelector('#p909tots'); if (b) b.onclick = () => assigna(pend.filter(x => !x.estat));
     w.querySelectorAll('button[data-e]').forEach(x => { x.onclick = () => { const i = it.find(y => y.exp === x.dataset.e); if (i) assigna([i]); }; });
