@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Zona Recepció 909
 // @namespace    recollit-entregat-909
-// @version      1.7
+// @version      1.8
 // @description  v1.7: si l'adreça només porta el número, busca el carrer a la línia del nom/empresa. v1.6: si és a la fulla d'un repartidor, la pantalla es pinta del color de la zona per adreça; la veu diu «FPE vençuda» en lloc de «Fora FPE». v1.5: la veu diu la FPE (FPE vençuda / FPE avui / FPE demà / FPE dia X). v1.4: FPE en gran al costat de la fitxa (es veu de lluny). v1.3: mostra sempre la FPE (data prevista d'entrega) amb avís AVUI / VENÇUDA / futura. Pantalla per al personal de recepció de la nau GLS 909: escaneja o escriu el número d'enviament i et diu de quin color és la zona on l'has de buscar (Vermell, Verd, Groc, Blau, Polígon, Organyà, Cerdanya, La Farga, Agència...), si és a l'estanteria, a la fulla d'un repartidor, al ParcelShop, si encara no ha arribat o si ja està lliurat. Consulta Atlas en directe i fa servir les mateixes zones que el Punteig 909. S'obre NOMÉS amb https://atlas.gls-spain.es/shippingfinder/index?zona909 (adreça pròpia); l'adreça normal de Mil Envíos no es toca mai.
 // @match        https://atlas.gls-spain.es/*
 // @grant        none
@@ -75,7 +75,7 @@ const SYN={COMTAT:'COMPTAT',VESCOMTAT:'VESCOMPTAT',GUILLEN:'GUILLEM',SOLARIA:'SA
   DOMENECH:'DOMENEC',ORGANA:'ORGANYA',PL:'PLACA',PZA:'PLACA',PLAZA:'PLACA',PCA:'PLACA',PLAÇA:'PLACA',SEO:'SEU',URGEL:'URGELL',LLORENS:'LLORENC',LORENZO:'LLORENC',
   POL:'POLIGON',PGNO:'POLIGON',PARCELA:'PARCELLA',ZELOETA:'ZULUETA',ZULOETA:'ZULUETA',CALASSANC:'CALASANC',CALASANZ:'CALASANC',PARQUE:'PARC',PARK:'PARC',REGERENCIA:'REGENCIA',LALT:'ALT',PAUCLARIS:'CLARIS',BRUIDEU:'BRUDIEU',CONTACT:'COMPTAT',MONTORULL:'MONTURULL',LLESTERIAS:'LLETERIES',LLESTERIES:'LLETERIES',LLETERIAS:'LLETERIES',CORREUS:'CARREUS',DELEGACIO:'DELEGACION',LORRI:'ORRI',RECOGEN:'RECOGE',POLIGONO:'POLIGON',INDUSTRIAL:'POLIGON',PI:'PI'};
 function ztoks(s){
-  s=String(s??'').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/Ç/g,'C').replace(/Ñ/g,'N').replace(/L[·.]L/g,'LL').replace(/[^A-Z0-9]+/g,' ').replace(/([A-Z]{3,})(\d)/g,'$1 $2').trim();
+  s=String(s??'').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/Ç/g,'C').replace(/Ñ/g,'N').replace(/L[·.]L/g,'LL').replace(/\bARMENGOL\b/g,'ERMENGOL').replace(/[^A-Z0-9]+/g,' ').replace(/([A-Z]{3,})(\d)/g,'$1 $2').trim();
   if(!s)return [];const out=[];
   for(let t of s.split(' ')){const mn=t.match(/^(?:N|NO|NUM|NUMERO)(\d{1,4})$/);if(mn){out.push(mn[1]);continue}t=SYN[t]||t;out.push(t);if(/^[DL][AEIOU]/.test(t)&&t.length>=6){const u=t.slice(1);out.push(SYN[u]||u)}}
   return out;
