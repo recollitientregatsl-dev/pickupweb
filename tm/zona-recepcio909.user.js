@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Zona Recepció 909
 // @namespace    recollit-entregat-909
-// @version      1.6
-// @description  v1.6: si és a la fulla d'un repartidor, la pantalla es pinta del color de la zona per adreça; la veu diu «FPE vençuda» en lloc de «Fora FPE». v1.5: la veu diu la FPE (FPE vençuda / FPE avui / FPE demà / FPE dia X). v1.4: FPE en gran al costat de la fitxa (es veu de lluny). v1.3: mostra sempre la FPE (data prevista d'entrega) amb avís AVUI / VENÇUDA / futura. Pantalla per al personal de recepció de la nau GLS 909: escaneja o escriu el número d'enviament i et diu de quin color és la zona on l'has de buscar (Vermell, Verd, Groc, Blau, Polígon, Organyà, Cerdanya, La Farga, Agència...), si és a l'estanteria, a la fulla d'un repartidor, al ParcelShop, si encara no ha arribat o si ja està lliurat. Consulta Atlas en directe i fa servir les mateixes zones que el Punteig 909. S'obre NOMÉS amb https://atlas.gls-spain.es/shippingfinder/index?zona909 (adreça pròpia); l'adreça normal de Mil Envíos no es toca mai.
+// @version      1.7
+// @description  v1.7: si l'adreça només porta el número, busca el carrer a la línia del nom/empresa. v1.6: si és a la fulla d'un repartidor, la pantalla es pinta del color de la zona per adreça; la veu diu «FPE vençuda» en lloc de «Fora FPE». v1.5: la veu diu la FPE (FPE vençuda / FPE avui / FPE demà / FPE dia X). v1.4: FPE en gran al costat de la fitxa (es veu de lluny). v1.3: mostra sempre la FPE (data prevista d'entrega) amb avís AVUI / VENÇUDA / futura. Pantalla per al personal de recepció de la nau GLS 909: escaneja o escriu el número d'enviament i et diu de quin color és la zona on l'has de buscar (Vermell, Verd, Groc, Blau, Polígon, Organyà, Cerdanya, La Farga, Agència...), si és a l'estanteria, a la fulla d'un repartidor, al ParcelShop, si encara no ha arribat o si ja està lliurat. Consulta Atlas en directe i fa servir les mateixes zones que el Punteig 909. S'obre NOMÉS amb https://atlas.gls-spain.es/shippingfinder/index?zona909 (adreça pròpia); l'adreça normal de Mil Envíos no es toca mai.
 // @match        https://atlas.gls-spain.es/*
 // @grant        none
 // @run-at       document-start
@@ -189,6 +189,31 @@ zoneOf.COL = ZONES;
 return zoneOf;
   })();
 
+  // v-NOM: si el camp d'adreça no porta carrer (buit o només número), el carrer sovint és a la línia del nom/empresa
+  // (remitents internacionals: «Judith … Carrera de lOrri. TIENDA BEEP» + adreça «16»)
+  const VIA909 = /\b(?:CALLE|CARRERA|CARRERO|CARRER|AVDA|AVGDA|AVENIDA|AVINGUDA|AV|PASSEIG|PASEO|PG|PLAÇA|PLACA|PLAZA|PL|CARRETERA|CTRA|CRTA|PASSATGE|PASAJE|PTGE|TRAVESSIA|TRAVESIA|PARTIDA|CAMI|CAMINO|RAMBLA|CL)\b\.?\s*|\bC\s*\/\s*|\bC\.\s+/i;
+  function adrecaDelNom(ad, nom) {
+    const a = String(ad || '').trim();
+    if (/[A-Za-zÀ-ÿ]{3,}/.test(a)) return '';
+    const n = String(nom || ''), m = n.match(VIA909); if (!m) return '';
+    const resta = n.slice(m.index + m[0].length).split(/[.;]\s|\s[-–]\s|\s{2,}/)[0].replace(/\b([ldLD])(?=[A-ZÀ-Ú][a-zà-ú])/g, '$1 ');
+    if (!/[A-Za-zÀ-ÿ]{3,}/.test(resta)) return '';
+    return (m[0].replace(/carrera/i, 'Carrer').trim() + ' ' + resta + ' ' + a).replace(/\s+/g, ' ').trim();
+  }
+  // zona amb el nom com a reserva: retorna {…zona, ad} (ad = adreça que s'ha fet servir)
+  function zonaAmbNom(ad, nom, loc, cp, ps) {
+    let z = {}; try { z = zonaNova(ad, loc, cp, ps) || {}; } catch (e) { }
+    const sense = !z.z || z.z === '?' || z.pt === 'Sense adreça';
+    if (sense && !/[A-Za-zÀ-ÿ]{3,}/.test(String(ad || ''))) {
+      const an = adrecaDelNom(ad, nom);
+      if (an) { try { const z2 = zonaNova(an, loc, cp, ps) || {}; if (z2.z && z2.z !== '?') return { ...z2, ad: an, delNom: 1 }; } catch (e) { } }
+      // un punt de concentració escrit al nom (p. ex. «GRAPATS», «CAP I CUA») amb l'adreça buida
+      try { const z3 = zonaNova(String(nom || '') + ' ' + String(ad || ''), loc, cp, ps) || {}; if (z3.pt && z3.z && z3.z !== '?' && z3.z !== 'REA') return { ...z3, ad: String(nom || '') + ' ' + String(ad || ''), delNom: 1 }; } catch (e) { }
+    }
+    return { ...z, ad };
+  }
+
+
 
   const COL = zonaNova.COL;
   const ESP = {
@@ -263,7 +288,7 @@ return zoneOf;
   function decideix(x, op) {
     const s = +x.StatusId;
     const P = String(x.nombrePSDestino || '').trim();
-    const zr = zonaNova(x.PostingAddress, x.PostingCity, x.PostingSourceCode, P) || { z: '?' };
+    const zr = zonaAmbNom(x.PostingAddress, x.PostingName, x.PostingCity, x.PostingSourceCode, P);
     const zc = zr.z || '?';
     const colorZona = { t: zc === 'REA' ? 'AGÈNCIA' : zc === '?' ? 'ZONA ?' : zc, c: COL[zc] || COL['?'], say: SAY[zc] || '' };
     const opz = op ? op.z : '';
