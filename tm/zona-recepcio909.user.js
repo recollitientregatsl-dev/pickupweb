@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Zona Recepció 909
 // @namespace    recollit-entregat-909
-// @version      1.9
+// @version      1.10
 // @description  v1.7: si l'adreça només porta el número, busca el carrer a la línia del nom/empresa. v1.6: si és a la fulla d'un repartidor, la pantalla es pinta del color de la zona per adreça; la veu diu «FPE vençuda» en lloc de «Fora FPE». v1.5: la veu diu la FPE (FPE vençuda / FPE avui / FPE demà / FPE dia X). v1.4: FPE en gran al costat de la fitxa (es veu de lluny). v1.3: mostra sempre la FPE (data prevista d'entrega) amb avís AVUI / VENÇUDA / futura. Pantalla per al personal de recepció de la nau GLS 909: escaneja o escriu el número d'enviament i et diu de quin color és la zona on l'has de buscar (Vermell, Verd, Groc, Blau, Polígon, Organyà, Cerdanya, La Farga, Agència...), si és a l'estanteria, a la fulla d'un repartidor, al ParcelShop, si encara no ha arribat o si ja està lliurat. Consulta Atlas en directe i fa servir les mateixes zones que el Punteig 909. S'obre NOMÉS amb https://atlas.gls-spain.es/shippingfinder/index?zona909 (adreça pròpia); l'adreça normal de Mil Envíos no es toca mai.
 // @match        https://atlas.gls-spain.es/*
 // @grant        none
@@ -286,7 +286,7 @@ return zoneOf;
 
   // ================= DECISIÓ: ON L'HE DE BUSCAR? =================
   // Registre «SENSE ZONA» al full ASSIGNACIÓ REPARTO 909 (un per expedició i dia)
-  const SZ_URL = 'https://script.google.com/macros/s/AKfycbyiKaK7NFLJ6LZmVSshBMeM9Y__67SjRbcl8aQxAHS8HnDxYyfFpSH1r2Tm6YI-NYs/exec', SZ_K = 'r909-31647c9906bb';
+  const SZ_URL = 'https://script.google.com/macros/s/AKfycbyiKaK7NFLJ6LZmVSshBMeM9Y__67SjRbcl8aQxAHS8HnDxYyfFpSH1r2Tm6YI-NYs/exec', SZ_K = 'sz909-d8d14c1858a4';
   const szVist = new Set();
   function logSZ(x) {
     try {
