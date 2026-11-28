@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Zona Recepció 909
 // @namespace    recollit-entregat-909
-// @version      1.8
+// @version      1.9
 // @description  v1.7: si l'adreça només porta el número, busca el carrer a la línia del nom/empresa. v1.6: si és a la fulla d'un repartidor, la pantalla es pinta del color de la zona per adreça; la veu diu «FPE vençuda» en lloc de «Fora FPE». v1.5: la veu diu la FPE (FPE vençuda / FPE avui / FPE demà / FPE dia X). v1.4: FPE en gran al costat de la fitxa (es veu de lluny). v1.3: mostra sempre la FPE (data prevista d'entrega) amb avís AVUI / VENÇUDA / futura. Pantalla per al personal de recepció de la nau GLS 909: escaneja o escriu el número d'enviament i et diu de quin color és la zona on l'has de buscar (Vermell, Verd, Groc, Blau, Polígon, Organyà, Cerdanya, La Farga, Agència...), si és a l'estanteria, a la fulla d'un repartidor, al ParcelShop, si encara no ha arribat o si ja està lliurat. Consulta Atlas en directe i fa servir les mateixes zones que el Punteig 909. S'obre NOMÉS amb https://atlas.gls-spain.es/shippingfinder/index?zona909 (adreça pròpia); l'adreça normal de Mil Envíos no es toca mai.
 // @match        https://atlas.gls-spain.es/*
 // @grant        none
@@ -285,11 +285,24 @@ return zoneOf;
   }
 
   // ================= DECISIÓ: ON L'HE DE BUSCAR? =================
+  // Registre «SENSE ZONA» al full ASSIGNACIÓ REPARTO 909 (un per expedició i dia)
+  const SZ_URL = 'https://script.google.com/macros/s/AKfycbyiKaK7NFLJ6LZmVSshBMeM9Y__67SjRbcl8aQxAHS8HnDxYyfFpSH1r2Tm6YI-NYs/exec', SZ_K = 'r909-31647c9906bb';
+  const szVist = new Set();
+  function logSZ(x) {
+    try {
+      const s = v => (v == null ? '' : String(v).trim());
+      const exp = s(x.ShippingId); if (!exp || szVist.has(exp)) return; szVist.add(exp);
+      let fpe = ''; try { const ms = +s(x.EstimatedDate).replace(/[^\d]/g, ''); if (ms) fpe = new Date(ms).toISOString().slice(0, 10); } catch (e) { }
+      const q = new URLSearchParams({ k: SZ_K, a: 'sz', o: 'Zona Recepció', codi: s(x.Barcode), exp, adr: s(x.PostingAddress), pob: s(x.PostingCity), cp: s(x.PostingSourceCode), nom: s(x.PostingName), fpe });
+      fetch(SZ_URL + '?' + q, { mode: 'no-cors' }).catch(() => {});
+    } catch (e) { }
+  }
   function decideix(x, op) {
     const s = +x.StatusId;
     const P = String(x.nombrePSDestino || '').trim();
     const zr = zonaAmbNom(x.PostingAddress, x.PostingName, x.PostingCity, x.PostingSourceCode, P);
     const zc = zr.z || '?';
+    if (!zr.z) logSZ(x);
     const colorZona = { t: zc === 'REA' ? 'AGÈNCIA' : zc === '?' ? 'ZONA ?' : zc, c: COL[zc] || COL['?'], say: SAY[zc] || '' };
     const opz = op ? op.z : '';
     const opTxt = op ? opz + (op.d ? ' · ' + ddmm(op.d) + ' ' + hhmm(op.d) : '') : '';
